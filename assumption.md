@@ -41,9 +41,9 @@
 - RNG u_ID becomes owner
 
 
-Channels Assumptions:
+## Channels Assumptions
 
-For channels_list:
+### For channels_list
 - Valid token (input)
 - Valid channels 
 - Channels & associated details correctly linked to User ID
@@ -53,7 +53,7 @@ For channels_list:
 - Function returns a list (an empty list if no channels are found)
 - User is able to view private channels they are a member/ admin of.
 
-For channels_listall:
+### For channels_listall:
 - Valid token (input)
 - If this is used to view all channels for admin and server purposes:
     - Admin privileges are required to view all public & private channels.
@@ -62,7 +62,7 @@ For channels_listall:
     - User can only view public channels/ private channels they are a member of.
 - Function returns a list (an empty list if no channels are found)
 
-For channels_create:
+### For channels_create:
 - Valid token (input)- no empty string, unique
 - Valid name (input)- no empty string
 - Valid is_public varible (input)
