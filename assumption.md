@@ -73,4 +73,29 @@
     - Internal server has admin privileges in order to assign creator as admin.
 
 
+## Auth Assumptions
 
+### For auth_register:
+ - Valid token generated (unique)
+ - Valid first name (input)
+ - Valid last name (input)
+ - Valid email address (input)
+ - Valid password (input)
+ - Valid User ID
+ - Input error if first name is empty or > 50 characters
+ - Input error if last name is empty or > 50 characters
+ - Input error if invalid email address
+ - Input error if password < 6 characters
+
+### For auth_login:
+ - Valid token generated (unique)
+ - Valid first name
+ - Valid last name
+ - Valid email address (input)
+ - Valid password (input)
+ - Valid User ID
+ - Input error if invalid email address
+ - Input error if invalid password
+
+### For auth_logout
+ - Valid token (input)
