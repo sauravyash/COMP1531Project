@@ -59,7 +59,7 @@
     - Admin privileges are required to view all public & private channels.
     - Internal server has admin privileges.
 - If this is used to view channels that a User may join/ for navigation:
-    - User can only view public channels/ private channels they are a member of.
+    - User can only view all public channels and only private channels they are a member of.
 - Function returns a list (an empty list if no channels are found)
 
 ### For channels_create:
