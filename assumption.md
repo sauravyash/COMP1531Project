@@ -98,4 +98,4 @@
  - Input error if invalid password
 
 ### For auth_logout
- - Valid token (input)
+ - Valid token (input)- active
