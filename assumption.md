@@ -39,3 +39,38 @@
 ### Channel_removeowner
 - Must from Owner ID
 - RNG u_ID becomes owner
+
+
+Channels Assumptions:
+
+For channels_list:
+- Valid token (input)
+- Valid channels 
+- Channels & associated details correctly linked to User ID
+- User is authorised to view channels in list
+- User token is correctly matched to User ID
+- List displays all information (not just some of the channels, etc.)
+- Function returns a list (an empty list if no channels are found)
+- User is able to view private channels they are a member/ admin of.
+
+For channels_listall:
+- Valid token (input)
+- If this is used to view all channels for admin and server purposes:
+    - Admin privileges are required to view all public & private channels.
+    - Internal server has admin privileges.
+- If this is used to view channels that a User may join/ for navigation:
+    - User can only view public channels/ private channels they are a member of.
+- Function returns a list (an empty list if no channels are found)
+
+For channels_create:
+- Valid token (input)- no empty string, unique
+- Valid name (input)- no empty string
+- Valid is_public varible (input)
+- Input error if name > 20 characters
+- New 'empty' channel is created-> only member is admin, no messages, etc.
+- Channel is set as either public or private
+- That this channel will be/ is linked to the creator of the channel (as an admin):
+    - Internal server has admin privileges in order to assign creator as admin.
+
+
+
