@@ -99,3 +99,4 @@
 
 ### For auth_logout
  - Valid token (input)- active
+ - Returns true if successful logout, or false if already logged out.
