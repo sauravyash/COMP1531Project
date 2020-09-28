@@ -1,5 +1,5 @@
 import pytest
-from error import InputError
+
 from channels import channels_create
 
 ### BLACKBOX TESTING ###
@@ -10,11 +10,11 @@ from channels import channels_create
 # - Token must be unique
 def test_channels_create_valid_token():
     with pytest.raises(InputError) as e:
-        channels_create(0, "namee", true)
+        channels_create(0, "namee", True)
     with pytest.raises(InputError) as e:
-        channels_create("", "namee", true)
+        channels_create("", "namee", True)
     with pytest.raises(InputError) as e:
-        channels_create(None, "namee", true)
+        channels_create(None, "namee", True)
 
 
 # Test for Valid Name
@@ -23,12 +23,12 @@ def test_channels_create_valid_token():
 # - Name cannot be longer than 20 chars
 def test_channels_create_valid_name(): 
     with pytest.raises(InputError) as e:
-        channels_create("123421", None, true)
+        channels_create("123421", None, True)
     with pytest.raises(InputError) as e:
-        channels_create("234234", "", true)
+        channels_create("234234", "", True)
     with pytest.raises(InputError) as e:
         # 21 char length name
-        channels_create("233422", "qwertyuiopasdfghjklzx", true)
+        channels_create("233422", "qwertyuiopasdfghjklzx", True)
 
 # Test channel privacy
 # - is_public is a boolean
@@ -44,7 +44,7 @@ def test_channels_create_is_public():
 # Test function output types
 # - message_id is an int
 def test_channels_create_check_return_types():
-    assert isinstance(channels_create("", "", true), int)
+    assert isinstance(channels_create("", "", True), dict)
 
 
 
