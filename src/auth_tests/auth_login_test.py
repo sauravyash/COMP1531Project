@@ -1,6 +1,8 @@
+import auth
 from auth import auth_register
 from auth import auth_login
 import pytest
+from error import InputError
 
 #Successful logins
 def test_validemail():
