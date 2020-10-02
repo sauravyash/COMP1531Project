@@ -6,6 +6,15 @@ data = {
     'tokens': []
 }
 
+# returns user id of given user token
+# Raises a LookupError if token is not found
+def resolve_token(token):
+    for token_data in data['tokens']:
+        if token_data['token'] == token:
+            return token_data['user_id']
+
+    raise LookupError("Token not found")
+
 '''
 EXAMPLE
 data = {
