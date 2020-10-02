@@ -11,16 +11,16 @@ def test_validemail():
 
 #Unsuccesful logins
 def test_unregisteredemail():
-    result = auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
+    result = auth.auth_register('validemail1@gmail.com', 'validpassword', 'fname', 'fname')
     with pytest.raises(InputError) as e:
-        auth_login('unregisteredemail@gmail.com', 'validpassword')
+        auth.auth_login('unregisteredemail@gmail.com', 'validpassword')
 
 def test_incorrectpassword():
-    result = auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
+    result = auth.auth_register('validemail2@gmail.com', 'validpassword', 'fname', 'fname')
     with pytest.raises(InputError) as e:
-        auth_login('validemail@gmail.com', 'notthecorrectpassword')
+        auth.auth_login('validemail2@gmail.com', 'notthecorrectpassword')
 
 def test_invalidemail():
-    result = auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
+    result = auth.auth_register('validemail3@gmail.com', 'validpassword', 'fname', 'fname')
     with pytest.raises(InputError) as e:
-        auth_login('invalidemail.com', 'validpassword')
+        auth.auth_login('invalidemail.com', 'validpassword')
