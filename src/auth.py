@@ -76,7 +76,7 @@ def load_tokens(token):
 
 # Searches list of all stored handles and checks if handle has been found
 def search_handle(handle):
-    handle = []
+    handle_list = []
     for i in range(0, len(data.data.get("users"))):
         handle_list.append(data.data.get("users")[i].get("handle"))
 
