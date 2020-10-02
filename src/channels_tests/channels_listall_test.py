@@ -1,6 +1,7 @@
 import pytest
 
-from channels import channels_listall
+import channels
+import auth
 # from data file import global dictionary - for when we merge and implement
 
 
