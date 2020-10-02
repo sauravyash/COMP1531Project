@@ -41,37 +41,28 @@ def load_ids():
 def token_index(token):
     token_list = []
     for i in range(0, len(data.data.get("users"))):
-    #    email_list.append(data.data.get("users")[i].get("email"))
         token_list.append(data.data.get("users")[i].get("token"))
 
     return token_list.index(token)
 
 # Searches list of all stored emails and checks if email has been found
 def search_emails(email):
-    #email_list = []
-    #for i in range(0, len(data.data.get("users"))):
-    #    email_list.append(data.data.get("users")[i].get("email"))
-
     if email in load_emails():
         return True
     return False
 
 # Returns user_id with respect to the email (false if not found)
 def search_u_id(email):
-    #email_list = []
     id_list = []
     for i in range(0, len(data.data.get("users"))):
-    #    email_list.append(data.data.get("users")[i].get("email"))
         id_list.append(data.data.get("users")[i].get("id"))
 
     return id_list[load_emails().index(email)]
 
 # Returns password with respect to the email (false if not found)
 def search_passwords(email, password):
-    #email_list = []
     password_list = []
     for i in range(0, len(data.data.get("users"))):
-    #    email_list.append(data.data.get("users")[i].get("email"))
         password_list.append(data.data.get("users")[i].get("password"))
 
     if password_list[load_emails().index(email)] == password:
@@ -81,7 +72,6 @@ def search_passwords(email, password):
 def load_tokens(token):
     token_list = []
     for i in range(0, len(data.data.get("users"))):
-    #    email_list.append(data.data.get("users")[i].get("email"))
         token_list.append(data.data.get("users")[i].get("token"))
 
 # Searches list of all stored handles and checks if handle has been found
@@ -142,17 +132,10 @@ def auth_logout(token):
         }
 
 def auth_register(email, password, name_first, name_last):
-    #ASSUMPTION: User_id = 0 means error
-    #check if email not already being used
-    #check if email if valid
-    #check if password is valid
-    #check if name is valid
-
-    #if all true generate new user_id (increment from last user_id in database)
-    #generate handle, generate token (email for now), store password and names
-
-    #retrieve list of all users and search to see if email is there
-
+    user_one = 0
+    if data.data.get("users") == None: #create users
+        data.data["users"] = []
+        user_one = 1
 
     if (check_email(email) == False):
         raise InputError
@@ -160,7 +143,7 @@ def auth_register(email, password, name_first, name_last):
             'u_id': 0,
             'token': email + "invalid",
         }
-    elif (search_emails(email)):
+    elif (search_emails(email) and user_one == 0):
         raise InputError
         return {
             'u_id': 0,
@@ -183,16 +166,17 @@ def auth_register(email, password, name_first, name_last):
     if (len(handle) > 20):
         handle = handle[:20]
 
-
     #if (search_handle(handle)): append a number
         #modify handle
-
 
     #store password, handle, names
     #generate user id by incrementing largest user_id in database
     #store email, user_id
 
-    new_id = max(load_ids()) + 1
+    if (user_one): #generate first user
+        new_id = 1
+    else:
+        new_id = max(load_ids()) + 1
 
     data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email})
 

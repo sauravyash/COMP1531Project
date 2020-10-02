@@ -25,6 +25,14 @@ def test_invalidlname():
     with pytest.raises(InputError) as e:
         auth.auth_register('validemail4@gmail.com', '123abc!@#', 'fname', 'invalidlastnamewhichisgoingtobemorethan50characterslong')
 
+def test_nofirstname():
+    with pytest.raises(InputError) as e:
+        auth.auth_register('validemail3@gmail.com', '123abc!@#', '', 'lname')
+
+def test_nolastname():
+    with pytest.raises(InputError) as e:
+        auth.auth_register('validemail4@gmail.com', '123abc!@#', 'fname', '')
+
 def test_alreadyregistered():
     with pytest.raises(InputError) as e:
         auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
