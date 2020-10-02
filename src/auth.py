@@ -76,7 +76,7 @@ def load_tokens(token):
 
 # Searches list of all stored handles and checks if handle has been found
 def search_handle(handle):
-    handle = []
+    handle_list = []
     for i in range(0, len(data.data.get("users"))):
         handle_list.append(data.data.get("users")[i].get("handle"))
 
@@ -166,19 +166,19 @@ def auth_register(email, password, name_first, name_last):
     if (len(handle) > 20):
         handle = handle[:20]
 
-    #if (search_handle(handle)): append a number
-        #modify handle
-
     #store password, handle, names
     #generate user id by incrementing largest user_id in database
     #store email, user_id
 
     if (user_one): #generate first user
         new_id = 1
+        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'owner': "owner"})
     else:
-        new_id = max(load_ids()) + 1
+        if (search_handle(handle)):
+            handle = handle + "1"
 
-    data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email})
+        new_id = max(load_ids()) + 1
+        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'owner': "user"})
 
     return {
         'u_id': new_id, #next user_id
