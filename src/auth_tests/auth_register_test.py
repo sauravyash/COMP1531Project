@@ -4,13 +4,14 @@ import pytest
 from error import InputError
 
 #Successful registrations
-def test_validemail():
+def test_valid():
     auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
 
 #Unsuccesful registrations
 def test_invalidemail():
     with pytest.raises(InputError) as e:
-        auth.auth_register('invalidemail.com', '123abc!@#', 'fname', 'lname')
+        result = auth.auth_register('invalidemail.com', '123abc!@#', 'fname', 'lname')
+        print(result)
 
 def test_invalidpassword():
     with pytest.raises(InputError) as e:
