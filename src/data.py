@@ -1,0 +1,2 @@
+global data
+data = {}
