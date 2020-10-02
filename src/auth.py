@@ -166,9 +166,6 @@ def auth_register(email, password, name_first, name_last):
     if (len(handle) > 20):
         handle = handle[:20]
 
-    if (search_handle(handle)):
-        handle = handle + "1"
-
     #store password, handle, names
     #generate user id by incrementing largest user_id in database
     #store email, user_id
@@ -177,6 +174,9 @@ def auth_register(email, password, name_first, name_last):
         new_id = 1
         data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'owner': "owner"})
     else:
+        if (search_handle(handle)):
+            handle = handle + "1"
+
         new_id = max(load_ids()) + 1
         data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'owner': "user"})
 
