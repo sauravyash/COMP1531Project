@@ -2,16 +2,15 @@
 global data
 data = {
     'users': [],
-    'channels': [],
-    'tokens': []
+    'channels': []
 }
 
 # returns user id of given user token
 # Raises a LookupError if token is not found
 def resolve_token(token):
-    for token_data in data['tokens']:
-        if token_data['token'] == token:
-            return token_data['user_id']
+    for user in data['users']:
+        if user['token'] == token and user['authenticated']:
+            return user['id']
 
     raise LookupError("Token not found")
 
