@@ -1,3 +1,6 @@
+import data
+from error import InputError
+from error import AccessError
 def channel_invite(token, channel_id, u_id):
     return {
     }
@@ -36,8 +39,30 @@ def channel_messages(token, channel_id, start):
     }
 
 def channel_leave(token, channel_id):
-    return {
-    }
+    u_id_index = 0
+    channel_id_index = 0
+    u_id = 0
+    try: 
+        
+        channel_id_index = data.resolve_channel_id_index(channel_id)
+       
+
+    except LookupError:
+        raise InputError("Invalid channel ID")
+
+    # user
+    try:
+        u_id = data.resolve_token(token)
+        u_id_index = data.resolve_user_id_index(u_id)
+
+    except LookupError:
+        raise InputError("Invalid token")
+
+    # remove
+    data.data['channels'][channel_id_index]['members'].remove(u_id)
+
+    return {}
+
 
 def channel_join(token, channel_id):
     return {
