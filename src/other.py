@@ -1,4 +1,10 @@
-def clear():
+
+# Clears original data structure...
+def clear():    
+    data = {
+        'users': [],
+        'channels': []
+    }
     pass
 
 def users_all(token):
