@@ -2,8 +2,8 @@ import data
 # Clears original data structure...
 def clear():
     data.data = {
-        #'users': [],
-        #'channels': []
+        'users': [],
+        'channels': []
     }
     pass
 
