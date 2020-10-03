@@ -7,8 +7,8 @@ def channel_invite(token, channel_id, u_id):
     # channel
     u_id_index = 0
     channel_id_index = 0
-    
-    try:  
+
+    try:
         channel_id_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
@@ -23,22 +23,22 @@ def channel_invite(token, channel_id, u_id):
     for l in data.data['channels'][channel_id_index]['members']:
         if u_id == l:
             raise AccessError("Duplicate UserID")
-                
+
 
     # append
     data.data['channels'][channel_id_index]['members'].append(u_id)
- 
+
     return {}
 
 def channel_details(token, channel_id):
     channel_id_index = data.resolve_channel_id_index(channel_id)
-    
+
     channel = data.data['channels'][channel_id_index]
     users = channel['admins'] + channel['members']
-    
+
     if data.resolve_token(token) not in users and channel["is_public"]:
         raise AccessError("Not a member of the specified channel")
-    
+
     return channel
 
 
@@ -50,7 +50,7 @@ def channel_messages(token, channel_id, start):
 
     channel = data.data['channels'][channel_id_index]
     users = channel['admins'] + channel['members']
-    
+
     if data.resolve_token(token) not in users:
         raise AccessError("Not a member of the specified channel")
 
@@ -62,7 +62,7 @@ def channel_messages(token, channel_id, start):
     end = start + 50 if len(messages) >= 50 else -1
 
     return {
-        'messages': messages[start::end], 
+        'messages': messages[start::end],
         'start': start,
         'end': end,
     }
@@ -71,10 +71,10 @@ def channel_leave(token, channel_id):
     u_id_index = 0
     channel_id_index = 0
     u_id = 0
-    try: 
-        
+    try:
+
         channel_id_index = data.resolve_channel_id_index(channel_id)
-       
+
 
     except LookupError:
         raise InputError("Invalid channel ID")
@@ -95,8 +95,8 @@ def channel_leave(token, channel_id):
 def channel_join(token, channel_id):
     u_id_index = 0
     channel_id_index = 0
-    
-    try:  
+
+    try:
         channel_id_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
@@ -105,12 +105,12 @@ def channel_join(token, channel_id):
     for l in data.data['channels'][channel_id_index]['members']:
         if u_id == l:
             raise AccessError("Duplicate UserID")
-    channel =  data.data['channels'][channel_id_index]            
+    channel =  data.data['channels'][channel_id_index]
 
     # append
     user = data.resolve_token(token)
     is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
-    if channel['is_public'] or is_owner == 'owner': 
+    if channel['is_public'] or is_owner == 'owner':
         channel['members'].append(u_id)
 
     return {}
@@ -118,9 +118,9 @@ def channel_join(token, channel_id):
 def channel_addowner(token, channel_id, u_id):
     u_id_index = 0
     channel_id_index = 0
-    
+
     # channel
-    try:         
+    try:
         channel_id_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
@@ -140,9 +140,9 @@ def channel_addowner(token, channel_id, u_id):
 def channel_removeowner(token, channel_id, u_id):
     u_id_index = 0
     channel_id_index = 0
-    
+
     # channel
-    try:         
+    try:
         channel_id_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
