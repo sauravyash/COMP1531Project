@@ -9,38 +9,38 @@ def test_valid():
     auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
 
 #Unsuccesful registrations
-def test_invalidemail():
+def test_invalid_email():
     other.clear()
     with pytest.raises(InputError) as e:
         result = auth.auth_register('invalidemail.com', '123abc!@#', 'fname', 'lname')
         print(result)
 
-def test_invalidpassword():
+def test_invalid_password():
     other.clear()
     with pytest.raises(InputError) as e:
         auth.auth_register('validemail@gmail.com', '123', 'fname', 'lname')
 
-def test_invalidfname():
+def test_invalid_fname():
     other.clear()
     with pytest.raises(InputError) as e:
         auth.auth_register('validemail@gmail.com', '123abc!@#', 'invalidfirstnamewhichisgoingtobemorethan50characterslong', 'lname')
 
-def test_invalidlname():
+def test_invalid_lname():
     other.clear()
     with pytest.raises(InputError) as e:
         auth.auth_register('validemail@gmail.com', '123abc!@#', 'fname', 'invalidlastnamewhichisgoingtobemorethan50characterslong')
 
-def test_nofirstname():
+def test_empty_first_name():
     other.clear()
     with pytest.raises(InputError) as e:
         auth.auth_register('validemail@gmail.com', '123abc!@#', '', 'lname')
 
-def test_nolastname():
+def test_empty_last_name():
     other.clear()
     with pytest.raises(InputError) as e:
         auth.auth_register('validemail@gmail.com', '123abc!@#', 'fname', '')
 
-def test_alreadyregistered():
+def test_already_registered():
     other.clear()
     auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
     with pytest.raises(InputError) as e:
