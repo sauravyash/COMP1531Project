@@ -82,10 +82,46 @@ def channel_leave(token, channel_id):
     return {}
 
 def channel_join(token, channel_id):
+    u_id_index = 0
+    channel_id_index = 0
+    
+    # channel
+    try:         
+        channel_id_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError("Invalid channel ID")
+
+    # user
+    try:
+        u_id_index = data.resolve_user_id_index(u_id)
+    except LookupError:
+        raise InputError("Invalid user ID")
+
+
+    data.data['channels'][channel_id_index]['admins'].append(u_id)
+
     return {
     }
 
 def channel_addowner(token, channel_id, u_id):
+    u_id_index = 0
+    channel_id_index = 0
+    
+    # channel
+    try:         
+        channel_id_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError("Invalid channel ID")
+
+    # user
+    try:
+        u_id_index = data.resolve_user_id_index(u_id)
+    except LookupError:
+        raise InputError("Invalid user ID")
+
+
+    data.data['channels'][channel_id_index]['admins'].append(u_id)
+
     return {
     }
 
