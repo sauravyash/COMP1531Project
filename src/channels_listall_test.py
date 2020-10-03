@@ -2,6 +2,7 @@ import pytest
 
 import channels
 import auth
+import data
 from other import clear
 
 ### BLACKBOX TESTING ###
@@ -23,8 +24,8 @@ def test_channels_create_check_return_types():
     channel_1 = channels.channels_create(token, 'Hola_Seniora', True)
     
     for dictionary in channels.channels_listall(token):
-        assert isinstance(channel_1, int)
-        assert isinstance(dictionary[channel_1], str)
+        assert isinstance(dictionary['channel_id'], int)
+        assert isinstance(dictionary['name'], str)
     
     clear()
     '''
@@ -43,8 +44,9 @@ def test_channels_listall_public_only():
     channel_2 = channels.channels_create(token, 'ILoveIcecream', True)
     
     (Only public)
-    assert channels.channels_listall(token) == [{channel_1: 'Hola_Seniora'},
-    {channel_2: 'ILoveIcecream'}]
+    assert channels.channels_listall(token) == 
+    [{'channel_id': channel_1, 'name': 'Hola_Seniora'},
+    {'channel_id': channel_2, 'name': 'ILoveIcecream'}]
     
     # Clear data
     clear()
@@ -64,8 +66,10 @@ def test_channels_listall_public_private():
     
     (Public & private)
     assert channels.channels_listall(token_1) == 
-    [{channel_1: 'Hola_Seniora'}, {channel_2: 'ILoveIcecream'}, 
-    {channel_3: 'ImAnEngineer'}, {channel_4: 'HugsOnly'}]
+    [{'channel_id': channel_1, 'name': 'Hola_Seniora'},
+    {'channel_id': channel_2, 'name': 'ILoveIcecream'}, 
+    {'channel_id': channel_3, 'name': 'ImAnEngineer'}, 
+    {'channel_id': channel_4, 'name': 'HugsOnly'}]
     
     # Clear data
     clear()
