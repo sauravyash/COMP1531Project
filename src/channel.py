@@ -43,17 +43,28 @@ def channel_details(token, channel_id):
 
 
 def channel_messages(token, channel_id, start):
+    try:
+        channel_id_index = data.resolve_channel_id_index(channel_id)
+    except LookupError as e:
+        raise InputError(e.message)
+
+    channel = data.data['channels'][channel_id_index]
+    users = channel['admins'] + channel['members']
+    
+    if data.resolve_token(token) not in users:
+        raise AccessError("Not a member of the specified channel")
+
+    messages = channel['messages']
+
+    if start > len(messages):
+        raise InputError("Start is Out of Bounds")
+
+    end = start + 50 if len(messages) >= 50 else -1
+
     return {
-        'messages': [
-            {
-                'message_id': 1,
-                'u_id': 1,
-                'message': 'Hello world',
-                'time_created': 1582426789,
-            }
-        ],
-        'start': 0,
-        'end': 50,
+        'messages': messages[start::end], 
+        'start': start,
+        'end': end,
     }
 
 def channel_leave(token, channel_id):
