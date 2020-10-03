@@ -39,7 +39,11 @@ def channel_details(token, channel_id):
     if data.resolve_token(token) not in users and channel["is_public"]:
         raise AccessError("Not a member of the specified channel")
 
-    return channel
+    return {
+        'name': channel['name'],
+        'owner_members': channel['admins'],
+        'all_members': channel['members'],
+    }
 
 
 def channel_messages(token, channel_id, start):
