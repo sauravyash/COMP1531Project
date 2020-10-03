@@ -185,7 +185,7 @@ def auth_register(email, password, name_first, name_last):
 
         if len(handle) > 20:
             handle = handle[:20 - len(str(user_num))]
-            handle += str(handle)
+            handle += str(user_num)
 
     #store password, handle, names
     #generate user id by incrementing largest user_id in database
