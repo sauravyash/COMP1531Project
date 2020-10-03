@@ -93,12 +93,6 @@ def channel_leave(token, channel_id):
     return {}
 
 def channel_join(token, channel_id):
-
-<<<<<<< HEAD
-    return {
-        
-    }
-=======
     u_id_index = 0
     channel_id_index = 0
     
@@ -119,10 +113,7 @@ def channel_join(token, channel_id):
     if channel['is_public'] or is_owner == 'owner': 
         channel['members'].append(u_id)
 
- 
     return {}
-
->>>>>>> feature/channel_join
 
 def channel_addowner(token, channel_id, u_id):
     u_id_index = 0
