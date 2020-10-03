@@ -16,7 +16,12 @@ def channels_listall(token):
     new_list = []
     
     for channel in data.data['channels']:
-        new_list.append({channel['id']: channel['name']})   
+        new_list.append(
+            {
+                'channel_id': channel['id'],  
+                'name': channel['name'],
+                
+            })   
     
     return new_list
 
