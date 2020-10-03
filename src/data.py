@@ -38,8 +38,6 @@ def resolve_message_id_index(channel_id, user_id):
     pass
 
 
-
->>>>>>> feature/data_store
 '''
 EXAMPLE
 data = {
@@ -73,21 +71,6 @@ data = {
             'name' : 'channel2',
             ...
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    ],
-    'tokens': [
-        {
-            'user_id': "mbr1",
-            'token': "1234"
-        },
-        {
-            ...
-        }
->>>>>>> feature/data_store
-=======
->>>>>>> feature/channels
     ]
 }
 '''
