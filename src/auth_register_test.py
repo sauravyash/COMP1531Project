@@ -20,6 +20,11 @@ def test_invalid_password():
     with pytest.raises(InputError) as e:
         auth.auth_register('validemail@gmail.com', '123', 'fname', 'lname')
 
+def test_empty_password():
+    other.clear()
+    with pytest.raises(InputError) as e:
+        auth.auth_register('validemail@gmail.com', '', 'fname', 'lname')
+
 def test_invalid_fname():
     other.clear()
     with pytest.raises(InputError) as e:
