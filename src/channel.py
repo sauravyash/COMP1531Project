@@ -1,50 +1,36 @@
 import data
-from error import InputError
-from error import AccessError
 def channel_invite(token, channel_id, u_id):
-    # use i instead cid to avoid confusion
+   # use i instead cid to avoid confusion
     # channels -> first key -> id in the first key
     # channel
+    u_id_index = 0
+    channel_id_index = 0
+    
+    try: 
+        
+        channel_id_index = data.resolve_channel_id_index(channel_id)
+       
 
-    check_valid_cid = 0
-    for i in data.data['channels']:
-        if channel_id == i['id']: 
-            # valid channel
-            check_valid_cid = 1
-            break
-
-    if check_valid_cid is not 1:
-        raise InputError
-        return
+    except LookupError:
+        raise InputError("Invalid channel ID")
 
     # user
-    check_valid_user = 0
-    for j in data.data['users']:
-        if (u_id == j['id']) and (token == j['token']):
-            # valid user
-            check_valid_user = 1
-            break
+    try:
+        u_id_index = data.resolve_user_id_index(u_id)
 
-    if check_valid_user is not 1:
-        raise InputError
-        return
+    except LookupError:
+        raise InputError("Invalid user ID")
 
     # member in the channel already
-    for k in data.data['channels']:
-        for l in k['members']:
-            if u_id == l:
-                raise AccessError
-                return
-    
-    
+    for l in data.data['channels'][channel_id_index]['members']:
+        if u_id == l:
+            raise AccessError("Duplicate UserID")
+                
+
     # append
-    for i in data.data['channels']:
-        if channel_id == i['id'] : 
-            member_list = i['members']
-            member_list.append(u_id)
+    data.data['channels'][channel_id_index]['members'].append(u_id)
  
-    return
-    
+    return {}
 
 def channel_details(token, channel_id):
     return {
@@ -80,50 +66,8 @@ def channel_messages(token, channel_id, start):
     }
 
 def channel_leave(token, channel_id):
-    check_valid_cid = 0
-    for i in data.data['channels']:
-        if channel_id == i['id']: 
-            # valid channel
-            check_valid_cid = 1
-            break
-         
-    if check_valid_cid is not 1:
-        raise InputError
-        return
-
-    # find the user id using token
-    saved_uID = -99
-    valid_token = 0
-    for k in data.data['users']:
-        if token == k['token']:
-            valid_token = 1
-            saved_uID = k['id']
-
-    # valid token
-    if valid_token != 1:
-        raise InputError
-        return
-    check_channel_member = 0
-    for i in data.data['channels']:
-        if channel_id == i['id'] : 
-            member_list = i['members']
-            for users in member_list:
-                if saved_uID == users:
-                    check_channel_member = 1
-                    break
-
-    if (check_channel_member != 1):
-        raise AccessError
-
-
-    # remove
-    # print(saved_uID)
-    for i in data.data['channels']:
-        if channel_id == i['id'] : 
-            member_list = i['members']
-            member_list.remove(saved_uID)
-
-    return 
+    return {
+    }
 
 def channel_join(token, channel_id):
     return {
