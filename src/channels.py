@@ -35,7 +35,7 @@ def channels_create(token, name, is_public):
         'name' : name,
         'admins': [data.resolve_token(token)],
         'members': [],
-        'messages' [],
+        'messages': [],
         'is_public': is_public
     })
     return {
