@@ -97,20 +97,22 @@ def auth_login(email, password):
         raise InputError
         return {
             'u_id': 0,
-            'token': email + "invalid",
+            'token': email,
         }
     elif (search_emails(email) == False):
         raise InputError
         return {
             'u_id': 0,
-            'token': email + "invalid",
+            'token': email,
         }
     elif (search_passwords(email, password) == False):
         raise InputError
         return {
             'u_id': 0,
-            'token': email + "invalid",
+            'token': email,
         }
+
+    data.data["users"][load_emails().index(email)]["authenticated"] = True
 
     return {
         'u_id': search_u_id(email),
@@ -119,13 +121,13 @@ def auth_login(email, password):
 
 def auth_logout(token):
     #tokens appened with "invalid" are not authenticated
-    if token[-7:] == "invalid":
+    if data.data["users"][token_index(token)]["authenticated"] == False:
         return {
             'is_success': False,
         }
     else:
         #deauthenticate token (token = token + "invalid")
-        data.data["users"][token_index(token)]["token"] = token + "invalid"
+        data.data["users"][token_index(token)]["authenticated"] = False
 
         return {
             'is_success': True,
@@ -141,25 +143,25 @@ def auth_register(email, password, name_first, name_last):
         raise InputError
         return {
             'u_id': 0,
-            'token': email + "invalid",
+            'token': emai,
         }
     elif (search_emails(email) and user_one == 0):
         raise InputError
         return {
             'u_id': 0,
-            'token': email + "invalid",
+            'token': email,
         }
     elif (check_password(password) == False):
         raise InputError
         return {
             'u_id': 0,
-            'token': email + "invalid",
+            'token': email,
         }
     elif (check_name(name_first, name_last) == False):
         raise InputError
         return {
             'u_id': 0,
-            'token': email + "invalid",
+            'token': email,
         }
 
     handle = name_first.lower() + name_last.lower()
@@ -172,13 +174,13 @@ def auth_register(email, password, name_first, name_last):
 
     if (user_one): #generate first user
         new_id = 1
-        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'owner': "owner"})
+        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'authenticated': True, 'owner': "owner"})
     else:
         if (search_handle(handle)):
             handle = handle + "1"
 
         new_id = max(load_ids()) + 1
-        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'owner': "user"})
+        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'authenticated': True, 'owner': "user"})
 
     return {
         'u_id': new_id, #next user_id
