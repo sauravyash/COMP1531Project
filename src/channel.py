@@ -94,9 +94,35 @@ def channel_leave(token, channel_id):
 
 def channel_join(token, channel_id):
 
+<<<<<<< HEAD
     return {
         
     }
+=======
+    u_id_index = 0
+    channel_id_index = 0
+    
+    try:  
+        channel_id_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError("Invalid channel ID")
+
+    # member in the channel already
+    for l in data.data['channels'][channel_id_index]['members']:
+        if u_id == l:
+            raise AccessError("Duplicate UserID")
+    channel =  data.data['channels'][channel_id_index]            
+
+    # append
+    user = data.resolve_token(token)
+    is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
+    if channel['is_public'] or is_owner == 'owner': 
+        channel['members'].append(u_id)
+
+ 
+    return {}
+
+>>>>>>> feature/channel_join
 
 def channel_addowner(token, channel_id, u_id):
     u_id_index = 0
