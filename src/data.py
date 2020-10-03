@@ -9,6 +9,7 @@ data = {
 
 # returns user id of given user token
 # Raises a LookupError if token is not found
+
 def resolve_token(token):
     for user in data['users']:
         if user['token'] == token and user['authenticated']:
@@ -76,3 +77,4 @@ data = {
     ]
 }
 '''
+
