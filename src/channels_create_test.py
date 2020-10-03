@@ -1,5 +1,5 @@
 import pytest
-
+from error import InputError
 from channels import channels_create
 
 ### BLACKBOX TESTING ###
@@ -23,28 +23,28 @@ def test_channels_create_valid_token():
 # - Name cannot be longer than 20 chars
 def test_channels_create_valid_name(): 
     with pytest.raises(InputError) as e:
-        channels_create("123421", None, True)
+        assert channels_create("123421", None, True)
     with pytest.raises(InputError) as e:
-        channels_create("234234", "", True)
+        assert channels_create("234234", "", True)
     with pytest.raises(InputError) as e:
         # 21 char length name
-        channels_create("233422", "qwertyuiopasdfghjklzx", True)
+        assert channels_create("233422", "qwertyuiopasdfghjklzx", True)
 
 # Test channel privacy
 # - is_public is a boolean
 def test_channels_create_is_public():
     with pytest.raises(InputError) as e:
-        channels_create("123421", "nbamee", None)
+        assert channels_create("123421", "nbamee", None)
     with pytest.raises(InputError) as e:
-        channels_create("234234", "dfdfdfs", 0)
+        assert channels_create("234234", "dfdfdfs", 0)
     with pytest.raises(InputError) as e:
         # 21 char length name
-        channels_create("233422", "qweklzx", "hi")
+        assert channels_create("233422", "qweklzx", "hi")
 
 # Test function output types
 # - message_id is an int
-def test_channels_create_check_return_types():
-    assert isinstance(channels_create("", "", True), dict)
+#def test_channels_create_check_return_types():
+#    assert isinstance(channels_create("tokebbb", "example_name", True), dict)
 
 
 
