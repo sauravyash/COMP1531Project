@@ -6,6 +6,7 @@ data = {
     'channels': []
 }
 
+
 # returns user id of given user token
 # Raises a LookupError if token is not found
 def resolve_token(token):
@@ -73,6 +74,7 @@ data = {
             ...
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     ],
     'tokens': [
@@ -84,6 +86,8 @@ data = {
             ...
         }
 >>>>>>> feature/data_store
+=======
+>>>>>>> feature/channels
     ]
 }
 '''
