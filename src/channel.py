@@ -36,7 +36,7 @@ def channel_details(token, channel_id):
     channel = data.data['channels'][channel_id_index]
     users = channel['admins'] + channel['members']
     
-    if data.resolve_token(token) not in users:
+    if data.resolve_token(token) not in users and channel["is_public"]:
         raise AccessError("Not a member of the specified channel")
     
     return channel
