@@ -168,19 +168,56 @@ def auth_register(email, password, name_first, name_last):
     if (len(handle) > 20):
         handle = handle[:20]
 
+    while search_handle(handle):
+        nums = []
+        for i in range(len(handle)):
+            if handle[i].isdigit():
+                nums.append(handle[i])
+        if nums == []:
+            user_num = 1
+        else:
+            handle = handle[:len(handle) - len(nums)]
+            user_num = int("".join(nums)) + 1
+
+        handle += str(user_num)
+
+        if len(handle) > 20:
+            handle = handle[:20 - len(str(user_num))]
+            handle += str(handle)
+
     #store password, handle, names
     #generate user id by incrementing largest user_id in database
     #store email, user_id
 
     if (user_one): #generate first user
         new_id = 1
-        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'authenticated': True, 'owner': "owner"})
+        data.data.get("users").append({
+            'id': new_id,
+            'name_first': name_first,
+            'name_last': name_last,
+            'email': email,
+            'password': password,
+            'handle': handle,
+            'token': email,
+            'authenticated': True,
+            'owner': "owner"
+        })
     else:
-        if (search_handle(handle)):
-            handle = handle + "1"
+        #if (search_handle(handle)):
+        #    handle = handle + "1"
 
         new_id = max(load_ids()) + 1
-        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'authenticated': True, 'owner': "user"})
+        data.data.get("users").append({
+            'id': new_id,
+            'name_first': name_first,
+            'name_last': name_last,
+            'email': email,
+            'password': password,
+            'handle': handle,
+            'token': email,
+            'authenticated': True,
+            'owner': "user"
+        })
 
     return {
         'u_id': new_id, #next user_id
