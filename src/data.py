@@ -35,7 +35,8 @@ def resolve_channel_id_index(channel_id):
 def resolve_message_id_index(channel_id, user_id):
     pass
 
-
+def print_data():
+    print(data)
 
 '''
 EXAMPLE
