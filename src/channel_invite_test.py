@@ -1,5 +1,5 @@
 #######################################Channel Invite Tests#############################
-from channel_invite import channel_invite
+from channel import channel_invite
 from error import InputError
 from error import AccessError
 import pytest
