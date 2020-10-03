@@ -5,7 +5,7 @@ from error import InputError
 import pytest
 # Success removeowner
 def test_removeowner():
-    channel_removeowner("VALID token", 6, 6)
+    assert channel_removeowner("VALID token", 6, 6) == {}
 
 # Fail Removeowner
 def test_removeowner_invalid_token():
