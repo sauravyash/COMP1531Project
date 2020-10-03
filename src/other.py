@@ -1,7 +1,8 @@
+import data
 
 # Clears original data structure...
 def clear():    
-    data = {
+    data.data = {
         'users': [],
         'channels': []
     }
