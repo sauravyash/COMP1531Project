@@ -25,7 +25,7 @@ def check_name(name_first, name_last):
 # Loads all emails from database into emails_list
 def load_emails():
     email_list = []
-    for i in range(0, len(data.data.get("users"))):
+    for i in range(len(data.data.get("users"))):
         email_list.append(data.data.get("users")[i].get("email"))
 
     return email_list
@@ -33,14 +33,14 @@ def load_emails():
 # Loads all user_ids from database into id_list
 def load_ids():
     id_list = []
-    for i in range(0, len(data.data.get("users"))):
+    for i in range(len(data.data.get("users"))):
         id_list.append(data.data.get("users")[i].get("id"))
 
     return id_list
 
 def token_index(token):
     token_list = []
-    for i in range(0, len(data.data.get("users"))):
+    for i in range(len(data.data.get("users"))):
         token_list.append(data.data.get("users")[i].get("token"))
 
     return token_list.index(token)
@@ -54,7 +54,7 @@ def search_emails(email):
 # Returns user_id with respect to the email (false if not found)
 def search_u_id(email):
     id_list = []
-    for i in range(0, len(data.data.get("users"))):
+    for i in range(len(data.data.get("users"))):
         id_list.append(data.data.get("users")[i].get("id"))
 
     return id_list[load_emails().index(email)]
@@ -62,7 +62,7 @@ def search_u_id(email):
 # Returns password with respect to the email (false if not found)
 def search_passwords(email, password):
     password_list = []
-    for i in range(0, len(data.data.get("users"))):
+    for i in range(len(data.data.get("users"))):
         password_list.append(data.data.get("users")[i].get("password"))
 
     if password_list[load_emails().index(email)] == password:
@@ -71,13 +71,13 @@ def search_passwords(email, password):
 
 def load_tokens(token):
     token_list = []
-    for i in range(0, len(data.data.get("users"))):
+    for i in range(len(data.data.get("users"))):
         token_list.append(data.data.get("users")[i].get("token"))
 
 # Searches list of all stored handles and checks if handle has been found
 def search_handle(handle):
     handle_list = []
-    for i in range(0, len(data.data.get("users"))):
+    for i in range(len(data.data.get("users"))):
         handle_list.append(data.data.get("users")[i].get("handle"))
 
     if handle in handle_list:
@@ -120,13 +120,12 @@ def auth_login(email, password):
     }
 
 def auth_logout(token):
-    #tokens appened with "invalid" are not authenticated
     if data.data["users"][token_index(token)]["authenticated"] == False:
         return {
             'is_success': False,
         }
     else:
-        #deauthenticate token (token = token + "invalid")
+        #deauthenticate token
         data.data["users"][token_index(token)]["authenticated"] = False
 
         return {
@@ -174,13 +173,33 @@ def auth_register(email, password, name_first, name_last):
 
     if (user_one): #generate first user
         new_id = 1
-        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'authenticated': True, 'owner': "owner"})
+        data.data.get("users").append({
+            'id': new_id,
+            'name_first': name_first,
+            'name_last': name_last,
+            'email': email,
+            'password': password,
+            'handle': handle,
+            'token': email,
+            'authenticated': True,
+            'owner': "owner"
+        })
     else:
         if (search_handle(handle)):
             handle = handle + "1"
 
         new_id = max(load_ids()) + 1
-        data.data.get("users").append({'id': new_id, 'name_first': name_first, 'name_last': name_last, 'email': email, 'password': password, 'handle': handle, 'token': email, 'authenticated': True, 'owner': "user"})
+        data.data.get("users").append({
+            'id': new_id,
+            'name_first': name_first,
+            'name_last': name_last,
+            'email': email,
+            'password': password,
+            'handle': handle,
+            'token': email,
+            'authenticated': True,
+            'owner': "user"
+        })
 
     return {
         'u_id': new_id, #next user_id
