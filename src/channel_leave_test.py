@@ -5,7 +5,7 @@ from error import AccessError
 import pytest
 # Success Leave
 def test_leave_success():
-    channel_leave("VALID token", 1)
+    assert channel_leave("VALID token", 1) == {}
 
 # Fail Leave
 def test_leave_invalid_token():
