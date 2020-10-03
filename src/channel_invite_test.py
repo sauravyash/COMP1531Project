@@ -6,7 +6,7 @@ import pytest
 
 # Success Invite
 def test_valid_invite():
-    channel_invite("VALID token5", 1, 5)
+   assert channel_invite("VALID token5", 1, 5) == {}
 
 # Fail Invite
 def test_invite_invalid_token():
