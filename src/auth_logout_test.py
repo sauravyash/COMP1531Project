@@ -10,7 +10,7 @@ def test_logout():
     assert(auth.auth_logout(result["token"])["is_success"] == True)
 
 #Unsuccesful logouts
-def test_alreadyloggedout():
+def test_already_logged_out():
     other.clear()
     result = auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
     auth.auth_login('validemail@gmail.com', 'validpassword')
