@@ -141,6 +141,16 @@ def channel_addowner(token, channel_id, u_id):
     except LookupError:
         raise InputError("Invalid user ID")
 
+    # user id from token
+    user = data.resolve_token(token)
+    is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
+    if is_owner != 'owner':
+        raise AccessError("Not an owner of the specified channel")
+
+    # user id from parameter
+    is_owner = data.data['users'][data.resolve_user_id_index(u_id)]['owner'] 
+    if is_owner == 'owner':
+        raise AccessError("Target user already an owner of the channel")
 
     data.data['channels'][channel_id_index]['admins'].append(u_id)
 
