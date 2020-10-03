@@ -1,9 +1,11 @@
 # This file contains the appliation state data that is shared by the entire program
+
 global data
 data = {
     'users': [],
     'channels': []
 }
+
 
 # returns user id of given user token
 # Raises a LookupError if token is not found
@@ -71,15 +73,6 @@ data = {
             'name' : 'channel2',
             ...
         },
-    ],
-    'tokens': [
-        {
-            'user_id': "mbr1",
-            'token': "1234"
-        },
-        {
-            ...
-        }
     ]
 }
 '''
