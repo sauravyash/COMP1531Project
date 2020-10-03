@@ -1,16 +1,9 @@
 # This file contains the appliation state data that is shared by the entire program
-<<<<<<< HEAD
 
 global data
 data = {
     'users': [],
-    'channels': [],
-=======
-global data
-data = {
-    'users': [],
     'channels': []
->>>>>>> feature/data_store
 }
 
 # returns user id of given user token
