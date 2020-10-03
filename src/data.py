@@ -1,9 +1,9 @@
 # This file contains the appliation state data that is shared by the entire program
 
+global data
 data = {
     'users': [],
     'channels': [],
-    'tokens': []
 }
 
 '''
@@ -39,15 +39,6 @@ data = {
             'name' : 'channel2',
             ...
         },
-    ],
-    'tokens': [
-        {
-            'user_id': "mbr1",
-            'token': "1234"
-        },
-        {
-            ...
-        }
     ]
 }
 '''

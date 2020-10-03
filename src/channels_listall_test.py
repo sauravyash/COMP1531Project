@@ -2,8 +2,7 @@ import pytest
 
 import channels
 import auth
-# from data file import global dictionary - for when we merge and implement
-
+from other import clear
 
 ### BLACKBOX TESTING ###
 
@@ -11,9 +10,9 @@ import auth
 # - channel_id is an int
 # - name is a string
 def test_channels_create_check_return_types():
-    assert isinstance(channels_listall(""), list)
+    assert isinstance(channels.channels_listall(""), list)
     
-    for dictionary in channels_listall(""):
+    for dictionary in channels.channels_listall(""):
         assert isinstance(dictionary, dict)
     
     # Testing for when other functions are implemented...
@@ -23,7 +22,7 @@ def test_channels_create_check_return_types():
     token = auth.auth_login('validemail@gmail.com', '123abc!@#')
     channel_1 = channels.channels_create(token, 'Hola_Seniora', True)
     
-    for dictionary in channels_listall(token):
+    for dictionary in channels.channels_listall(token):
         assert isinstance(channel_1, int)
         assert isinstance(dictionary[channel_1], str)
     
@@ -32,7 +31,7 @@ def test_channels_create_check_return_types():
 
 # Test empty list (no channels)
 def test_channels_listall_empty_list():
-    assert channels_listall("") == [{}]
+    assert channels.channels_listall("") == []
 
 # Test list of many channels (for when we implement other functions)
 '''
