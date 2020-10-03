@@ -9,10 +9,10 @@ import auth
 # Test function output types
 # - channel_id is an int
 # - name is a string
-def test_channels_create_check_return_types():
-    assert isinstance(channels_listall(""), list)
+def test_channels_list_check_return_types():
+    assert isinstance(channels.channels_list(""), list)
     
-    for dictionary in channels_listall(""):
+    for dictionary in channels.channels_list(""):
         assert isinstance(dictionary, dict)
     
     # Testing for when other functions are implemented...
@@ -30,8 +30,8 @@ def test_channels_create_check_return_types():
     '''
 
 # Test empty list (no channels)
-def test_channels_listall_empty_list():
-    assert channels_listall("") == [{}]
+def test_channels_list_empty_list():
+    assert channels.channels_list("") == []
 
 # Test list of many channels (for when we implement other functions)
 '''
@@ -43,7 +43,7 @@ def test_channels_list_public_only():
     channel_2 = channels.channels_create(token, 'ILoveIcecream', True)
     
     (Only public)
-    assert channels.channels_listall(token) == [{channel_1: 'Hola_Seniora'},
+    assert channels.channels_list(token) == [{channel_1: 'Hola_Seniora'},
     {channel_2: 'ILoveIcecream'}]
     
     # Clear data
