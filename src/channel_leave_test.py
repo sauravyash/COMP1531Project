@@ -1,5 +1,5 @@
 ###########################################Channel Leave Tests##################################
-from channel_leave import channel_leave
+from channel import channel_leave
 from error import InputError
 from error import AccessError
 import pytest
