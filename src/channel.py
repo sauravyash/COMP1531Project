@@ -1,6 +1,6 @@
 import data
-from error import InputError
 from error import AccessError
+from error import InputError
 def channel_invite(token, channel_id, u_id):
        # use i instead cid to avoid confusion
     # channels -> first key -> id in the first key
@@ -110,5 +110,23 @@ def channel_addowner(token, channel_id, u_id):
     }
 
 def channel_removeowner(token, channel_id, u_id):
+    u_id_index = 0
+    channel_id_index = 0
+    
+    # channel
+    try:         
+        channel_id_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError("Invalid channel ID")
+
+    # user
+    try:
+        u_id_index = data.resolve_user_id_index(u_id)
+    except LookupError:
+        raise InputError("Invalid user ID")
+
+
+    data.data['channels'][channel_id_index]['admins'].remove(u_id)
+
     return {
     }
