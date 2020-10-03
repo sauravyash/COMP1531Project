@@ -116,36 +116,3 @@ def test_invalid_private_user_id():
 
     with pytest.raises(InputError) as e:
         channel_invite(result1["token"], channel_id["channel_id"], -1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-# Fail Invite
-def test_invite_invalid_token():
-    with pytest.raises(InputError) as e:
-        channel_invite("INVALID token", 1, 1)
-
-def test_invite_invalid_chID():
-    with pytest.raises(InputError) as e:
-        channel_invite("VALID token", "INVALID chID", 1)
-
-def test_invite_invalid_uID():
-    with pytest.raises(InputError) as e:
-        channel_invite("VALID token", "1", "INVALID uID")
-
-def test_invite_joined_uID():
-    with pytest.raises(AccessError) as e:
-        channel_invite("VALID token", 1, 1)
-'''
