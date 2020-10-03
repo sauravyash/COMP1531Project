@@ -20,7 +20,6 @@ def channels_listall(token):
             {
                 'channel_id': channel['id'],  
                 'name': channel['name'],
-                
             })   
     
     return new_list
