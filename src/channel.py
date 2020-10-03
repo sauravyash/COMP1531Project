@@ -8,18 +8,14 @@ def channel_invite(token, channel_id, u_id):
     u_id_index = 0
     channel_id_index = 0
     
-    try: 
-        
+    try:  
         channel_id_index = data.resolve_channel_id_index(channel_id)
-       
-
     except LookupError:
         raise InputError("Invalid channel ID")
 
     # user
     try:
         u_id_index = data.resolve_user_id_index(u_id)
-
     except LookupError:
         raise InputError("Invalid user ID")
 
@@ -35,23 +31,16 @@ def channel_invite(token, channel_id, u_id):
     return {}
 
 def channel_details(token, channel_id):
-    return {
-        'name': 'Hayden',
-        'owner_members': [
-            {
-                'u_id': 1,
-                'name_first': 'Hayden',
-                'name_last': 'Jacobs',
-            }
-        ],
-        'all_members': [
-            {
-                'u_id': 1,
-                'name_first': 'Hayden',
-                'name_last': 'Jacobs',
-            }
-        ],
-    }
+    channel_id_index = data.resolve_channel_id_index(channel_id)
+    
+    channel = data.data['channels'][channel_id_index]
+    users = channel['admins'] + channel['members']
+    
+    if data.resolve_token(token) not in users:
+        raise AccessError("Not a member of the specified channel")
+    
+    return channel
+
 
 def channel_messages(token, channel_id, start):
     return {

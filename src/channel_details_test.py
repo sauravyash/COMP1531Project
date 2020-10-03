@@ -1,5 +1,5 @@
 ###########################################Channel Deatil Tests################################
-from channel import channel_detail
+from channel import channel_details
 import pytest
 # Success Showing Detail
 def test_valid_detail():
