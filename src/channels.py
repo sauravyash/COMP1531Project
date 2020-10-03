@@ -12,6 +12,7 @@ def channels_list(token):
 
 def channels_listall(token):
     # Check if token exists...
+    assert(data.resolve_token(token))
     
     new_list = []
     
