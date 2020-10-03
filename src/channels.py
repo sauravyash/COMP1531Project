@@ -1,26 +1,6 @@
 import data
 from error import InputError
 
-def channels_list(token):
-    return {
-        'channels': [
-        	{
-        		'channel_id': 1,
-        		'name': 'My Channel',
-        	}
-        ],
-    }
-
-def channels_listall(token):
-    return {
-        'channels': [
-        	{
-        		'channel_id': 1,
-        		'name': 'My Channel',
-        	}
-        ],
-    }
-
 def channels_create(token, name, is_public):
     if not isinstance(token, str) or len(token) < 1:
         raise InputError("Invalid Token")
