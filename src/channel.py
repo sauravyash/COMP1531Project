@@ -31,11 +31,14 @@ def channel_invite(token, channel_id, u_id):
     return {}
 
 def channel_details(token, channel_id):
-    channel_id_index = data.resolve_channel_id_index(channel_id)
+    try:
+        channel_id_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError("Invalid channel ID")
 
     channel = data.data['channels'][channel_id_index]
     users = channel['admins'] + channel['members']
-    
+
     if not isinstance(channel_id, int) or channel_id < 0:
         raise InputError("Channel ID is not valid")
 
