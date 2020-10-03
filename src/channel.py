@@ -2,9 +2,6 @@ import data
 from error import AccessError
 from error import InputError
 def channel_invite(token, channel_id, u_id):
-       # use i instead cid to avoid confusion
-    # channels -> first key -> id in the first key
-    # channel
     u_id_index = 0
     channel_id_index = 0
 
@@ -172,6 +169,19 @@ def channel_removeowner(token, channel_id, u_id):
         u_id_index = data.resolve_user_id_index(u_id)
     except LookupError:
         raise InputError("Invalid user ID")
+
+    # user id from parameter
+    # remove a member that is not owner
+    is_owner = data.data['users'][data.resolve_user_id_index(u_id)]['owner'] 
+    if is_owner != 'owner':
+        raise InputError("Target user already an owner of the channel")
+
+    # user id from token
+    # remove not from owner
+    user = data.resolve_token(token)
+    is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
+    if is_owner != 'owner':
+        raise AccessError("Not an owner of the specified channel")
 
 
     data.data['channels'][channel_id_index]['admins'].remove(u_id)
