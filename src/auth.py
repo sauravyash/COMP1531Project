@@ -206,9 +206,6 @@ def auth_register(email, password, name_first, name_last):
             'owner': "owner"
         })
     else:
-        #if (search_handle(handle)):
-        #    handle = handle + "1"
-
         new_id = max(load_ids()) + 1
         data.data.get("users").append({
             'id': new_id,
