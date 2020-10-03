@@ -146,7 +146,7 @@ def auth_register(email, password, name_first, name_last):
         raise InputError
         return {
             'u_id': 0,
-            'token': emai,
+            'token': email,
         }
     elif (search_emails(email) and user_one == 0):
         raise InputError
