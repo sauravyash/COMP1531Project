@@ -3,7 +3,8 @@ import pytest
 import data
 import channels
 import auth
-# from data file import global dictionary - for when we merge and implement
+
+from other import clear
 
 ### BLACKBOX TESTING ###
 
@@ -11,47 +12,53 @@ import auth
 # - channel_id is an int
 # - name is a string
 def test_channels_list_check_return_types():
-    assert isinstance(channels.channels_list(""), list)
+    # Clear existing data...
+    clear()
     
-    for dictionary in channels.channels_list(""):
+    assert isinstance(channels.channels_listall(""), list)
+    
+    for dictionary in channels.channels_listall(""):
         assert isinstance(dictionary, dict)
-    
-    # Testing for when other functions are implemented...
-    '''   
+     
     # Set up user and create channel...
     auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token = auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channel_1 = channels.channels_create(token, 'Hola_Seniora', True)
+    token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
+    channel_1 = channels.channels_create(token_dict['token'], 'Hola_Seniora', True)
     
-    for dictionary in channels_list(token):
+    for dictionary in channels.channels_list(token_dict['token']):
         assert isinstance(dictionary['channel_id'], int)
         assert isinstance(dictionary['name'], str)
-    
-    clear()
-    '''
+
 
 # Test empty list (no channels)
 def test_channels_list_empty_list():
+    # Clear existing data...
+    clear()
+    
     assert channels.channels_list("") == []
 
+
 # Test list of many channels (for when we implement other functions)
-'''
 def test_channels_list_public_only():
+    # Clear existing data...
+    clear()
+    
     # Set up user and create a channel...
     auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token = auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channel_1 = channels.channels_create(token, 'Hola_Seniora', True)
-    channel_2 = channels.channels_create(token, 'ILoveIcecream', True)
+    token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
+    channel_1 = channels.channels_create(token_dict['token'], 'Hola_Seniora', True)
+    channel_2 = channels.channels_create(token_dict['token'], 'ILoveIcecream', True)
     
-    (Only public)
-    assert channels.channels_list(token) == 
-        [{'channel_id': channel_1, 'name': 'Hola_Seniora'},
-        {'channel_id': channel_2, 'name': 'ILoveIcecream'}]
-    
-    # Clear data
-    clear()
+    # (Only public)
+    assert channels.channels_list(token_dict['token']) == [
+    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'}, 
+    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'}]
+
 
 def test_channels_list_public_private():    
+    # Clear data
+    clear()
+    
     # Set up 3 users and create multiple channels...
     auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
     auth.auth_login('validemail@gmail.com', '123abc!@#')
@@ -62,24 +69,25 @@ def test_channels_list_public_private():
     auth.auth_register('validemail2@gmail.com', '1234abc!@#', 'Jess', 'Apples')
     token_2 = auth.auth_login('validemail2@gmail.com', '1234abc!@#')
     
-    channel_1 = channels.channels_create(token_1, 'Hola_Seniora', True)
-    channel_2 = channels.channels_create(token_2, 'ILoveIcecream', True)
-    channel_3 = channels.channels_create(token_1, 'ImAnEngineer', False)
-    channel_4 = channels.channels_create(token_2, 'HugsOnly', False)
+    channel_1 = channels.channels_create(token_1['token'], 'Hola_Seniora', True)
+    channel_2 = channels.channels_create(token_2['token'], 'ILoveIcecream', True)
+    channel_3 = channels.channels_create(token_1['token'], 'ImAnEngineer', False)
+    channel_4 = channels.channels_create(token_2['token'], 'HugsOnly', False)
     
-    (Public & private)
-    assert channels.channels_list(token_1) == 
-    [{'channel_id': channel_1, 'name': 'Hola_Seniora'}, 
-    {'channel_id': channel_3, 'name': 'ImAnEngineer'}]
+    # (Public & private)
+    assert channels.channels_list(token_1['token']) == [
+    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'}, 
+    {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'}]
     
-    assert channels.channels_list(token_2) == 
-    [{'channel_id': channel_2, 'name': 'ILoveIcecream'}, 
-    {'channel_id': channel_4, 'name': 'HugsOnly'}]
-    
-    # Clear data
-    clear()
+    assert channels.channels_list(token_2['token']) == [
+    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'}, 
+    {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}]
+
 
 def test_channels_list_owner_priv():    
+    # Clear data
+    clear()
+    
     # Set up 3 users (including owner) and create multiple channels...
     auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
     token_owner = auth.auth_login('validemail@gmail.com', '123abc!@#')
@@ -90,28 +98,24 @@ def test_channels_list_owner_priv():
     auth.auth_register('validemail2@gmail.com', '1234abc!@#', 'Jess', 'Apples')
     token_2 = auth.auth_login('validemail2@gmail.com', '1234abc!@#')
     
-    channel_1 = channels.channels_create(token_1, 'Hola_Seniora', True)
-    channel_2 = channels.channels_create(token_2, 'ILoveIcecream', True)
-    channel_3 = channels.channels_create(token_1, 'ImAnEngineer', False)
-    channel_4 = channels.channels_create(token_2, 'HugsOnly', False)
+    channel_1 = channels.channels_create(token_1['token'], 'Hola_Seniora', True)
+    channel_2 = channels.channels_create(token_2['token'], 'ILoveIcecream', True)
+    channel_3 = channels.channels_create(token_1['token'], 'ImAnEngineer', False)
+    channel_4 = channels.channels_create(token_2['token'], 'HugsOnly', False)
     
-    (Public & private)
-    assert channels.channels_list(token_owner) ==
-    [{'channel_id': channel_1, 'name': 'Hola_Seniora'},
-    {'channel_id': channel_2, 'name': 'ILoveIcecream'}, 
-    {'channel_id': channel_3, 'name': 'ImAnEngineer'}, 
-    {'channel_id': channel_4, 'name': 'HugsOnly'}]
+    # (owner vs member of Flockr)
+    assert channels.channels_list(token_owner['token']) == [
+    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
+    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'}, 
+    {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'}, 
+    {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}]
     
-    assert channels.channels_list(token_1) == 
-    [{'channel_id': channel_1, 'name': 'Hola_Seniora'}, 
-    {'channel_id': channel_3, 'name': 'ImAnEngineer'}]
+    assert channels.channels_list(token_1['token']) == [
+    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'}, 
+    {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'}]
     
-    assert channels.channels_list(token_2) == 
-    [{'channel_id': channel_2, 'name': 'ILoveIcecream'}, 
-    {'channel_id': channel_4, 'name': 'HugsOnly'}]
-    
-    # Clear data
-    clear()
+    assert channels.channels_list(token_2['token']) == [
+    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'}, 
+    {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}]
 
-'''
 

@@ -3,31 +3,33 @@ import data
 from error import InputError
 
 def channels_list(token):
+    
+    new_list = []
+    
     try:
-        new_list = []
-        
         # Find user_id by token...
         user_id = data.resolve_token(token)
-        
-        # Flockr owner can see all channels...
-        for user in data.data['users']:
-            if user['owner'] == 'owner' and user['id'] == user_id:
-                channels_listall(token)           
-        
-        # Otherwise, only the channels they are a member of...
-        for channel in data.data['channels']:
-            for member in channel['members']:
-                if u_id == member:
-                    new_list.append({channel['id']: channel['name']})    
-            for owner in channel['owners']:
-                if u_id == owner:
-                    new_list.append({channel['id'], channel['name']})
-        
+    except:
+        print("Something is not right...")
         return new_list
     
-    # If token is invalid or empty..
-    except:
-        return []
+    # Flockr owner can see all channels...
+    for user in data.data['users']:
+        if user['owner'] == 'owner' and user['id'] == user_id:
+            return channels_listall(token)           
+    
+    # Otherwise, only the channels they are a member of...
+    for channel in data.data['channels']:
+        for member in channel['members']:
+            if user_id == member:
+                new_list.append(
+                    {'channel_id': channel['id'], 'name': channel['name']})    
+        for admin in channel['admins']:
+            if user_id == admin:
+                new_list.append(
+                    {'channel_id': channel['id'], 'name': channel['name']})
+    
+    return new_list
 
 
 def channels_listall(token):
