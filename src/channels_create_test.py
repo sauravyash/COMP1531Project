@@ -21,7 +21,7 @@ def test_channels_create_valid_token():
 # - Name must be a string
 # - Name cannot be an empty String
 # - Name cannot be longer than 20 chars
-def test_channels_create_valid_name(): 
+def test_channels_create_valid_name():
     with pytest.raises(InputError) as e:
         assert channels_create("123421", None, True)
     with pytest.raises(InputError) as e:
@@ -41,12 +41,12 @@ def test_channels_create_is_public():
         # 21 char length name
         assert channels_create("233422", "qweklzx", "hi")
 
+# Test if passing with valid parameters
+def test_channels_create_valid_all():
+    assert channels_create("validemail@gmail.com", "channel_1", True)
+    assert channels_create("validemail@gmail.com", "channel_2", False)
+
 # Test function output types
 # - message_id is an int
 #def test_channels_create_check_return_types():
 #    assert isinstance(channels_create("tokebbb", "example_name", True), dict)
-
-
-
-
-
