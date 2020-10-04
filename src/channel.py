@@ -118,7 +118,9 @@ def channel_join(token, channel_id):
     user = data.resolve_token(token)
     is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
     if channel['is_public'] or is_owner == 'owner':
-        channel['members'].append(u_id)
+        channel['members'].append(user)
+    else:
+        raise AccessError("Not authorized")
 
     return {}
 
