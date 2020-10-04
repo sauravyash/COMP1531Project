@@ -50,10 +50,12 @@ def channel_details(token, channel_id):
 
 
 def channel_messages(token, channel_id, start):
+    if start < 0:
+        raise InputError("Start out of bounds")
     try:
         channel_id_index = data.resolve_channel_id_index(channel_id)
     except LookupError as e:
-        raise InputError(e.message)
+        raise InputError("Channel not found")
 
     channel = data.data['channels'][channel_id_index]
     users = channel['admins'] + channel['members']
