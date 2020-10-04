@@ -5,40 +5,45 @@
 ### Channel Invite
 - Channel ID must be valid
 - User ID must be valid
+- Token be from a member of the channel. 
 - User ID not in the channel
-- Token needs to be unique and valid (Token can only be used once)
+- Token needs to be unique and valid. 
 - Only Channel member can invite
-- One invite per member
+- Cannot join private if not authorised. 
 
 ### Channel details
 - Channel ID is valid and unique
-- Token ID is valid and unique
-- Keep track on the number of members
+- Token ID needs to come from a channel member.
 
 ### Channel messages
 - Channel ID needs to be valid
 - Keep track on the latest 50 messages
 - Valid User ID
+- As the messages componenent hasn't been implemented in iteration 1, Channel_messages
+will return a empty dictionary.
 
 ### Channel_leave
-- Channel member minus   
+- There is one less member in members list.   
 -  Valid User ID
 - Channel ID needs to be valid
+- Must come from a channel member. 
 
 ### Channel_join  
-- Channel member add 1
+- There is one more member in members list. 
 - Valid User ID
 - Channel ID needs to be valid
+- Cannot join private if not authorised. 
 
 ### Channel_addowner
 - Valid User ID
 - Channel ID needs to be valid
 - Must from Owner ID
-- Channel can have one owner
+- Must be a channel member. 
 
 ### Channel_removeowner
-- Must from Owner ID
-- RNG u_ID becomes owner
+- Must come from Owner ID
+- The removing user must be owner. 
+- Must be on the same channel.
 
 
 ## Channels Assumptions
@@ -77,6 +82,7 @@
 
 ### For auth_register:
  - Valid token generated (unique)
+ - Token is user email for iteration 1.
  - Valid first name (input)
  - Valid last name (input)
  - Valid email address (input)
@@ -85,10 +91,11 @@
  - Input error if first name is empty or > 50 characters
  - Input error if last name is empty or > 50 characters
  - Input error if invalid email address
- - Input error if password < 6 characters
+ - Input error if password < 6 characters, or if empty. 
 
 ### For auth_login:
  - Valid token generated (unique)
+ - Token is user email for iteration 1.
  - Valid first name
  - Valid last name
  - Valid email address (input)
