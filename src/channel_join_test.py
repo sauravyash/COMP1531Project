@@ -1,5 +1,5 @@
 ############################################Channel Join Tests###################################
-#from channel import channel_invite
+from channel import channel_invite
 from channel import channel_join
 from error import InputError
 from error import AccessError
@@ -17,6 +17,7 @@ def test_valid_join_public_owner():
     result1 = auth.auth_login("validemail1@gmail.com", "password123")
 
     channel_id = channels.channels_create(result["token"], "channel_1", True)
+
     assert channel_join(result["token"], channel_id["channel_id"]) == {}
 
 def test_valid_join_public_memeber():
@@ -28,6 +29,7 @@ def test_valid_join_public_memeber():
     result1 = auth.auth_login("validemail1@gmail.com", "password123")
 
     channel_id = channels.channels_create(result["token"], "channel_1", True)
+
     assert channel_join(result1["token"], channel_id["channel_id"]) == {}
 
 
@@ -50,7 +52,7 @@ def test_invalid_public_channel_id():
     result1 = auth.auth_login("validemail1@gmail.com", "password123")
 
     channel_id = channels.channels_create(result["token"], "channel_1", True)
-
+    channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
     with pytest.raises(InputError) as e:
         channel_join(result1["token"], -1)
 
@@ -63,7 +65,7 @@ def test_invalid_private_channel_id():
     result1 = auth.auth_login("validemail1@gmail.com", "password123")
 
     channel_id = channels.channels_create(result["token"], "channel_1", False)
-
+    channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
     with pytest.raises(InputError) as e:
         channel_join(result1["token"], -1)
 
@@ -76,5 +78,6 @@ def test_invalid_join_not_authorized():
     result1 = auth.auth_login("validemail1@gmail.com", "password123")
 
     channel_id = channels.channels_create(result["token"], "channel_1", False)
+    channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])   
     with pytest.raises(AccessError) as e:
         channel_join(result1["token"], channel_id["channel_id"])

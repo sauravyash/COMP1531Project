@@ -79,10 +79,7 @@ def channel_leave(token, channel_id):
     channel_id_index = 0
     u_id = 0
     try:
-
         channel_id_index = data.resolve_channel_id_index(channel_id)
-
-
     except LookupError:
         raise InputError("Invalid channel ID")
 
@@ -90,12 +87,14 @@ def channel_leave(token, channel_id):
     try:
         u_id = data.resolve_token(token)
         u_id_index = data.resolve_user_id_index(u_id)
-
     except LookupError:
         raise InputError("Invalid token")
 
     # remove
-    data.data['channels'][channel_id_index]['members'].remove(u_id)
+    if u_id in data.data['channels'][channel_id_index]['members']:
+        data.data['channels'][channel_id_index]['members'].remove(u_id)
+    else:
+        raise AccessError("User not in a member")
 
     return {}
 
@@ -107,6 +106,8 @@ def channel_join(token, channel_id):
         channel_id_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
+
+    u_id = data.resolve_token(token)
 
     # member in the channel already
     for l in data.data['channels'][channel_id_index]['members']:
