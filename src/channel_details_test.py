@@ -52,7 +52,7 @@ def test_invalid_details_not_member():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(AccessError) as e:
+    with pytest.raises(AccessError):
         channel_details(result2["token"], channel_id["channel_id"])
 
 def test_invalid_details_channel_id_public():
@@ -67,7 +67,7 @@ def test_invalid_details_channel_id_public():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_details(result1["token"], -1)
 
 def test_invalid_details_channel_id_private():
@@ -82,5 +82,5 @@ def test_invalid_details_channel_id_private():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_details(result1["token"], -1)

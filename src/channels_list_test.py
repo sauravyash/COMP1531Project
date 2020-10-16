@@ -23,7 +23,7 @@ def test_channels_list_check_return_types():
     # Set up user and create channel...
     auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
     token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channel_1 = channels.channels_create(token_dict['token'], 'Hola_Seniora', True)
+    channels.channels_create(token_dict['token'], 'Hola_Seniora', True)
     
     for dictionary in channels.channels_list(token_dict['token']):
         assert isinstance(dictionary['channel_id'], int)

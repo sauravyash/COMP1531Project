@@ -4,7 +4,7 @@ from error import InputError
 
 #NOT MINE, from spec sheet
 def check_email(email):
-    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' #NOT MINE, from spec sheet
+    regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' #NOT MINE, from spec sheet
 
     if (re.search(regex, email)):
         return True
@@ -87,33 +87,13 @@ def search_handle(handle):
         return True
     return False
 
-
-
-
-
-
-
-
-
 def auth_login(email, password):
     if (check_email(email) == False):
         raise InputError
-        return {
-            'u_id': 0,
-            'token': email,
-        }
     elif (search_emails(email) == False):
         raise InputError
-        return {
-            'u_id': 0,
-            'token': email,
-        }
     elif (search_passwords(email, password) == False):
         raise InputError
-        return {
-            'u_id': 0,
-            'token': email,
-        }
 
     data.data["users"][load_emails().index(email)]["authenticated"] = True
 
@@ -142,31 +122,16 @@ def auth_register(email, password, name_first, name_last):
         user_one = 1
 
     if (check_email(email) == False):
-        raise InputError
-        return {
-            'u_id': 0,
-            'token': email,
-        }
+        raise InputError 
     elif (search_emails(email) and user_one == 0):
         raise InputError
-        return {
-            'u_id': 0,
-            'token': email,
-        }
     elif (check_password(password) == False):
         raise InputError
-        return {
-            'u_id': 0,
-            'token': email,
-        }
     elif (check_name(name_first, name_last) == False):
         raise InputError
-        return {
-            'u_id': 0,
-            'token': email,
-        }
 
     handle = name_first.lower() + name_last.lower()
+    
     if (len(handle) > 20):
         handle = handle[:20]
 

@@ -35,7 +35,7 @@ def test_invalid_addowner_channel_ID():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_addowner(result["token"], -1, result1["u_id"])
 
 def test_invalid_addowner_user_ID():
@@ -50,7 +50,7 @@ def test_invalid_addowner_user_ID():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_addowner(result1["token"], channel_id["channel_id"], -1)
 
 def test_invalid_addowner_is_already_owner():
@@ -61,7 +61,7 @@ def test_invalid_addowner_is_already_owner():
     channel_id = channels.channels_create(result["token"], "channel_1", True)
 
     # owner trying to add itself as owner
-    with pytest.raises(AccessError) as e:
+    with pytest.raises(AccessError):
         channel_addowner(result["token"], channel_id['channel_id'], result["u_id"])
 
 def test_invalid_addowner_not_authorized():
@@ -79,5 +79,5 @@ def test_invalid_addowner_not_authorized():
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
     # member trying to addowner
-    with pytest.raises(AccessError) as e:
+    with pytest.raises(AccessError):
         channel_addowner(result1["token"], channel_id['channel_id'], result["u_id"])

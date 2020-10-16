@@ -39,7 +39,7 @@ def test_invalid_channel_messages_ID():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_messages(result1["token"], -1, 0)
 
 def test_invalid_channel_messages_start():
@@ -54,7 +54,7 @@ def test_invalid_channel_messages_start():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_messages(result1["token"], channel_id["channel_id"], -1)
 
 def test_invalid_channel_messages_authorised():
@@ -67,5 +67,5 @@ def test_invalid_channel_messages_authorised():
 
     channel_id = channels.channels_create(result["token"], "channel_1", False)
 
-    with pytest.raises(AccessError) as e:
+    with pytest.raises(AccessError):
         channel_messages(result1["token"], channel_id["channel_id"], 0)
