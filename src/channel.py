@@ -1,8 +1,9 @@
 import data
 from error import AccessError
 from error import InputError
+
 def channel_invite(token, channel_id, u_id):
-    u_id_index = 0
+    #u_id_index = 0
     channel_id_index = 0
 
     try:
@@ -12,7 +13,7 @@ def channel_invite(token, channel_id, u_id):
 
     # user
     try:
-        u_id_index = data.resolve_user_id_index(u_id)
+        data.resolve_user_id_index(u_id)
     except LookupError:
         raise InputError("Invalid user ID")
 
@@ -50,19 +51,22 @@ def channel_details(token, channel_id):
 
 
 def channel_messages(token, channel_id, start):
+    channel_id_index = -1
+
     if start < 0:
         raise InputError("Start out of bounds")
+
     try:
         channel_id_index = data.resolve_channel_id_index(channel_id)
-    except LookupError as e:
+    except LookupError:
         raise InputError("Channel not found")
 
     channel = data.data['channels'][channel_id_index]
     users = channel['admins'] + channel['members']
 
     if data.resolve_token(token) not in users:
-        raise AccessError("Not a member of the specified channel")
-
+        raise AccessError("Not a member of the specified channel") 
+    
     messages = channel['messages']
 
     if start > len(messages):
@@ -77,7 +81,7 @@ def channel_messages(token, channel_id, start):
     }
 
 def channel_leave(token, channel_id):
-    u_id_index = 0
+    #u_id_index = 0
     channel_id_index = 0
     u_id = 0
     try:
@@ -88,7 +92,7 @@ def channel_leave(token, channel_id):
     # user
     try:
         u_id = data.resolve_token(token)
-        u_id_index = data.resolve_user_id_index(u_id)
+        data.resolve_user_id_index(u_id)
     except LookupError:
         raise InputError("Invalid token")
 
@@ -101,7 +105,7 @@ def channel_leave(token, channel_id):
     return {}
 
 def channel_join(token, channel_id):
-    u_id_index = 0
+    #u_id_index = 0
     channel_id_index = 0
 
     try:
@@ -128,7 +132,7 @@ def channel_join(token, channel_id):
     return {}
 
 def channel_addowner(token, channel_id, u_id):
-    u_id_index = 0
+    #u_id_index = 0
     channel_id_index = 0
 
     # channel
@@ -139,7 +143,7 @@ def channel_addowner(token, channel_id, u_id):
 
     # user
     try:
-        u_id_index = data.resolve_user_id_index(u_id)
+        data.resolve_user_id_index(u_id)
     except LookupError:
         raise InputError("Invalid user ID")
 
@@ -160,7 +164,7 @@ def channel_addowner(token, channel_id, u_id):
     }
 
 def channel_removeowner(token, channel_id, u_id):
-    u_id_index = 0
+    #u_id_index = 0
     channel_id_index = 0
 
     # channel
@@ -171,7 +175,7 @@ def channel_removeowner(token, channel_id, u_id):
 
     # user
     try:
-        u_id_index = data.resolve_user_id_index(u_id)
+        data.resolve_user_id_index(u_id)
     except LookupError:
         raise InputError("Invalid user ID")
 

@@ -37,7 +37,7 @@ def channels_listall(token):
     try:
         new_list = []
         
-        u_id = data.resolve_token(token)
+        data.resolve_token(token)
         
         for channel in data.data['channels']:
             new_list.append(

@@ -31,9 +31,9 @@ def test_invalid_leave_channel_ID_public():
     auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
     result1 = auth.auth_login("validemail1@gmail.com", "password123")
 
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
+    channels.channels_create(result["token"], "channel_1", True)
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_leave(result1["token"], -1)
 
 def test_invalid_leave_channel_ID_private():
@@ -42,11 +42,11 @@ def test_invalid_leave_channel_ID_private():
     result = auth.auth_login("validemail@gmail.com", "password123")
 
     auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("validemail1@gmail.com", "password123")
+    auth.auth_login("validemail1@gmail.com", "password123")
 
-    channel_id = channels.channels_create(result["token"], "channel_1", False)
+    channels.channels_create(result["token"], "channel_1", False)
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_leave(result["token"], -1)
 
 def test_invalid_leave_not_member():
@@ -59,5 +59,5 @@ def test_invalid_leave_not_member():
 
     channel_id = channels.channels_create(result["token"], "channel_1", False)
 
-    with pytest.raises(AccessError) as e:
+    with pytest.raises(AccessError):
         channel_leave(result1["token"], channel_id["channel_id"])

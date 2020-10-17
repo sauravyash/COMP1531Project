@@ -31,7 +31,7 @@ def test_invalid_removeowner_channel_ID():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_removeowner(result["token"], -1, result["u_id"])
 
 def test_invalid_removeowner_not_owner():
@@ -46,7 +46,7 @@ def test_invalid_removeowner_not_owner():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         channel_removeowner(result["token"], channel_id["channel_id"], result1["u_id"])
 
 def test_invalid_removeowner_not_authorised():
@@ -61,5 +61,5 @@ def test_invalid_removeowner_not_authorised():
 
     channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-    with pytest.raises(AccessError) as e:
+    with pytest.raises(AccessError):
         channel_removeowner(result1["token"], channel_id["channel_id"], result["u_id"])
