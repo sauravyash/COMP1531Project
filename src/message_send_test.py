@@ -40,23 +40,28 @@ def test_invalid_message_token():
     '''
     When the sender token is not valid
     '''
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    #other.clear
+    auth.auth_register("cool_email@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("cool_email@gmail.com", "password123")
+
+    auth.auth_register("good_email@gmail.com", "password123", "fname1", "lname1")
+    result1 = auth.auth_login("good_email@gmail.com", "password123")
     channel_id = channels.channels_create(result["token"], "channel_1", True)
 
     with pytest.raises(AccessError):
-        message_send("Invalid token", channel_id["channel_id"], "Funky Monkey")
+        message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
 
 # When the message sent to an invalid channel
 def test_invalid_message_channel_id():
     '''
     When the message sent to an invalid channel ID
     '''
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    #other.clear
+    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("coolemail@gmail.com", "password123")
     channels.channels_create(result["token"], "channel_1", True)
     with pytest.raises(InputError):
-        message_send(result["token"], -1, "Funky Monkey")
+        message_send(result["token"], 125, "Funky Monkey")
 
 def test_invalid_message_string_size_1000():
     '''
