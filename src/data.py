@@ -74,7 +74,6 @@ def check_name(name_first, name_last):
     Returns: True/False
     """
     return (len(name_first) > 0 and len(name_first) < 51 and len(name_last) > 0 and len(name_last) < 51)
-    return False
 
 # Loads all user_ids from database into id_list
 def load_ids():
@@ -134,7 +133,6 @@ def password_match(email, password):
     Returns: True/False
     """
     return data["users"][u_id_index(email) - 1]["password"] == password
-    return False
 
 # Searches list of all stored handles and checks if handle has been found
 def search_handle(handle):
