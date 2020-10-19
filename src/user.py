@@ -1,3 +1,5 @@
+''' user functions
+'''
 import data
 from error import InputError
 from error import AccessError
@@ -23,11 +25,11 @@ def user_profile(token, u_id):
 
     return {
         'user': {
-        	'u_id': user_details["id"],
-        	'email': user_details["email"],
-        	'name_first': user_details["name_first"],
-        	'name_last': user_details["name_last"],
-        	'handle_str': user_details["handle"],
+    	'u_id': user_details["id"],
+    	'email': user_details["email"],
+    	'name_first': user_details["name_first"],
+    	'name_last': user_details["name_last"],
+    	'handle_str': user_details["handle"],
         },
     }
 
