@@ -185,8 +185,7 @@ def generate_msg_id(channel_id):
         generated_id += 1
         
 def is_user_authorised(channel_id, user_id):
-    return (user_id in data.get('channels')[channel_index]['members']) 
-        or (data.get('channels')[channel_index]['admins'])
+    return (user_id in data.get('channels')[channel_index]['members']) or (data.get('channels')[channel_index]['admins'])
 
 '''
 EXAMPLE
