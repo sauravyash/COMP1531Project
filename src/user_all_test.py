@@ -1,4 +1,4 @@
-'''import auth
+import auth
 import channels
 import other
 import pytest
@@ -9,7 +9,6 @@ from channel import channel_messages
 from error import InputError
 from error import AccessError
 
-
 from user import user_all
 
 # Success User_all
@@ -18,6 +17,50 @@ from user import user_all
 
 def test_user_all():
     other.clear()
+    
+    users = [
+        {
+            'fname': 'fname',
+            'lname': 'lname',
+            'email': 'validemail@gmail.com'
+        },
+        {
+            'fname': 'fname1',
+            'lname': 'lname1',
+            'email': 'validemail1@gmail.com'
+        },
+        {
+            'fname': 'fname2',
+            'lname': 'lname2',
+            'email': 'validemail2@gmail.com'
+        },
+        {
+            'fname': 'fname3',
+            'lname': 'lname3',
+            'email': 'validemail3@gmail.com'
+        },
+        {
+            'fname': 'fname4',
+            'lname': 'lname4',
+            'email': 'validemail4@gmail.com'
+        }
+    ]
+    
+    result = []
+
+    for user in users:
+        auth.auth_register(user["email"], "GenericPwd1", user["fname"], user["lname"])
+        result.append(auth.auth_login(user["email"], "GenericPwd1"))
+    
+    fetched_users = user_all(result[0])
+
+    for i, user in enumerate(fetched_users):
+        assert user['email'] == users[i]['email']
+        assert user["lname"] == users[i]['lname']
+        assert user['fname'] == users[i]['fname']
+
+
+    '''
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("validemail@gmail.com", "password123")
 
@@ -35,4 +78,4 @@ def test_user_all():
     result4 = auth.auth_login("awsome_awsome_email@gmail.com", "password123")
 
     assert user_all(result["token"]) == users
-'''
+    '''
