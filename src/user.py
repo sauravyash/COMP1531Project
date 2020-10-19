@@ -102,18 +102,3 @@ def user_profile_sethandle(token, handle_str):
 
     return {
     }
-
-def user_all(token):
-    ''' Displays list of all users and respective data
-
-    Arguments: token, must be string
-    Returns: list of users
-    '''
-    try:
-        data.resolve_token(token)
-    except LookupError:
-        raise AccessError("Token not found")
-
-    return {
-        data.data["users"]
-    }
