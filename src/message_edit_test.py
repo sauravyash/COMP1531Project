@@ -45,13 +45,34 @@ def test_valid_message_edit():
     assert message_edit(result1["token"], m_id["message_id"], "Monkey Funky") == {}
 
 
-def test_authorized_edit():
+def test_authorized_edit_owner():
     '''
     Success Messages
     Valid sender token
     Valid message ID
     Edited message within 1000 charactre limit
     Edit authorized by owner or sender
+    '''
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
+
+    auth.auth_register("goodemail@gmail.com", "password123", "fname1", "lname1")
+    result1 = auth.auth_login("goodemail@gmail.com", "password123")
+
+    auth.auth_register("coolemail@gmail.com", "password123", "fname2", "lname2")
+    result2 = auth.auth_login("coolemail@gmail.com", "password123")
+
+    channel_id = channels.channels_create(result1["token"], "channel_1", True)
+    channel_invite(result1["token"], channel_id["channel_id"], result2["u_id"])
+    channel_invite(result1["token"], channel_id["channel_id"], result["u_id"])
+    m_id = message_send(result2["token"], channel_id["channel_id"], "Funky Monkey")
+    assert message_edit(result1["token"], m_id["message_id"], "Monkey Funky") == {}
+
+
+def test_authorized_edit_super_owner():
+    '''
+    Authorized from the owner of the flockr
     '''
     result, result1, channel_id = create_test_channel()
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")

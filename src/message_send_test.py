@@ -44,7 +44,7 @@ def test_invalid_message_token():
     result = auth.auth_login("cool_email@gmail.com", "password123")
 
     auth.auth_register("good_email@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("good_email@gmail.com", "password123")
+    auth.auth_login("good_email@gmail.com", "password123")
     channel_id = channels.channels_create(result["token"], "channel_1", True)
 
     with pytest.raises(InputError):
