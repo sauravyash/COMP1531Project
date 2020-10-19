@@ -170,22 +170,26 @@ def generate_handle(handle):
 
 def search_msg_id(msg_id):
     try:
-        channel = resolve_message_id_index(msg_id)
-        return {}
+        channel_id, msg_index = resolve_message_id_index(msg_id)
+        return {'channel': channel_id, 'msg_index': msg_index}
     except:
         return None
     
 
-def generate_msg_id(channel_id):
+def generate_msg_id():
     generated_id = 0
 
     while True:
-        if search_msg_id(channel_id, generated_id) is None:
+        if search_msg_id(generated_id) is None:
             yield generated_id
         generated_id += 1
         
 def is_user_authorised(channel_id, user_id):
-    return (user_id in data.get('channels')[channel_index]['members']) or (data.get('channels')[channel_index]['admins'])
+    try:
+        channel_index = resolve_channel_id_index(channel_id)
+        return (user_id in data.get('channels')[channel_index]['members']) or (data.get('channels')[channel_index]['admins'])
+    except LookupError:
+        return False
 
 '''
 EXAMPLE

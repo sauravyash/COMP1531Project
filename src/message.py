@@ -28,7 +28,7 @@ def message_send(token, channel_id, message):
         raise AccessError("User Not Permitted!")
 
     # create msg
-    new_id = data.generate_msg_id(channel_id)
+    new_id = data.generate_msg_id()
 
     msg = {
         'id': new_id,
