@@ -73,7 +73,7 @@ def check_name(name_first, name_last):
     Input arguments: name_first, name_last, must be strings
     Returns: True/False
     """
-    return (len(name_first) > 0 and len(name_first) < 51 and len(name_last) > 0 and len(name_last) < 51)
+    return len(name_first) > 0 and len(name_first) < 51 and len(name_last) > 0 and len(name_last) < 51
 
 # Loads all user_ids from database into id_list
 def load_ids():
