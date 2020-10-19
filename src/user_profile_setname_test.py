@@ -10,77 +10,41 @@ import random
 import string
 from user import user_profile_setname
 
-def create_user_1():
-    
+def test_valid_name():
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("validemail@gmail.com", "password123")
 
-def valid_test():
+    user_profile_setname(result["token"], "newfname", "newlname")
 
-    create_user_1()
-    first_name = "fname"
-    last_name = "lname"
-
-    assert( user_profile_setname(result["token"], first_name, last_name) == {} )
-
-def invalid_token_test():
-
-    create_user_1()
-    first_name = "fname"
-    last_name = "lname"
+def test_invalid_fname():
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
     with pytest.raises(InputError):
-        user_profile_setname("invalid_token", first_name, last_name) 
+        user_profile_setname(result["token"], "", "newlname")
 
-def test_invalid_first_name():
-
-    create_user_1()
-    letters = string.ascii_letters
-    result_str = ''.join(random.choice(letters) for i in range(55))
-
-    first_name = result_str
-    last_name = "lname"
+def test_invalid_lname():
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
     with pytest.raises(InputError):
-        user_profile_setname(result["token"], first_name, last_name)
+        user_profile_setname(result["token"], "newfname", "")
 
-def test_invalid_last_name():
-
-    create_user_1()
-    letters = string.ascii_letters
-    result_str = ''.join(random.choice(letters) for i in range(55))
-
-    first_name = "fname"
-    last_name = result_str
+def test_invalid_longfname():
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
     with pytest.raises(InputError):
-        user_profile_setname(result["token"], first_name, last_name)
+        user_profile_setname(result["token"], "newfirstnamewhichiscertainlymorethanfiftycharacterslong", "newlname")
 
-def test_invalid_full_name():
-
-    create_user_1()
-    letters = string.ascii_letters
-    result_str = ''.join(random.choice(letters) for i in range(55))
-    first_name = result_str
-    last_name = result_str
+def test_invalid_longlname():
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
     with pytest.raises(InputError):
-        user_profile_setname(result["token"], first_name, last_name)
-
-def test_empty_name():
-
-    create_user_1()
-    first_name = ""
-    last_name = ""
-
-    with pytest.raises(InputError):
-        user_profile_setname(result["token"], first_name, last_name)
-
-
-
-
-
-
-
-
+        user_profile_setname(result["token"], "newfname", "newlastnamewhichiscertainlymorethanfiftycharacterslong")
