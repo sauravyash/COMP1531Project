@@ -24,7 +24,12 @@ def create_test_user():
 # returns user_id, email, first name, last name, and handle
 def test_valid_user_profile():
 
-    create_test_user()
+    #create_test_user()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
+
+    auth.auth_register("good_email@gmail.com", "password123", "fname1", "lname1")
+    result1 = auth.auth_login("good_email@gmail.com", "password123")
     # crossponding dictionary with same id and token
     assert user_profile(result1["token"], result1["u_id"]) == users["user"]
 
@@ -33,15 +38,26 @@ def test_valid_user_profile():
 # invalid/not registered token
 def test_invalid_user_profile():
 
-    create_test_user()
+    #create_test_user()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
+
+    auth.auth_register("good_email@gmail.com", "password123", "fname1", "lname1")
+    result1 = auth.auth_login("good_email@gmail.com", "password123")
     # crossponding dictionary with same id and token
-    with pytest raises(InputError):
-        user_profile(result2["token"], result2["u_id"])
+    with pytest.raises(InputError):
+        #user_profile(result2["token"], result2["u_id"])
+        user_profile(result1["token"], 0)
 
 # Empty Input
-def test_invalid_user_profile_empty():
-
-    create_test_user()
-    # crossponding dictionary with same id and token
-    with pytest raises(InputError):
-        user_profile("", result2["u_id"])
+#def test_invalid_user_profile_empty():
+#
+    #create_test_user()
+#    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+#    result = auth.auth_login("validemail@gmail.com", "password123")
+#
+#    auth.auth_register("good_email@gmail.com", "password123", "fname1", "#lname1")
+#    result1 = auth.auth_login("good_email@gmail.com", "password123")
+#    # crossponding dictionary with same id and token
+#    with pytest.raises(InputError):
+#        user_profile("", result2["u_id"])
