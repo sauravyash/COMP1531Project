@@ -78,7 +78,13 @@ def message_edit(token, message_id, message):
         raise InputError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
-    if msgs[msg_index]['author'] != user_id:
+    is_user_author = msgs[msg_index]['author'] != user_id
+    is_user_channel_owner = user_id in data.data.get('channels')[channel_index]['admins']
+    try:
+        is_user_flockr_owner = user_id == data.data['users'][0]['user_id']
+    except KeyError:
+        is_user_flockr_owner = False
+    if is_user_author or is_user_channel_owner or is_user_flockr_owner:
         raise AccessError("user not authorised")
 
     msgs[msg_index]['content'] = message
