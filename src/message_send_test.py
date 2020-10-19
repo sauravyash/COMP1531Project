@@ -49,7 +49,7 @@ def test_invalid_message_token():
     channel_id = channels.channels_create(result["token"], "channel_1", True)
 
     with pytest.raises(InputError):
-        message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+        message_send("Dodge", channel_id["channel_id"], "Funky Monkey")
 
 # When the message sent to an invalid channel
 def test_invalid_message_channel_id():
