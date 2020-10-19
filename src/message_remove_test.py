@@ -45,7 +45,27 @@ def test_valid_message_remove():
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     assert message_remove(result1["token"], m_id["message_id"]) == {}
 
-def test_valid_message_remove_authorized():
+def test_valid_message_remove_channel_owner():
+    '''
+    message remove from the channel owner
+    '''
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    auth.auth_login("validemail@gmail.com", "password123")
+
+    auth.auth_register("newvalidemail@gmail.com", "password123", "fname1", "lname1")
+    result1 = auth.auth_login("newvalidemail@gmail.com", "password123")
+
+    auth.auth_register("goodemail@gmail.com", "password123", "fname2", "lname2")
+    result2 = auth.auth_login("goodemail@gmail.com", "password123")
+
+    channel_id = channels.channels_create(result1["token"], "channel_1", True)
+    channel_invite(result1["token"], channel_id["channel_id"], result2["u_id"])
+
+    m_id = message_send(result2["token"], channel_id["channel_id"], "Funky Monkey")
+    assert message_remove(result1["token"], m_id["message_id"]) == {}
+
+def test_valid_message_remove_flockr_owner():
     '''
     the message is removed
     '''
