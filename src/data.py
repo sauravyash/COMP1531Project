@@ -185,13 +185,10 @@ def generate_msg_id():
         generated_id += 1
         
 def is_user_authorised(channel_id, user_id):
-    print_data()
-    print(channel_id,user_id)
     try:
         channel_index = resolve_channel_id_index(channel_id)
         is_member = user_id in data.get('channels')[channel_index]['members'] 
         is_admin = user_id in data.get('channels')[channel_index]['admins']
-        print( is_admin, is_member)
         return is_admin or is_member
     except LookupError:
         return False
