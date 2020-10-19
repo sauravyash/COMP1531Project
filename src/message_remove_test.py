@@ -43,7 +43,7 @@ def test_valid_message_remove():
     result, result1, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    assert message_remove(result1["token"], m_id) == {}
+    assert message_remove(result1["token"], m_id["message_id"]) == {}
 
 def test_valid_message_remove_authorized():
     '''
@@ -53,7 +53,7 @@ def test_valid_message_remove_authorized():
     result, result1, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    assert message_remove(result["token"], m_id) == {}
+    assert message_remove(result["token"], m_id["message_id"]) == {}
 
 # Fail
 def test_invalid_message_token():
@@ -65,7 +65,7 @@ def test_invalid_message_token():
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     with pytest.raises(InputError):
-        message_remove("Invalid token", m_id)
+        message_remove("Invalid token", m_id["message_id"])
 
 
 def test_invalid_message_id():
@@ -77,7 +77,7 @@ def test_invalid_message_id():
     message_send(result["token"], channel_id["channel_id"], "Hello")
     message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     with pytest.raises(InputError):
-        message_remove(result1["token"], -1)
+        message_remove(result1["token"], 123)
 
 def test_invalid_message_removed():
     '''
@@ -87,10 +87,10 @@ def test_invalid_message_removed():
     result, result1, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    message_remove(result1["token"], m_id)
+    message_remove(result1["token"], m_id["message_id"])
 
     with pytest.raises(InputError):
-        message_remove(result1["token"], m_id)
+        message_remove(result1["token"], m_id["message_id"])
 
 
 def test_invalid_message_remove_not_sender():
@@ -107,7 +107,7 @@ def test_invalid_message_remove_not_sender():
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
 
     with pytest.raises(AccessError):
-        message_remove(result2["token"], m_id)
+        message_remove(result2["token"], m_id["message_id"])
 
 
 def test_invalid_message_remove_not_authorized():
@@ -118,4 +118,4 @@ def test_invalid_message_remove_not_authorized():
     result, result1, channel_id = create_test_channel()
     m_id = message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
     with pytest.raises(AccessError):
-        message_remove(result1["token"], m_id)
+        message_remove(result1["token"], m_id["message_id"])
