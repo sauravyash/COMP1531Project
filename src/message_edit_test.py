@@ -42,7 +42,7 @@ def test_valid_message_edit():
     result, result1, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    assert message_edit(result1["token"], m_id, "Monkey Funky") == {}
+    assert message_edit(result1["token"], m_id["message_id"], "Monkey Funky") == {}
 
 
 def test_authorized_edit():
@@ -55,7 +55,7 @@ def test_authorized_edit():
     '''
     result, result1, channel_id = create_test_channel()
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    assert message_edit(result["token"], m_id, "Monkey Funky") == {}
+    assert message_edit(result["token"], m_id["message_id"], "Monkey Funky") == {}
 
 
 #Fail
@@ -67,7 +67,7 @@ def test_invalid_token():
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     with pytest.raises(InputError):
-        message_edit("Invalid token", m_id, "Monkey Funky")
+        message_edit("Invalid token", m_id["message_id"], "Monkey Funky")
 
 def test_invalid_message_id():
     '''
@@ -88,7 +88,7 @@ def test_invalid_message_edit_exceeds_size_limit():
     result_str = ''.join(random.choice(letters) for i in range(1005))
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     with pytest.raises(InputError):
-        message_edit(result["token"], m_id, result_str)
+        message_edit(result["token"], m_id["message_id"], result_str)
 
 def test_invalid_message_edit_not_sender():
     '''
@@ -102,7 +102,7 @@ def test_invalid_message_edit_not_sender():
 
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     with pytest.raises(AccessError):
-        message_edit(result2["token"], m_id, "Monkey Funky")
+        message_edit(result2["token"], m_id["message_id"], "Monkey Funky")
 
 
 def test_invalid_message_edit_not_authorized():
@@ -112,4 +112,4 @@ def test_invalid_message_edit_not_authorized():
     result, result1, channel_id = create_test_channel()
     m_id = message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
     with pytest.raises(AccessError):
-        message_edit(result1["token"], m_id, "Monkey Funky")
+        message_edit(result1["token"], m_id["message_id"], "Monkey Funky")
