@@ -24,7 +24,6 @@ def create_test_channel():
     return (result, channel_id)
 
 # Success Messages
-
 def test_valid_message_send():
     '''
     Sender Token must be valid
