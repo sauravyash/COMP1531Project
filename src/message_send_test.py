@@ -33,7 +33,7 @@ def test_valid_message_send():
     message letters must be within 1000 characters
     '''
     result, channel_id = create_test_channel()
-    assert message_send(result["token"], channel_id["channel_id"], "Funky Monkey") == "valid_mID"
+    message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
 
 # Fail
 def test_invalid_message_token():
