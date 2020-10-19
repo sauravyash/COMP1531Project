@@ -1,3 +1,6 @@
+'''
+import functions
+'''
 import pytest
 import auth
 import other
@@ -13,8 +16,13 @@ from error import AccessError
 #    result = auth.auth_login("validemail@gmail.com", "password123")
 
 
-# When the token is valid but the user id is invalid
+
 def test_invalid_user_profile():
+    '''
+    When the token is valid but the user id is invalid
+    '''
+
+
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("validemail@gmail.com", "password123")
@@ -23,8 +31,12 @@ def test_invalid_user_profile():
         user_profile(result["token"], 0)
 
 
-# When the user ID is valid but token is invalid
+
 def test_invalid_user_profile_token():
+    '''
+    When the user ID is valid but token is invalid
+    '''
+
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("validemail@gmail.com", "password123")
