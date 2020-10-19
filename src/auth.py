@@ -18,10 +18,10 @@ def auth_login(email, password):
     elif not data.password_match(email, password):
         raise InputError
 
-    data.data["users"][data.u_id_index(email) - 1]["authenticated"] = True
+    data.data["users"][data.find_user_id_index(email) - 1]["authenticated"] = True
 
     return {
-        'u_id': data.u_id_index(email),
+        'u_id': data.find_user_id_index(email),
         'token': email,
     }
 

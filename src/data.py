@@ -132,7 +132,7 @@ def password_match(email, password):
     Arguments: email, password, must be strings
     Returns: True/False
     """
-    return data["users"][u_id_index(email) - 1]["password"] == password
+    return data["users"][find_user_id_index(email) - 1]["password"] == password
 
 # Searches list of all stored handles and checks if handle has been found
 def search_handle(handle):
