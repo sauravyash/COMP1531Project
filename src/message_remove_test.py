@@ -64,7 +64,7 @@ def test_invalid_message_token():
     result, result1, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         message_remove("Invalid token", m_id)
 
 

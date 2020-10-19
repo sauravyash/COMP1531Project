@@ -48,7 +48,7 @@ def test_invalid_message_token():
     result1 = auth.auth_login("good_email@gmail.com", "password123")
     channel_id = channels.channels_create(result["token"], "channel_1", True)
 
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
 
 # When the message sent to an invalid channel
