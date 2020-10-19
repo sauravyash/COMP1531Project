@@ -1,4 +1,4 @@
-import auth
+'''import auth
 import channels
 import other
 import pytest
@@ -15,7 +15,7 @@ from user import user_all
 # Success User_all
 # Valid user token
 # Returns a list of all users and their associated details
-'''
+
 def test_user_all():
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
