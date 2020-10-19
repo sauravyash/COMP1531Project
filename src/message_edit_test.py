@@ -70,7 +70,7 @@ def test_authorized_edit_owner():
     assert message_edit(result1["token"], m_id["message_id"], "Monkey Funky") == {}
 
 
-def test_authorized_edit_super_owner():
+def test_authorized_edit_flockr_owner():
     '''
     Authorized from the owner of the flockr
     '''
