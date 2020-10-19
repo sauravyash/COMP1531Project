@@ -83,11 +83,7 @@ def message_edit(token, message_id, message):
         is_user_flockr_owner = user_id == data.data['users'][0]['user_id']
     except KeyError:
         is_user_flockr_owner = False
-
-    data.print_data()
-    print(is_user_author, is_user_channel_owner, is_user_flockr_owner,
-            message_id, user_id, msgs[msg_index]['author'])
-    
+   
     if not is_user_author and not is_user_channel_owner and not is_user_flockr_owner:
         raise AccessError("user not authorised")
 
