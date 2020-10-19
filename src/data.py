@@ -113,7 +113,7 @@ def search_emails(email):
     return False
 
 # Returns user_id with respect to the email
-def u_id_index(email):
+def find_user_id_index(email):
     """ Looks up user id with respect to email
 
     Arguments: email, must be string
