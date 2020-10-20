@@ -37,7 +37,7 @@ def test_valid_message_edit():
     Edited message within 1000 charactre limit
     Edit authorized by owner or sender
     '''
-    result, result1, channel_id = create_test_channel()
+    _, result1, channel_id = create_test_channel()
     #message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     assert message_edit(result1["token"], m_id["message_id"], "Monkey Funky") == {}
