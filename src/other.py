@@ -1,5 +1,7 @@
 import data
 from error import AccessError
+from channels import channels_list
+
 # Clears original data structure...
 def clear():
     data.data = {
@@ -47,7 +49,7 @@ def search(token, query_str):
         index = data.resolve_channel_id_index(channel['channel_id'])
         # Test if the user is a member or admin of the channel (has joined)
         selected_channel = data.data['channels'][index]
-        if token in selected_channel[members] or token in selected_channel[admin]:
+        if token in selected_channel['members'] or token in selected_channel['admins']:
             for message_info in selected_channel['messages']:
                 if query_str in message['message']:
                     # if the query string is contained within a message, add that
@@ -55,5 +57,5 @@ def search(token, query_str):
                     list_of_messages.append(message_info)
     
     return {
-        'messages': [list_of_messages]
+        'messages': list_of_messages
     }

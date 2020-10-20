@@ -27,7 +27,7 @@ def create_test_channel():
     channel = channels.channels_create(result1['token'], 'channel_1', True)
     channel_invite(result1['token'], channel['channel_id'], result2['u_id'])
 
-    return (result['token'], result1['token'], channel['channel_id'])
+    return (result1['token'], result2['token'], channel['channel_id'])
 
 def test_simple_search():
     # Create test environment...
@@ -40,6 +40,7 @@ def test_simple_search():
     
     # Test search...
     return_messages = other.search(token1, 'he')
+    print(return_messages)
     assert return_messages['messages'][1]['message_id'] == mid_1
     assert return_messages['messages'][2]['message_id'] == mid_2
     assert return_messages['messages'][3]['message_id'] == mid_3
