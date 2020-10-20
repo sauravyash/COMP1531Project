@@ -25,7 +25,7 @@ def create_test_channel():
     
     # Create a channel and invite a user to it...
     channel = channels.channels_create(result1['token'], 'channel_1', True)
-    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
+    channel_invite(result1['token'], channel['channel_id'], result2['u_id'])
 
     return (result['token'], result1['token'], channel['channel_id'])
 
