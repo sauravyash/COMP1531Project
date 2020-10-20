@@ -12,17 +12,19 @@ def message_send(token, channel_id, message):
     # check permissions
     if not is_message_valid(message):
         raise InputError("Invalid Message")
-    
+
     user_id = -1
     try:
         user_id = data.resolve_token(token)
     except LookupError:
         raise InputError('Invalid Token')
+    except:
+        raise InputError("invalid token")
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError('Invalid Channel ID')
-    
+
     if not data.is_user_authorised(channel_id, user_id):
         raise AccessError("User Not Permitted!")
 
@@ -46,12 +48,14 @@ def message_send(token, channel_id, message):
 
 def message_remove(token, message_id):
     channel_id, user_id, channel_index, msg_index = tuple([-1 for _ in range(4)])
-    
+
     try:
         channel_id, msg_index = data.resolve_message_id_index(message_id)
         channel_index = data.resolve_channel_id_index(channel_id)
         user_id = data.resolve_token(token)
     except LookupError:
+        raise InputError("invalid token")
+    except:
         raise InputError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
@@ -61,7 +65,7 @@ def message_remove(token, message_id):
         is_user_flockr_owner = user_id == data.data['users'][0]['user_id']
     except KeyError:
         is_user_flockr_owner = False
-   
+
     if not is_user_author and not is_user_channel_owner and not is_user_flockr_owner:
         raise AccessError("user not authorised")
 
@@ -81,6 +85,8 @@ def message_edit(token, message_id, message):
         user_id = data.resolve_token(token)
     except LookupError:
         raise InputError("invalid token")
+    except:
+        raise InputError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
     is_user_author = msgs[msg_index]['u_id'] == user_id
@@ -89,7 +95,7 @@ def message_edit(token, message_id, message):
         is_user_flockr_owner = user_id == data.data['users'][0]['user_id']
     except KeyError:
         is_user_flockr_owner = False
-   
+
     if not is_user_author and not is_user_channel_owner and not is_user_flockr_owner:
         raise AccessError("user not authorised")
     data.print_data()
