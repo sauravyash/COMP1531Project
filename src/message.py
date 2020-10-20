@@ -30,10 +30,10 @@ def message_send(token, channel_id, message):
     new_id = next(data.generate_msg_id())
 
     msg = {
-        'id': new_id,
-        'author': user_id,
-        'content': message,
-        'time': datetime.datetime.now().timestamp()
+        'message_id': new_id,
+        'u_id': user_id,
+        'message': message,
+        'time_created': datetime.datetime.now().timestamp()
     }
 
     # add msg to data
@@ -41,7 +41,7 @@ def message_send(token, channel_id, message):
     msgs.append(msg)
 
     return {
-        'message_id': msg['id']
+        'message_id': msg['message_id']
     }
 
 def message_remove(token, message_id):
@@ -55,7 +55,7 @@ def message_remove(token, message_id):
         raise InputError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
-    is_user_author = msgs[msg_index]['author'] == user_id
+    is_user_author = msgs[msg_index]['u_id'] == user_id
     is_user_channel_owner = user_id in data.data.get('channels')[channel_index]['admins']
     try:
         is_user_flockr_owner = user_id == data.data['users'][0]['user_id']
@@ -83,7 +83,7 @@ def message_edit(token, message_id, message):
         raise InputError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
-    is_user_author = msgs[msg_index]['author'] == user_id
+    is_user_author = msgs[msg_index]['u_id'] == user_id
     is_user_channel_owner = user_id in data.data.get('channels')[channel_index]['admins']
     try:
         is_user_flockr_owner = user_id == data.data['users'][0]['user_id']
@@ -92,7 +92,7 @@ def message_edit(token, message_id, message):
    
     if not is_user_author and not is_user_channel_owner and not is_user_flockr_owner:
         raise AccessError("user not authorised")
-
-    msgs[msg_index]['content'] = message
+    data.print_data()
+    msgs[msg_index]['message'] = message
 
     return {}
