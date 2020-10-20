@@ -51,7 +51,7 @@ def search(token, query_str):
         selected_channel = data.data['channels'][index]
         if token in selected_channel['members'] or token in selected_channel['admins']:
             for message_info in selected_channel['messages']:
-                if query_str in message['message']:
+                if query_str in message_info['message']:
                     # if the query string is contained within a message, add that
                     # message and its details to a list.
                     list_of_messages.append(message_info)

@@ -106,7 +106,7 @@ def user_profile_sethandle(token, handle_str):
 def user_all(token):
     # validate token
     try:
-        u_id = data.resolve_token(token)
+        data.resolve_token(token)
     except LookupError:
         raise InputError('invalid token')
     
