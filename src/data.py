@@ -1,5 +1,7 @@
 # This file contains the appliation state data that is shared by the entire program
 import re
+import hashlib
+import jwt
 
 global data
 data = {
@@ -7,13 +9,15 @@ data = {
     'channels': []
 }
 
+JWT_KEY = 'b0ggers'
 
 # returns user id of given user token
 # Raises a LookupError if token is not found
 
 def resolve_token(token):
+    decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data['users']:
-        if user['token'] == token and user['authenticated']:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
     raise LookupError("Token not found")
@@ -95,7 +99,7 @@ def token_index(token):
     Returns: Token index
     """
     for user in data["users"]:
-        if user["token"] == token:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == jwt.decode(token, JWT_KEY, algorithms=['HS256']):
             return user["id"] - 1
 
     raise LookupError("Token not found")
@@ -132,7 +136,7 @@ def password_match(email, password):
     Arguments: email, password, must be strings
     Returns: True/False
     """
-    return data["users"][find_user_id_index(email) - 1]["password"] == password
+    return data["users"][find_user_id_index(email) - 1]["password"] == hashlib.sha256(password.encode()).hexdigest()
 
 # Searches list of all stored handles and checks if handle has been found
 def search_handle(handle):
@@ -165,7 +169,7 @@ def generate_handle(handle):
 
         handle += str(user_num)
 
-        if len(handle) > 20:
+        if len(handle) > 20: # pragma: no cover
             handle = handle[:20 - len(str(user_num))]
             handle += str(user_num)
 
@@ -182,7 +186,7 @@ data = {
             'email': 'validemail@gmail.com',
             'password': 'validpassword123',
             'handle': 'firstnamelastname',
-            'token': 'validemail@gmail.com',
+            'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
             'authenticated': True,
             'owner': 'user'
         },
