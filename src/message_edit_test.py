@@ -7,12 +7,10 @@ import pytest
 import other
 import auth
 import channels
-from channel import channel_invite
-from error import InputError
-from error import AccessError
+import channel
+from error import InputError, AccessError
 # assume message id is an int
-from message import message_send
-from message import message_edit
+from message import message_send, message_edit
 
 
 def create_test_channel():
@@ -27,7 +25,7 @@ def create_test_channel():
     result1 = auth.auth_login("goodemail@gmail.com", "password123")
 
     channel_id = channels.channels_create(result["token"], "channel_1", True)
-    channel_invite(result["token"], channel_id["channel_id"], result1["u_id"])
+    channel.channel_invite(result["token"], channel_id["channel_id"], result1["u_id"])
 
     return (result, result1, channel_id)
 
@@ -40,10 +38,12 @@ def test_valid_message_edit():
     Edit authorized by owner or sender
     '''
     result, result1, channel_id = create_test_channel()
-    message_send(result["token"], channel_id["channel_id"], "Hello")
+    #message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     assert message_edit(result1["token"], m_id["message_id"], "Monkey Funky") == {}
+    msgs = channel.channel_messages(result1["token"], channel_id["channel_id"], 0)
 
+    assert msgs["messages"][0]['message'] == "Monkey Funky"
 
 def test_authorized_edit_owner():
     '''
@@ -64,11 +64,10 @@ def test_authorized_edit_owner():
     result2 = auth.auth_login("coolemail@gmail.com", "password123")
 
     channel_id = channels.channels_create(result1["token"], "channel_1", True)
-    channel_invite(result1["token"], channel_id["channel_id"], result2["u_id"])
-    channel_invite(result1["token"], channel_id["channel_id"], result["u_id"])
+    channel.channel_invite(result1["token"], channel_id["channel_id"], result2["u_id"])
+    channel.channel_invite(result1["token"], channel_id["channel_id"], result["u_id"])
     m_id = message_send(result2["token"], channel_id["channel_id"], "Funky Monkey")
     assert message_edit(result1["token"], m_id["message_id"], "Monkey Funky") == {}
-
 
 def test_authorized_edit_flockr_owner():
     '''
@@ -119,7 +118,7 @@ def test_invalid_message_edit_not_sender():
     result, result1, channel_id = create_test_channel()
     auth.auth_register("awsome_email@gmail.com", "password123", "fname2", "lname2")
     result2 = auth.auth_login("awsome_email@gmail.com", "password123")
-    channel_invite(result["token"], channel_id["channel_id"], result2["u_id"])
+    channel.channel_invite(result["token"], channel_id["channel_id"], result2["u_id"])
 
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     with pytest.raises(AccessError):

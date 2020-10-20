@@ -5,6 +5,7 @@ import random
 import string
 import pytest
 import auth
+import channel
 import channels
 import other
 from error import InputError
@@ -33,6 +34,9 @@ def test_valid_message_send():
     '''
     result, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
+    msgs = channel.channel_messages(result["token"], channel_id["channel_id"], 0)
+ 
+    assert msgs["messages"][0]['message'] == "Funky Monkey"
 
 # Fail
 def test_invalid_message_token():

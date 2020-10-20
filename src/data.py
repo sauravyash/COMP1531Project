@@ -35,7 +35,7 @@ def resolve_channel_id_index(channel_id):
 def resolve_message_id_index(message_id):
     for channel in data["channels"]:
         for i, msg in enumerate(channel["messages"]):
-            if msg['id'] == message_id:
+            if msg['message_id'] == message_id:
                 return (channel['id'], i)
 
     raise LookupError("message id not found")
