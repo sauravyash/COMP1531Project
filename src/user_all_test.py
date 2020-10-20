@@ -52,12 +52,12 @@ def test_user_all():
         auth.auth_register(user["email"], "GenericPwd1", user["fname"], user["lname"])
         result.append(auth.auth_login(user["email"], "GenericPwd1"))
     
-    fetched_users = user_all(result[0])
+    fetched_users = user_all(result[0]['token'])['users']
 
     for i, user in enumerate(fetched_users):
         assert user['email'] == users[i]['email']
-        assert user["lname"] == users[i]['lname']
-        assert user['fname'] == users[i]['fname']
+        assert user["name_last"] == users[i]['lname']
+        assert user['name_first'] == users[i]['fname']
 
 
     '''
