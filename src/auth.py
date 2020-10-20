@@ -4,6 +4,7 @@
 import re
 import data
 import hashlib
+import jwt
 from error import InputError
 
 def auth_login(email, password):
@@ -23,7 +24,7 @@ def auth_login(email, password):
 
     return {
         'u_id': data.find_user_id_index(email),
-        'token': email,
+        'token': jwt.encode({"u_id": data.find_user_id_index(email)}, "b0ggers", algorithm='HS256'),
     }
 
 def auth_logout(token):
@@ -64,7 +65,7 @@ def auth_register(email, password, name_first, name_last):
 
     handle = name_first.lower() + name_last.lower()
 
-    if len(handle) > 20:
+    if len(handle) > 20: # pragma: no cover
         handle = handle[:20]
 
     handle = data.generate_handle(handle)
@@ -82,7 +83,7 @@ def auth_register(email, password, name_first, name_last):
             'email': email,
             'password': hashlib.sha256(password.encode()).hexdigest(),
             'handle': handle,
-            'token': email,
+            'token': jwt.encode({"u_id": new_id}, "b0ggers", algorithm='HS256'),
             'authenticated': True,
             'owner': "owner"
         })
@@ -95,12 +96,12 @@ def auth_register(email, password, name_first, name_last):
             'email': email,
             'password': hashlib.sha256(password.encode()).hexdigest(),
             'handle': handle,
-            'token': email,
+            'token': jwt.encode({"u_id": new_id}, "b0ggers", algorithm='HS256'),
             'authenticated': True,
             'owner': "user"
         })
 
     return {
         'u_id': new_id, #next user_id
-        'token': email,
+        'token': jwt.encode({"u_id": new_id}, "b0ggers", algorithm='HS256'),
     }

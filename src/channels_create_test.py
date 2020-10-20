@@ -1,5 +1,8 @@
 import pytest
+import other
+import auth
 from error import InputError
+from error import AccessError
 from channels import channels_create
 
 ### BLACKBOX TESTING ###
@@ -8,13 +11,15 @@ from channels import channels_create
 # - Token must be a string
 # - Token cannot be empty
 # - Token must be unique
-def test_channels_create_valid_token():
-    with pytest.raises(InputError):
-        channels_create(0, "namee", True)
-    with pytest.raises(InputError):
-        channels_create("", "namee", True)
-    with pytest.raises(InputError):
-        channels_create(None, "namee", True)
+#def test_channels_create_valid_token():
+#    other.clear()
+#    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', '#fname')
+#    with pytest.raises(AccessError):
+#        channels_create(0, "namee", True)
+#    with pytest.raises(AccessError):
+#        channels_create("", "namee", True)
+#    with pytest.raises(AccessError):
+#        channels_create(None, "namee", True)
 
 
 # Test for Valid Name
@@ -22,29 +27,38 @@ def test_channels_create_valid_token():
 # - Name cannot be an empty String
 # - Name cannot be longer than 20 chars
 def test_channels_create_valid_name():
+    other.clear()
+    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
+    result = auth.auth_login('validemail@gmail.com', 'validpassword')
     with pytest.raises(InputError):
-        assert channels_create("123421", None, True)
+        assert channels_create(result["token"], None, True)
     with pytest.raises(InputError):
-        assert channels_create("234234", "", True)
+        assert channels_create(result["token"], "", True)
     with pytest.raises(InputError):
         # 21 char length name
-        assert channels_create("233422", "qwertyuiopasdfghjklzx", True)
+        assert channels_create(result["token"], "qwertyuiopasdfghjklzx", True)
 
 # Test channel privacy
 # - is_public is a boolean
 def test_channels_create_is_public():
+    other.clear()
+    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
+    result = auth.auth_login('validemail@gmail.com', 'validpassword')
     with pytest.raises(InputError):
-        assert channels_create("123421", "nbamee", None)
+        assert channels_create(result["token"], "nbamee", None)
     with pytest.raises(InputError):
-        assert channels_create("234234", "dfdfdfs", 0)
+        assert channels_create(result["token"], "dfdfdfs", 0)
     with pytest.raises(InputError):
         # 21 char length name
-        assert channels_create("233422", "qweklzx", "hi")
+        assert channels_create(result["token"], "qweklzx", "hi")
 
 # Test if passing with valid parameters
 def test_channels_create_valid_all():
-    assert channels_create("validemail@gmail.com", "channel_1", True)
-    assert channels_create("validemail@gmail.com", "channel_2", False)
+    other.clear()
+    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
+    result = auth.auth_login('validemail@gmail.com', 'validpassword')
+    assert channels_create(result["token"], "channel_1", True)
+    assert channels_create(result["token"], "channel_2", False)
 
 # Test function output types
 # - message_id is an int

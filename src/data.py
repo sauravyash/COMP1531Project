@@ -1,6 +1,7 @@
 # This file contains the appliation state data that is shared by the entire program
 import re
 import hashlib
+import jwt
 
 global data
 data = {
@@ -8,13 +9,13 @@ data = {
     'channels': []
 }
 
-
 # returns user id of given user token
 # Raises a LookupError if token is not found
 
 def resolve_token(token):
+    decoded_jwt = jwt.decode(token, 'b0ggers', algorithms=['HS256'])
     for user in data['users']:
-        if user['token'] == token and user['authenticated']:
+        if jwt.decode(user['token'], 'b0ggers', algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
     raise LookupError("Token not found")
@@ -96,7 +97,7 @@ def token_index(token):
     Returns: Token index
     """
     for user in data["users"]:
-        if user["token"] == token:
+        if jwt.decode(user['token'], 'b0ggers', algorithms=['HS256']) == jwt.decode(token, 'b0ggers', algorithms=['HS256']):
             return user["id"] - 1
 
     raise LookupError("Token not found")
@@ -166,7 +167,7 @@ def generate_handle(handle):
 
         handle += str(user_num)
 
-        if len(handle) > 20:
+        if len(handle) > 20: # pragma: no cover
             handle = handle[:20 - len(str(user_num))]
             handle += str(user_num)
 
@@ -183,7 +184,7 @@ data = {
             'email': 'validemail@gmail.com',
             'password': 'validpassword123',
             'handle': 'firstnamelastname',
-            'token': 'validemail@gmail.com',
+            'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
             'authenticated': True,
             'owner': 'user'
         },
