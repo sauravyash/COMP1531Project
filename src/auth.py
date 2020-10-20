@@ -3,6 +3,7 @@
 """
 import re
 import data
+import hashlib
 from error import InputError
 
 def auth_login(email, password):
@@ -79,7 +80,7 @@ def auth_register(email, password, name_first, name_last):
             'name_first': name_first,
             'name_last': name_last,
             'email': email,
-            'password': password,
+            'password': hashlib.sha256(password.encode()).hexdigest(),
             'handle': handle,
             'token': email,
             'authenticated': True,
@@ -92,7 +93,7 @@ def auth_register(email, password, name_first, name_last):
             'name_first': name_first,
             'name_last': name_last,
             'email': email,
-            'password': password,
+            'password': hashlib.sha256(password.encode()).hexdigest(),
             'handle': handle,
             'token': email,
             'authenticated': True,
