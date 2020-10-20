@@ -23,25 +23,26 @@ def resolve_token(token):
     raise LookupError("Token not found")
 
 def resolve_user_id_index(user_id):
-    i = 0
-    for user in data["users"]:
+    for i, user in enumerate(data["users"]):
         if user['id'] == user_id:
             return i
-        else:
-            i += 1
-    raise LookupError("user_id not found")
+
+    raise LookupError("user id not found")
 
 def resolve_channel_id_index(channel_id):
-    i = 0
-    for channel in data["channels"]:
+    for i, channel in enumerate(data["channels"]):
         if channel['id'] == channel_id:
             return i
-        else:
-            i += 1
-    raise LookupError("channel_id not found")
 
-def resolve_message_id_index(channel_id, user_id):
-    pass
+    raise LookupError("channel id not found")
+
+def resolve_message_id_index(message_id):
+    for channel in data["channels"]:
+        for i, msg in enumerate(channel["messages"]):
+            if msg['id'] == message_id:
+                return (channel['id'], i)
+
+    raise LookupError("message id not found")
 
 def print_data():
     print(data)
@@ -55,9 +56,7 @@ def check_email(email):
     """
     regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
-    if re.search(regex, email):
-        return True
-    return False
+    return bool(re.search(regex, email))
 
 # Checks if input password is valid (i.e. has length more than 5 characters)
 def check_password(password):
@@ -66,9 +65,7 @@ def check_password(password):
     Input arguments: password, must be string
     Returns: True/False
     """
-    if len(password) >= 6:
-        return True
-    return False
+    return len(password) >= 6
 
 # Check is first and last names are between 1 and 50 characters inclusively
 def check_name(name_first, name_last):
@@ -174,6 +171,31 @@ def generate_handle(handle):
             handle += str(user_num)
 
     return handle
+
+def search_msg_id(msg_id):
+    try:
+        channel_id, msg_index = resolve_message_id_index(msg_id)
+        return {'channel': channel_id, 'msg_index': msg_index}
+    except:
+        return None
+    
+
+def generate_msg_id():
+    generated_id = 0
+
+    while True:
+        if search_msg_id(generated_id) is None:
+            yield generated_id
+        generated_id += 1
+        
+def is_user_authorised(channel_id, user_id):
+    try:
+        channel_index = resolve_channel_id_index(channel_id)
+        is_member = user_id in data.get('channels')[channel_index]['members'] 
+        is_admin = user_id in data.get('channels')[channel_index]['admins']
+        return is_admin or is_member
+    except LookupError:
+        return False
 
 '''
 EXAMPLE
