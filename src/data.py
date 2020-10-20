@@ -9,13 +9,15 @@ data = {
     'channels': []
 }
 
+JWT_KEY = 'b0ggers'
+
 # returns user id of given user token
 # Raises a LookupError if token is not found
 
 def resolve_token(token):
-    decoded_jwt = jwt.decode(token, 'b0ggers', algorithms=['HS256'])
+    decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data['users']:
-        if jwt.decode(user['token'], 'b0ggers', algorithms=['HS256']) == decoded_jwt and user['authenticated']:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
     raise LookupError("Token not found")
@@ -97,7 +99,7 @@ def token_index(token):
     Returns: Token index
     """
     for user in data["users"]:
-        if jwt.decode(user['token'], 'b0ggers', algorithms=['HS256']) == jwt.decode(token, 'b0ggers', algorithms=['HS256']):
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == jwt.decode(token, JWT_KEY, algorithms=['HS256']):
             return user["id"] - 1
 
     raise LookupError("Token not found")
