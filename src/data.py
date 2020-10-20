@@ -1,5 +1,7 @@
 # This file contains the appliation state data that is shared by the entire program
 import re
+import hashlib
+import jwt
 
 global data
 data = {
@@ -7,36 +9,43 @@ data = {
     'channels': []
 }
 
+
+
+JWT_KEY = 'b0ggers'
+
+
 # returns user id of given user token
 # Raises a LookupError if token is not found
 
 def resolve_token(token):
+    decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data['users']:
-        if user['token'] == token and user['authenticated']:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
     raise LookupError("Token not found")
 
 def resolve_user_id_index(user_id):
-    i = 0
-    for user in data["users"]:
+    for i, user in enumerate(data["users"]):
         if user['id'] == user_id:
             return i
-        else:
-            i += 1
-    raise LookupError("user_id not found")
+
+    raise LookupError("user id not found")
 
 def resolve_channel_id_index(channel_id):
-    i = 0
-    for channel in data["channels"]:
+    for i, channel in enumerate(data["channels"]):
         if channel['id'] == channel_id:
             return i
-        else:
-            i += 1
-    raise LookupError("channel_id not found")
 
-def resolve_message_id_index(channel_id, user_id):
-    pass
+    raise LookupError("channel id not found")
+
+def resolve_message_id_index(message_id):
+    for channel in data["channels"]:
+        for i, msg in enumerate(channel["messages"]):
+            if msg['message_id'] == message_id:
+                return (channel['id'], i)
+
+    raise LookupError("message id not found")
 
 def print_data():
     print(data)
@@ -50,9 +59,7 @@ def check_email(email):
     """
     regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
-    if re.search(regex, email):
-        return True
-    return False
+    return bool(re.search(regex, email))
 
 # Checks if input password is valid (i.e. has length more than 5 characters)
 def check_password(password):
@@ -61,9 +68,7 @@ def check_password(password):
     Input arguments: password, must be string
     Returns: True/False
     """
-    if len(password) >= 6:
-        return True
-    return False
+    return len(password) >= 6
 
 # Check is first and last names are between 1 and 50 characters inclusively
 def check_name(name_first, name_last):
@@ -94,7 +99,7 @@ def token_index(token):
     Returns: Token index
     """
     for user in data["users"]:
-        if user["token"] == token:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == jwt.decode(token, JWT_KEY, algorithms=['HS256']):
             return user["id"] - 1
 
     raise LookupError("Token not found")
@@ -131,7 +136,7 @@ def password_match(email, password):
     Arguments: email, password, must be strings
     Returns: True/False
     """
-    return data["users"][find_user_id_index(email) - 1]["password"] == password
+    return data["users"][find_user_id_index(email) - 1]["password"] == hashlib.sha256(password.encode()).hexdigest()
 
 # Searches list of all stored handles and checks if handle has been found
 def search_handle(handle):
@@ -164,11 +169,36 @@ def generate_handle(handle):
 
         handle += str(user_num)
 
-        if len(handle) > 20:
+        if len(handle) > 20: # pragma: no cover
             handle = handle[:20 - len(str(user_num))]
             handle += str(user_num)
 
     return handle
+
+def search_msg_id(msg_id):
+    try:
+        channel_id, msg_index = resolve_message_id_index(msg_id)
+        return {'channel': channel_id, 'msg_index': msg_index}
+    except:
+        return None
+    
+
+def generate_msg_id():
+    generated_id = 0
+
+    while True:
+        if search_msg_id(generated_id) is None:
+            yield generated_id
+        generated_id += 1
+        
+def is_user_authorised(channel_id, user_id):
+    try:
+        channel_index = resolve_channel_id_index(channel_id)
+        is_member = user_id in data.get('channels')[channel_index]['members'] 
+        is_admin = user_id in data.get('channels')[channel_index]['admins']
+        return is_admin or is_member
+    except LookupError:
+        return False
 
 '''
 EXAMPLE
@@ -181,7 +211,7 @@ data = {
             'email': 'validemail@gmail.com',
             'password': 'validpassword123',
             'handle': 'firstnamelastname',
-            'token': 'validemail@gmail.com',
+            'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
             'authenticated': True,
             'owner': 'user'
         },
