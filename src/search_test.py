@@ -51,7 +51,7 @@ def test_selective_search():
     
     # Send messages...
     mid_1 = message.message_send(token1, channel_id, 'hello')
-    mid_2 = message.message_send(token2, channel_id, 'help me')
+    message.message_send(token2, channel_id, 'help me')
     mid_3 = message.message_send(token1, channel_id, 'what the hell')
     
     # Test search...
@@ -69,7 +69,7 @@ def test_diff_users():
     
     # Send messages...
     mid_1 = message.message_send(token1, channel_id, 'hello')
-    mid_2 = message.message_send(token2, channel_id, 'help me')
+    message.message_send(token2, channel_id, 'help me')
     mid_3 = message.message_send(token1, channel_id, 'what the hell')
     
     # Test search...
@@ -78,8 +78,8 @@ def test_diff_users():
     assert return_messages1['messages'][2]['message_id'] == mid_3
     
     return_messages2 = other.search(token2, 'hell')
-    assert return_messages1['messages'][1]['message_id'] == mid_1
-    assert return_messages1['messages'][2]['message_id'] == mid_3
+    assert return_messages2['messages'][1]['message_id'] == mid_1
+    assert return_messages2['messages'][2]['message_id'] == mid_3
     
     assert other.search('fake_token', 'hell') == {'messages': []}
 
