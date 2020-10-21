@@ -59,6 +59,8 @@ def channels_create(token, name, is_public):
         data.resolve_token(token)
     except LookupError: # pragma: no cover
         raise AccessError("Invalid Token")
+    except: # pragma: no cover
+        raise AccessError("Invalid Token")
 
     # Check if name param is valid.
     if not isinstance(name, str) or len(name) > 20 or len(name) < 1:

@@ -43,7 +43,7 @@ def test_invalid_message_token():
     '''
     When the sender token is not valid
     '''
-    #other.clear
+    other.clear
     auth.auth_register("cool_email@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("cool_email@gmail.com", "password123")
 
