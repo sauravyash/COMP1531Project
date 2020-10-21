@@ -85,7 +85,8 @@ def auth_register(email, password, name_first, name_last):
             'handle': handle,
             'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
             'authenticated': True,
-            'owner': "owner"
+            'flockr_owner': True,
+            'permission_id': 1
         })
     else:
         new_id = max(data.load_ids()) + 1
@@ -98,7 +99,8 @@ def auth_register(email, password, name_first, name_last):
             'handle': handle,
             'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
             'authenticated': True,
-            'owner': "user"
+            'flockr_owner': True,
+            'permission_id': 2
         })
 
     return {
