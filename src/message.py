@@ -16,7 +16,7 @@ def message_send(token, channel_id, message):
     user_id = -1
     try:
         user_id = data.resolve_token(token)
-    except LookupError:
+    except LookupError: # pragma: no cover
         raise InputError('Invalid Token')
     except:
         raise InputError("invalid token")

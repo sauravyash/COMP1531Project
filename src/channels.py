@@ -21,7 +21,7 @@ def channels_list(token):
 
     # Otherwise, only the channels they are a member of...
     for channel in data.data['channels']:
-        for member in channel['members']:
+        for member in channel['members']: # pragma: no cover
             if user_id == member:
                 new_list.append(
                     {'channel_id': channel['id'], 'name': channel['name']})
@@ -53,16 +53,10 @@ def channels_listall(token):
     except:
         return []
 
-
 def channels_create(token, name, is_public):
-    #if not isinstance(token, str) or len(token) < 1: REPLACED WITH TRY EXCEPT
-    #    raise InputError("Invalid Token")
-    #if not isinstance(token, text_type) or len(token) < 1:
-    #    raise AccessError("Invalid Token")
-    
     try:
         data.resolve_token(token)
-    except LookupError:
+    except LookupError: # pragma: no cover
         raise AccessError("Invalid Token")
     if not isinstance(name, str) or len(name) > 20 or len(name) < 1:
         raise InputError("Invalid Name")

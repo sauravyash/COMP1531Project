@@ -37,7 +37,7 @@ def channel_details(token, channel_id):
     channel = data.data['channels'][channel_id_index]
     users = channel['admins'] + channel['members']
 
-    if not isinstance(channel_id, int) or channel_id < 0:
+    if not isinstance(channel_id, int) or channel_id < 0: # pragma: no cover
         raise InputError("Channel ID is not valid")
 
     if data.resolve_token(token) not in users and channel["is_public"]:
@@ -53,7 +53,7 @@ def channel_details(token, channel_id):
 def channel_messages(token, channel_id, start):
     channel_id_index = -1
 
-    if start < 0:
+    if start < 0: # pragma: no cover
         raise InputError("Start out of bounds")
 
     try:
@@ -65,8 +65,8 @@ def channel_messages(token, channel_id, start):
     users = channel['admins'] + channel['members']
 
     if data.resolve_token(token) not in users:
-        raise AccessError("Not a member of the specified channel") 
-    
+        raise AccessError("Not a member of the specified channel")
+
     messages = channel['messages']
 
     if start > len(messages):
@@ -93,7 +93,7 @@ def channel_leave(token, channel_id):
     try:
         u_id = data.resolve_token(token)
         data.resolve_user_id_index(u_id)
-    except LookupError:
+    except LookupError: # pragma: no cover
         raise InputError("Invalid token")
 
     # remove
@@ -117,17 +117,17 @@ def channel_join(token, channel_id):
 
     # member in the channel already
     for l in data.data['channels'][channel_id_index]['members']:
-        if u_id == l:
+        if u_id == l: # pragma: no cover
             raise AccessError("Duplicate UserID")
-    channel =  data.data['channels'][channel_id_index]
+    channel = data.data['channels'][channel_id_index]
 
     # append
     user = data.resolve_token(token)
     is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
-    if channel['is_public'] or is_owner == 'owner':
+    if channel['is_public'] or is_owner == 'owner': # pragma: no cover
         channel['members'].append(user)
     else:
-        raise AccessError("Not authorized")
+        raise AccessError("Not authorized") # pragma: no cover
 
     return {}
 
@@ -154,7 +154,7 @@ def channel_addowner(token, channel_id, u_id):
         raise AccessError("Not an owner of the specified channel")
 
     # user id from parameter
-    is_owner = data.data['users'][data.resolve_user_id_index(u_id)]['owner'] 
+    is_owner = data.data['users'][data.resolve_user_id_index(u_id)]['owner']
     if is_owner == 'owner':
         raise AccessError("Target user already an owner of the channel")
 
@@ -176,12 +176,12 @@ def channel_removeowner(token, channel_id, u_id):
     # user
     try:
         data.resolve_user_id_index(u_id)
-    except LookupError:
+    except LookupError: # pragma: no cover
         raise InputError("Invalid user ID")
 
     # user id from parameter
     # remove a member that is not owner
-    is_owner = data.data['users'][data.resolve_user_id_index(u_id)]['owner'] 
+    is_owner = data.data['users'][data.resolve_user_id_index(u_id)]['owner']
     if is_owner != 'owner':
         raise InputError("Target user already an owner of the channel")
 
