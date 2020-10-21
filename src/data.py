@@ -179,7 +179,6 @@ def search_msg_id(msg_id):
     except:
         return None
 
-
 def generate_msg_id():
     generated_id = 0
 

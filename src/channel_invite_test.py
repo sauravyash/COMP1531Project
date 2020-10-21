@@ -48,8 +48,6 @@ def test_duplicate_invite_public():
     with pytest.raises(AccessError):
         channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
 
-
-
 def test_duplicate_invite_private():
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")

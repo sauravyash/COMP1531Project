@@ -32,7 +32,6 @@ def channels_list(token):
 
     return new_list
 
-
 def channels_listall(token):
 
     try:

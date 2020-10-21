@@ -16,11 +16,10 @@ def test_valid_leave_public():
 
     auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
     result1 = auth.auth_login("validemail1@gmail.com", "password123")
-    
+
     channel_id = channels.channels_create(result["token"], "channel_1", True)
     channel_join(result1["token"], channel_id["channel_id"])
     assert channel_leave(result1["token"], channel_id["channel_id"]) == {}
-
 
 # Fail to leave
 def test_invalid_leave_channel_ID_public():

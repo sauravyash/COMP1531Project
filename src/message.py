@@ -17,9 +17,9 @@ def message_send(token, channel_id, message):
     try:
         user_id = data.resolve_token(token)
     except LookupError: # pragma: no cover
-        raise InputError('Invalid Token')
+        raise AccessError('Invalid Token')
     except:
-        raise InputError("invalid token")
+        raise AccessError("invalid token")
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
