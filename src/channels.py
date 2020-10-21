@@ -21,11 +21,11 @@ def channels_list(token):
 
     # Otherwise, only the channels they are a member of...
     for channel in data.data['channels']:
-        for member in channel['members']: # pragma: no cover
+        for member in channel['members']['permission_id_2']: # pragma: no cover
             if user_id == member:
                 new_list.append(
                     {'channel_id': channel['id'], 'name': channel['name']})
-        for admin in channel['admins']:
+        for admin in channel['members']['permission_id_1']:
             if user_id == admin:
                 new_list.append(
                     {'channel_id': channel['id'], 'name': channel['name']})
