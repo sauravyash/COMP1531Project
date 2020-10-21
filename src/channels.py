@@ -16,7 +16,7 @@ def channels_list(token):
 
     # Flockr owner can see all channels...
     for user in data.data['users']:
-        if user['permission_id'] == 1 and user['id'] == user_id:
+        if user['flockr_owner'] == True and user['id'] == user_id:
             return channels_listall(token)
 
     # Otherwise, only the channels they are a member of...
