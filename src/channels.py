@@ -53,20 +53,20 @@ def channels_listall(token):
         return []
 
 def channels_create(token, name, is_public):
-    
+
     # Check that token exists/ is valid.
     try:
         data.resolve_token(token)
     except LookupError: # pragma: no cover
         raise AccessError("Invalid Token")
-    
+
     # Check if name param is valid.
     if not isinstance(name, str) or len(name) > 20 or len(name) < 1:
         raise InputError("Invalid Name")
     # Check if is_public param is valid.
     if not isinstance(is_public, bool):
         raise InputError("Invalid is_public variable")
-    
+
     # Create and check that channel id is unique... (to be fixed)
     channel_id = 0
     unique = False
@@ -84,11 +84,11 @@ def channels_create(token, name, is_public):
         'members': {
             'permission_id_1': [data.resolve_token(token)],
             'permission_id_2': [],
-        }
+        },
         'messages': [],
         'is_public': is_public
     })
-    
+
     return {
         'channel_id': channel_id,
     }

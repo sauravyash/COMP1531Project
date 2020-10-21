@@ -54,9 +54,9 @@ def message_remove(token, message_id):
         channel_index = data.resolve_channel_id_index(channel_id)
         user_id = data.resolve_token(token)
     except LookupError:
-        raise InputError("invalid token")
+        raise AccessError("invalid token")
     except:
-        raise InputError("invalid token")
+        raise AccessError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
     is_user_author = msgs[msg_index]['u_id'] == user_id
@@ -84,9 +84,9 @@ def message_edit(token, message_id, message):
         channel_index = data.resolve_channel_id_index(channel_id)
         user_id = data.resolve_token(token)
     except LookupError:
-        raise InputError("invalid token")
+        raise AccessError("invalid token")
     except:
-        raise InputError("invalid token")
+        raise AccessError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
     is_user_author = msgs[msg_index]['u_id'] == user_id
