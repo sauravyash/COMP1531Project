@@ -187,6 +187,21 @@ def generate_msg_id():
             yield generated_id
         generated_id += 1
 
+def search_msg_id(channel_id):
+    try:
+        channel_index = resolve_channel_id_index(channel_id)
+        return channel_index
+    except:
+        return None
+
+def generate_channel_id():
+    generated_id = 0
+
+    while True:
+        if search_channel_id(generated_id) is None:
+            yield generated_id
+        generated_id += 1
+
 def is_user_authorised(channel_id, user_id):
     try:
         channel_index = resolve_channel_id_index(channel_id)
