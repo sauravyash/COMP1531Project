@@ -3,49 +3,73 @@ from error import AccessError
 from error import InputError
 
 def channel_invite(token, channel_id, u_id):
-    #u_id_index = 0
-    channel_id_index = 0
-
+    ''' Channel_invite
+    Add a user to a channel (public or private) when they are invited by a user
+    who is ALREADY a MEMBER of that channel.
+    
+    Arguments: Token- must be a valid int, channel_id- must be a valid int,
+    u_id- must be a valid int.
+    Result: Empty dictionary {}
+    
+    '''
+    
+    # Find index of channel and check channel ID is valid...
     try:
-        channel_id_index = data.resolve_channel_id_index(channel_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError("Invalid channel ID")
+        raise InputError('Invalid Channel ID')
 
-    # user
+    # Check that user ID is valid...
     try:
         data.resolve_user_id_index(u_id)
     except LookupError:
-        raise InputError("Invalid user ID")
+        raise InputError('Invalid User ID')
+    
+    # Check that the token is valid...
+    try:
+        u_id_token = data.resolve_token(token)
+    except LookupError:
+        raise InputError('Invalid Token')
 
-    # member in the channel already
-    for l in data.data['channels'][channel_id_index]['members']:
-        if u_id == l:
-            raise AccessError("Duplicate UserID")
+    # To cause less confusion:
+    invited_member = u_id
+    already_member = u_id_token
+    
+    # Check that the authorised user is already a member of the channel
+    channel_members = data.data['channels'][channel_index]['members']
+    if already_member not in channel_members:
+        raise AccessError('Duplicate UserID')
 
-
-    # append
-    data.data['channels'][channel_id_index]['members'].append(u_id)
+    # Otherwise add the user to the list of permission id 2 members.
+    member['permission_id_2'].append(invited_member)
 
     return {}
 
 def channel_details(token, channel_id):
+    ''' Channel_details
+    
+    
+    '''
+    # Find index of channel and check channel ID is valid...
     try:
-        channel_id_index = data.resolve_channel_id_index(channel_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError("Invalid channel ID")
+        raise InputError('Invalid Channel ID')
+        
+    # Check that the token is valid...
+    try:
+        user_id = data.resolve_token(token)
+    except LookupError:
+        raise InputError('Invalid Token')
 
+    # Check that the user is a member of the channel...
     channel = data.data['channels'][channel_id_index]
-    users = channel['admins'] + channel['members']
-
-    if not isinstance(channel_id, int) or channel_id < 0: # pragma: no cover
-        raise InputError("Channel ID is not valid")
-
-    if data.resolve_token(token) not in users and channel["is_public"]:
-        raise AccessError("Not a member of the specified channel")
+    if user_id not in channel['members']:
+        raise AccessError('Authorised User Not Member of Channel')
 
     return {
         'name': channel['name'],
-        'owner_members': channel['admins'],
+        'owner_members': channel['members']['permission_id_1'],
         'all_members': channel['members'],
     }
 
