@@ -20,7 +20,7 @@ def resolve_token(token):
         if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
-    raise LookupError("Token not found")
+    raise LookupError("Token not found") # pragma: no cover
 
 def resolve_user_id_index(user_id):
     for i, user in enumerate(data["users"]):
@@ -95,11 +95,11 @@ def token_index(token):
     Arguments: token, must be string
     Returns: Token index
     """
-    for user in data["users"]:
+    for user in data["users"]: # pragma: no cover
         if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == jwt.decode(token, JWT_KEY, algorithms=['HS256']):
             return user["id"] - 1
 
-    raise LookupError("Token not found")
+    raise LookupError("Token not found") # pragma: no cover
 
 # Determines if email has been registered
 def search_emails(email):
@@ -120,11 +120,11 @@ def find_user_id_index(email):
     Arguments: email, must be string
     Returns: user_id
     """
-    for user in data["users"]:
+    for user in data["users"]: # pragma: no cover
         if user["email"] == email:
             return user["id"]
 
-    raise LookupError("Email not found")
+    raise LookupError("Email not found") # pragma: no cover
 
 # Returns whether or not password matches respective email
 def password_match(email, password):
@@ -178,7 +178,7 @@ def search_msg_id(msg_id):
         return {'channel': channel_id, 'msg_index': msg_index}
     except:
         return None
-    
+
 
 def generate_msg_id():
     generated_id = 0
@@ -187,14 +187,14 @@ def generate_msg_id():
         if search_msg_id(generated_id) is None:
             yield generated_id
         generated_id += 1
-        
+
 def is_user_authorised(channel_id, user_id):
     try:
         channel_index = resolve_channel_id_index(channel_id)
-        is_member = user_id in data.get('channels')[channel_index]['members'] 
+        is_member = user_id in data.get('channels')[channel_index]['members']
         is_admin = user_id in data.get('channels')[channel_index]['admins']
         return is_admin or is_member
-    except LookupError:
+    except LookupError: # pragma: no cover
         return False
 
 '''
