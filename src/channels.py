@@ -9,26 +9,26 @@ from error import InputError
 from error import AccessError
 
 def channels_list(token):
-    
+
     ''' Channels_list
     Checks that the user has access to a channel before listing- all public
     channels and only private channels they have joined.
-    
+
     Arguments: Token- must be a valid int.
-    Return: Provide a list of all channels (and their associated details) that 
+    Return: Provide a list of all channels (and their associated details) that
     the authorised user is part of.
-    
+
     '''
-    
+
     new_list = []
-    
+
     # Check that the token is valid.
     try:
         user_id = data.token_to_user_id(token)
         user_index = data.resolve_user_id_index(user_id)
     except:
         raise AccessError(description='Invalid Token')
-    
+
     # Flockr owner can see all channels.
     if data.data['users'][user_index]['permission_id'] == 1:
         return channels_listall(token)
@@ -47,21 +47,21 @@ def channels_list(token):
     return new_list
 
 def channels_listall(token):
-    
+
     ''' Channels_listall
     All channels are listed regardless of user permissions.
-    
+
     Arguments: Token- must be a valid int.
     Return: Provide a list of all channels (and their associated details).
-    
+
     '''
-    
+
     # Check that the token is valid.
     try:
         data.token_to_user_id(token)
     except:
         raise AccessError(description='Invalid Token')
-    
+
     new_list = []
 
     for channel in data.data['channels']:
@@ -74,18 +74,18 @@ def channels_listall(token):
     return new_list
 
 def channels_create(token, name, is_public):
-    
+
     ''' Channels_create
-    A new section of the data structure is created and information about the 
+    A new section of the data structure is created and information about the
     channel is added.
-    
-    Arguments: Token- must be a valid int, name- must be a valid string, 
+
+    Arguments: Token- must be a valid int, name- must be a valid string,
     is_public- boolean value that controls public/private setting of channel.
     Return: Creates a new channel with that name that is either a public or
     private channel.
-    
+
     '''
-    
+
     # Check that token exists/ is valid.
     try:
         data.token_to_user_id(token)
@@ -117,4 +117,3 @@ def channels_create(token, name, is_public):
     return {
         'channel_id': channel_id,
     }
-    
