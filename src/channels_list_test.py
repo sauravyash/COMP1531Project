@@ -24,7 +24,7 @@ def test_channels_list_check_return_types():
     token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
     channels_create(token_dict['token'], 'Hola_Seniora', True)
 
-    for dictionary in channels_list(token_dict['token']):
+    for dictionary in channels_list(token_dict['token'])["channels"]:
         assert isinstance(dictionary['channel_id'], int)
         assert isinstance(dictionary['name'], str)
 
@@ -35,7 +35,9 @@ def test_channels_list_empty_list():
     auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
     login_info = auth.auth_login('validemail@gmail.com', '123abc!@#')
 
-    assert channels.channels_list(login_info["token"]) == []
+    assert channels.channels_list(login_info["token"]) == {
+        'channels': [] 
+    }
 
 # Test list of many channels (for when we implement other functions)
 # ----- Success List
@@ -50,9 +52,12 @@ def test_channels_list_public_only():
     channel_2 = channels_create(token_dict['token'], 'ILoveIcecream', True)
 
     # (Only public)
-    assert channels_list(token_dict['token']) == [
-    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'}]
+    assert channels_list(token_dict['token']) == {
+        'channels': [
+            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
+            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'}
+        ]
+    }
 
 def test_channels_list_public_private():
     # Clear data
@@ -78,15 +83,21 @@ def test_channels_list_public_private():
     channel.channel_addowner(token_2['token'], channel_2['channel_id'], token_1['u_id'])
 
     # (Public & private)
-    assert channels_list(token_1['token']) == [
-    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-    {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'},]
+    assert channels_list(token_1['token']) == {
+        'channels': [
+            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
+            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
+            {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'}
+        ]
+    }
 
-    assert channels_list(token_2['token']) == [
-    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-    {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'},]
+    assert channels_list(token_2['token']) == {
+        'channels': [
+            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
+            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
+            {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}
+        ]
+    }
 
 
 def test_channels_list_owner_priv():
@@ -109,19 +120,28 @@ def test_channels_list_owner_priv():
     channel_4 = channels_create(token_2['token'], 'HugsOnly', False)
 
     # (owner vs member of Flockr)
-    assert channels_list(token_owner['token']) == [
-    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-    {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'},
-    {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}]
+    assert channels_list(token_owner['token']) == {
+        'channels': [
+            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
+            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
+            {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'},
+            {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}
+        ]
+    }
 
-    assert channels_list(token_1['token']) == [
-    {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-    {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'}]
+    assert channels_list(token_1['token']) == {
+        'channels': [
+            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
+            {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'}
+        ]
+    }
 
-    assert channels_list(token_2['token']) == [
-    {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-    {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}]
+    assert channels_list(token_2['token']) == {
+        'channels': [
+            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
+            {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}
+        ]
+    }
 
 # ----- Fail List
 def test_invalid_token():

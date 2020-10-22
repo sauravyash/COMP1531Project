@@ -60,14 +60,9 @@ def message_remove(token, message_id):
         raise AccessError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
+     
     is_user_author = msgs[msg_index]['u_id'] == user_id
-    is_user_channel_owner = user_id in data.data.get('channels')[channel_index]['admins']
-    try:
-        is_user_flockr_owner = user_id == data.data['users'][0]['user_id']
-    except KeyError:
-        is_user_flockr_owner = False
-
-    if not is_user_author and not is_user_channel_owner and not is_user_flockr_owner:
+    if data.resolve_permissions(channel_id, user_id) != 1 or not is_user_author:
         raise AccessError("user not authorised")
 
     # remove msg from list
@@ -84,21 +79,15 @@ def message_edit(token, message_id, message):
         channel_id, msg_index = data.resolve_message_id_index(message_id)
         channel_index = data.resolve_channel_id_index(channel_id)
         user_id = data.token_to_user_id(token)
-    except LookupError:
-        raise AccessError("invalid token")
     except:
         raise AccessError("invalid token")
 
     msgs = data.data.get('channels')[channel_index]['messages']
     is_user_author = msgs[msg_index]['u_id'] == user_id
-    is_user_channel_owner = user_id in data.data.get('channels')[channel_index]['admins']
-    try:
-        is_user_flockr_owner = user_id == data.data['users'][0]['user_id']
-    except KeyError:
-        is_user_flockr_owner = False
-
-    if not is_user_author and not is_user_channel_owner and not is_user_flockr_owner:
+    
+    if not is_user_author or data.resolve_permissions(channel_id, user_id) != 1:
         raise AccessError("user not authorised")
+    
     data.print_data()
     msgs[msg_index]['message'] = message
 

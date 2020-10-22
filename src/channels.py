@@ -52,7 +52,9 @@ def channels_list(token):
                 new_list.append(
                     {'channel_id': channel['id'], 'name': channel['name']})
 
-    return new_list
+    return {
+        'channels': new_list 
+    }
 
 def channels_listall(token):
     ''' Channels_listall
@@ -78,8 +80,9 @@ def channels_listall(token):
                 'name': channel['name'],
             })
 
-    return new_list
-
+    return {
+        'channels': new_list 
+    }
 
 def channels_create(token, name, is_public): 
     ''' Channels_create
