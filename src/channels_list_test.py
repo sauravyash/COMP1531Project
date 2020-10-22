@@ -4,7 +4,7 @@ from error import AccessError
 
 from channels import channels_list
 from channels import channels_create
-
+import channels
 import channel
 import data
 import auth
@@ -31,11 +31,11 @@ def test_channels_list_check_return_types():
 # Test empty list (no channels)
 def test_channels_list_empty_list():
     # Clear existing data...
-    clear()
+    other.clear()
     auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
+    login_info = auth.auth_login('validemail@gmail.com', '123abc!@#')
 
-    assert channels.channels_list(token_dict) == []
+    assert channels.channels_list(login_info["token"]) == []
 
 # Test list of many channels (for when we implement other functions)
 # ----- Success List

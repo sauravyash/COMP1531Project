@@ -29,12 +29,13 @@ def channels_list(token):
     except:
         raise AccessError(description='Invalid Token')
 
-'''
+    '''
     # Flockr owner can see all channels...
     for user in data.data['users']:
         if user['permission_id'] == 1 and user['id'] == user_id:
             return channels_listall(token)
-'''
+    '''
+    
     # Flockr owner can see all channels.
     if data.data['users'][user_index]['permission_id'] == 1:
         return channels_listall(token)
