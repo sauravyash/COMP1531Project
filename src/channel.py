@@ -150,7 +150,7 @@ def channel_leave(token, channel_id):
         user_id = data.token_to_user_id(token)
     except:
         raise AccessError(description='Invalid Token')
-
+    
     # If the user is a member of the channel, then remove them.
     # Add a function that checks if the user is the only user, then delete the
     # channel.
@@ -205,64 +205,106 @@ def channel_join(token, channel_id):
     return {}
 
 def channel_addowner(token, channel_id, user_id):
-
-    # channel
-    try:
-        channe_index = data.resolve_channel_id_index(channel_id)
-    except LookupError:
-        raise InputError('Invalid channel ID')
-
-    # user
-    try:
-        data.resolve_user_id_index(user_id)
-    except LookupError:
-        raise InputError('Invalid user ID')
-
-    # user id from token
-    user = data.token_to_user_id(token)
-    is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
-    if is_owner != 'owner':
-        raise AccessError('Not an owner of the specified channel')
-
-    # user id from parameter
-    is_owner = data.data['users'][data.resolve_user_id_index(user_id)]['owner']
-    if is_owner == 'owner':
-        raise AccessError('Target user already an owner of the channel')
-
-    data.data['channels'][channel_index]['admins'].append(user_id)
-
-    return {
-    }
-
-def channel_removeowner(token, channel_id, user_id):
-
-    # channel
+    ''' Channel_addowner
+    An owner or flockr owner may make any member of the channel (who is not 
+    already an owner) an owner of the channel.
+    
+    Input: token- must be a valid int, channel_id- must be a valid int, user_id-
+    must be a valid int
+    Result: Empty dictionary, {}
+    
+    '''
+    
+    # Find index of channel and check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError('Invalid channel ID')
+        raise InputError(description='Invalid Channel ID')
 
-    # user
+    # Check that user ID is valid.
     try:
-        data.resolve_user_id_index(user_id)
-    except LookupError: # pragma: no cover
-        raise InputError('Invalid user ID')
+        user_index = data.resolve_user_id_index(user_id)
+    except LookupError:
+        raise InputError(description='Invalid User ID')
+    
+    # Check that the token is valid.
+    try:
+        user_id_token = data.token_to_user_id(token)
+    except:
+        raise AccessError(description='Invalid Token')
 
-    # user id from parameter
-    # remove a member that is not owner
-    is_owner = data.data['users'][data.resolve_user_id_index(user_id)]['owner']
-    if is_owner != 'owner':
-        raise InputError('Target user already an owner of the channel')
+    # To cause less confusion, name accordingly.
+    invited_member = user_id
+    already_member = user_id_token
+    
+    channel = data.data['channels'][channel_index]
+    # If authorised user (already_member) does not have owner permissions, raise
+    # an Access Error.
+    if data.resolve_permissions(channel['id'], already_member) is not 1:
+        raise AccessError(description='User Not Authorised With Channel Owner Permissions')
+        
+    # Check if invited user is a member of channel.
+    if data.resolve_permissions(channel['id'], invited_member) == None:
+        raise InputError(description='User Is Not a Member Of Channel')
+    # Check if invited user is not already an owner.
+    if invited_member in channel['members']['permission_id_1']:
+        raise InputError(description='User Is Already a Channel Owner')
+    
+    # Finally add this user as an owner to the channel.
+    channel['members']['permission_id_2'].remove(invited_member)
+    channel['members']['permission_id_1'].append(invited_member)
 
-    # user id from token
-    # remove not from owner
-    user = data.token_to_user_id(token)
-    is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
-    if is_owner != 'owner':
-        raise AccessError('Not an owner of the specified channel')
+    return {}
 
+def channel_removeowner(token, channel_id, user_id):
+    ''' Channel_removeowner
+    An owner or flockr owner may make any other owner of the channel and remove 
+    them, so they are now just a member.
+    
+    Input: token- must be a valid int, channel_id- must be a valid int, user_id-
+    must be a valid int
+    Result: Empty dictionary, {}
+    
+    '''
+    
+    # Find index of channel and check channel ID is valid.
+    try:
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError(description='Invalid Channel ID')
 
-    data.data['channels'][channel_index]['admins'].remove(user_id)
+    # Check that user ID is valid.
+    try:
+        user_index = data.resolve_user_id_index(user_id)
+    except LookupError:
+        raise InputError(description='Invalid User ID')
+    
+    # Check that the token is valid.
+    try:
+        user_id_token = data.token_to_user_id(token)
+    except:
+        raise AccessError(description='Invalid Token')
 
-    return {
-    }
+    # To cause less confusion, name accordingly.
+    invited_member = user_id
+    already_member = user_id_token
+    
+    channel = data.data['channels'][channel_index]
+    # If authorised user (already_member) does not have owner permissions, raise
+    # an Access Error.
+    if data.resolve_permissions(channel['id'], already_member) is not 1:
+        raise AccessError(description='User Not Authorised With Channel Owner Permissions')
+
+    # Check if invited user is a member of channel.
+    if data.resolve_permissions(channel['id'], invited_member) == None:
+        raise InputError(description='User Is Not a Member Of Channel')
+    # Check if invited user is already an owner.
+    if invited_member not in channel['members']['permission_id_1']:
+        raise InputError(description='User Is Not Already a Channel Owner')
+    
+    # Remove the user as an owner, and replace them as a member.
+    channel['members']['permission_id_1'].remove(invited_member)
+    channel['members']['permission_id_2'].append(invited_member)
+
+    return {}
+
