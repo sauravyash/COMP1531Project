@@ -291,25 +291,11 @@ def generate_channel_id():
 
 '''
 EXAMPLE
+EXAMPLE
 data = {
     'users': [
         {
             'id': 1,
-<<<<<<< Updated upstream
-            'name_first': 'firstname',
-            'name_last': 'lastname',
-            'email': 'validemail@gmail.com',
-            'password': 'validpassword123',
-            'handle': 'firstnamelastname',
-            'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
-            'authenticated': True,
-            'owner': 'user'
-        },
-        {
-            'id': 2,
-            'name' : 'user2',
-            ...
-=======
             'name_first': 'firstname1',
             'name_last': 'lastname1',
             'email': 'validemail1@gmail.com',
@@ -327,22 +313,12 @@ data = {
             'handle': 'firstnamelastnam2',
             'token': 'lkJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
             'permission_id': 2,
->>>>>>> Stashed changes
         },
     ],
     'channels': [
         {
             'id': 1,
             'name' : 'channel1',
-<<<<<<< Updated upstream
-            'admins': [ 'exampleID1', 'exampleID2'],
-            'members': [ 'mbr1', 'mbr2'] ,
-            'messages' [
-                  {
-                      'msg_id': 1,
-                      'msg_author': "mbr1",
-                      'msg_content': "hi"
-=======
             'members': [
                 'permission_id_1': [],
                 'permission_id_2': [],
@@ -353,7 +329,6 @@ data = {
                       'u_id': "mbr1",
                       'message': "hi"
                       'time_created': 1582426789
->>>>>>> Stashed changes
                   }
              ]
             'is_public': True
