@@ -140,7 +140,7 @@ def email_to_user_id(email):
 
 # USER PERMISSIONS
 def is_user_authorised(channel_id, user_id):
-    """ CHECK IF USER IS A MEMBER OF A CHANNEL
+    """ CHECK IF USER IS A MEMBER OF A CHANNEL & THEIR PERMISSIONS
 
     Arguments: channel_id- must be an int, user_id- must be an int
     Returns: Either 1 or 2- to indicate permissions; otherwise None
@@ -148,10 +148,14 @@ def is_user_authorised(channel_id, user_id):
     """
     
     try:
+        # Check if the user is a flockr owner.
+        user_index = resolve_user_id_index(user_id)
+        permission = data['users'][user_index]['permission_id']
         channel_index = resolve_channel_id_index(channel_id)
         members = data['channels'][channel_index]['members']
         
-        if user_id in members['permission_id_1']:
+        # If user is a CHANNEL owner or FLOCKR owner, return 1.
+        if user_id in members['permission_id_1'] or permission == 1:
             return 1
         elif user_id in members['permission_id_2']:
             return 2
