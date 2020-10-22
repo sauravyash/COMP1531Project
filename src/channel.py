@@ -142,7 +142,7 @@ def channel_leave(token, channel_id):
 
     # remove
     if user_id in data.data['channels'][channel_index]['members']:
-        data.data['channels'][channel_id_index]['members'].remove(user_id)
+        data.data['channels'][channel_index]['members'].remove(user_id)
     else:
         raise AccessError("User not in a member")
 
@@ -198,7 +198,7 @@ def channel_addowner(token, channel_id, user_id):
     if is_owner == 'owner':
         raise AccessError("Target user already an owner of the channel")
 
-    data.data['channels'][channel_id_index]['admins'].append(user_id)
+    data.data['channels'][channel_index]['admins'].append(user_id)
 
     return {
     }
@@ -207,7 +207,7 @@ def channel_removeowner(token, channel_id, user_id):
 
     # channel
     try:
-        channel_id_index = data.resolve_channel_id_index(channel_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
 
@@ -231,7 +231,7 @@ def channel_removeowner(token, channel_id, user_id):
         raise AccessError("Not an owner of the specified channel")
 
 
-    data.data['channels'][channel_id_index]['admins'].remove(user_id)
+    data.data['channels'][channel_index]['admins'].remove(user_id)
 
     return {
     }
