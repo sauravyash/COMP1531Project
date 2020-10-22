@@ -151,11 +151,14 @@ def resolve_permissions(channel_id, user_id):
         # Check if the user is a flockr owner.
         user_index = resolve_user_id_index(user_id)
         permission = data['users'][user_index]['permission_id']
+        
         channel_index = resolve_channel_id_index(channel_id)
         members = data['channels'][channel_index]['members']
         
         # If user is a CHANNEL owner or FLOCKR owner, return 1.
-        if user_id in members['permission_id_1'] or permission == 1:
+        if user_id in members['permission_id_1']:
+            return 1
+        elif user_id in members['permission_id_2'] and permission == 1:
             return 1
         elif user_id in members['permission_id_2']:
             return 2

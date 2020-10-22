@@ -26,7 +26,7 @@ def message_send(token, channel_id, message):
     except LookupError:
         raise InputError('Invalid Channel ID')
 
-    if not data.is_user_authorised(channel_id, user_id):
+    if not data.resolve_permissions(channel_id, user_id):
         raise AccessError("User Not Permitted!")
 
     # create msg

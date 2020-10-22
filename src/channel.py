@@ -38,7 +38,7 @@ def channel_invite(token, channel_id, user_id):
     
     # Check that the authorised user is already a member of the channel.
     channel = data.data['channels'][channel_index]
-    if not data.is_user_authorised(channel['channel_id'], already_member):
+    if not data.resolve_permissions(channel['id'], already_member):
         raise AccessError(description='Authorised User Not Member of Channel')
 
     # Add the user to the list of permission id 2 members.
@@ -70,7 +70,7 @@ def channel_details(token, channel_id):
 
     # Check that the user is a member of the channel.
     channel = data.data['channels'][channel_index]
-    if data.is_user_authorised(channel['channel_id'], user_id):
+    if data.resolve_permissions(channel['id'], user_id):
         raise AccessError(description='Authorised User Not Member of Channel')
     
     # Return channel details as a dictionary.
@@ -100,13 +100,13 @@ def channel_messages(token, channel_id, start):
         
     # Check that the token is valid.
     try:
-        u_id = data.token_to_user_id(token)
+        user_id = data.token_to_user_id(token)
     except:
         raise AccessError(description='Invalid Token')
     
     # Check that the user is a member of the channel.
     channel = data.data['channels'][channel_index]
-    if data.is_user_authorised(channel['channel_id'], user_id):
+    if data.resolve_permissions(channel['id'], user_id) is not None:
         raise AccessError(description='Authorised User Not Member of Channel')
         
     # Reverse messages list, so that most recent is index 0.
