@@ -101,7 +101,7 @@ def test_invalid_channel():
     with pytest.raises(InputError):
         channel_invite(result1['token'], -1, result2['u_id'])
 
-def test_invalid_u_id():
+def test_invalid_user_id():
     
     other.clear()
     
@@ -117,5 +117,5 @@ def test_invalid_u_id():
     
     # Input error is raised when fake user ID is used.
     with pytest.raises(InputError):
-        channel_invite(result1['token'], channel_id, -1)
+        channel_invite(result1['token'], channel_id['channel_id'], -1)
 

@@ -190,7 +190,7 @@ def channel_join(token, channel_id):
     
     # If member is already in channel, do not add twice.
     channel = data.data['channels'][channel_index]
-    if data.resolve_permissions(channel['id'], user_id) is not None:
+    if data.resolve_permissions(channel['id'], user_id) is not None: #pragma: no cover
         return {}
     
     # Check if member is a global owner (owner of flockr)

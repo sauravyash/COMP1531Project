@@ -134,6 +134,27 @@ def test_invalid_token():
     with pytest.raises(AccessError):
         channel_removeowner('fake_token', channel_id['channel_id'], result2['u_id'])
 
+def test_invalid_user_id():
+    
+    other.clear()
+    
+    # Register and login two users.
+    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
+    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
+
+    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
+    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
+    
+    # Create a channel with first user.
+    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    
+    # Invite the second user to the channel.
+    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
+    
+    # Check that Access Error is raised when invalid token is used.
+    with pytest.raises(InputError):
+        channel_removeowner('fake_token', channel_id['channel_id'], -1)
+
 def test_invalid_channel():
 
     other.clear()

@@ -1,4 +1,4 @@
-##############################Channel Messages Test#############################
+############################ Channel Messages Test ############################
 import pytest
 
 from error import InputError
@@ -92,6 +92,24 @@ def test_channel_messages_pagination():
             assert result_messages['messages'][j]['message'] == list(reversed(test_msgs))[i + j]
 
 # ----- Fail Messages
+def test_not_member():
+    
+    other.clear()
+    
+    # Register and login two users.
+    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
+    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
+
+    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
+    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
+    
+    # Create a channel with the first user.
+    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    
+    # Test that second user is not a member of channel- cannot become owner.
+    with pytest.raises(AccessError):
+        channel_messages(result2['token'], channel_id['channel_id'], 0)
+
 def test_invalid_channel():
     
     other.clear()
