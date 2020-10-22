@@ -120,7 +120,7 @@ def channel_messages(token, channel_id, start):
     if len(messages) - start >= 50:
         returned_msgs = messages[start:end]
     else:
-        messages[start:] 
+        returned_msgs = messages[start:] 
     
     return {
         'messages': returned_msgs,
