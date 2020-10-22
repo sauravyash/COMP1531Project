@@ -138,7 +138,7 @@ def email_to_user_id(email):
 
     raise LookupError("Email not found") # pragma: no cover
 
-# USER & CHANNEL    
+# USER PERMISSIONS
 def is_user_authorised(channel_id, user_id):
     """ CHECK IF USER IS A MEMBER OF A CHANNEL
 
@@ -153,7 +153,7 @@ def is_user_authorised(channel_id, user_id):
         
         if user_id in members['permission_id_1']:
             return 1
-        if user_id in members['permission_id_2']:
+        elif user_id in members['permission_id_2']:
             return 2
         else:
             return None
