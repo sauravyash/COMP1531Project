@@ -107,7 +107,7 @@ def test_invalid_channel():
     result = auth.auth_login('validemail@gmail.com', 'password123')
     
     # Create a channel with first user.
-    channel_id = channels.channels_create(result['token'], 'channel_1', True)
+    channels.channels_create(result['token'], 'channel_1', True)
     
     # Check that Input Error is raised when invalid channel is used.
     with pytest.raises(InputError):
