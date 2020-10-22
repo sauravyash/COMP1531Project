@@ -1,3 +1,8 @@
+''' Channels.py
+File that contains all functions related to channels.
+
+'''
+
 import data
 
 from error import InputError
@@ -19,7 +24,7 @@ def channels_list(token):
 
     try:
         # Find user_id by token...
-        user_id = data.resolve_token(token)
+        user_id = data.token_to_user_id(token)
     except LookupError:
         return new_list
 
@@ -54,7 +59,7 @@ def channels_listall(token):
     # Check that token is valid, if so return list of all channels...
     try:
         new_list = []
-        data.resolve_token(token)
+        data.token_to_user_id(token)
 
         for channel in data.data['channels']:
             new_list.append(
@@ -84,28 +89,26 @@ def channels_create(token, name, is_public):
     
     # Check that token exists/ is valid.
     try:
-        data.resolve_token(token)
-    except LookupError: # pragma: no cover
-        raise AccessError("Invalid Token")
+        data.token_to_user_id(token)
     except: # pragma: no cover
-        raise AccessError("Invalid Token")
+        raise AccessError(description="Invalid Token")
 
     # Check if name param is valid.
     if not isinstance(name, str) or len(name) > 20 or len(name) < 1:
-        raise InputError("Invalid Name")
+        raise InputError(description="Invalid Name")
     # Check if is_public param is valid.
     if not isinstance(is_public, bool):
-        raise InputError("Invalid is_public variable")
+        raise InputError(description="Invalid is_public variable")
 
     # Create and check that channel id is unique...
-    channel_id = next(data.generate_channel_id())
+    channel_id = data.generate_channel_id()
 
     # Create channel data structure & add new information...
     data.data['channels'].append({
         'id': channel_id,
         'name' : name,
         'members': {
-            'permission_id_1': [data.resolve_token(token)],
+            'permission_id_1': [data.token_to_user_id(token)],
             'permission_id_2': [],
         },
         'messages': [],

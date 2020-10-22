@@ -1,8 +1,9 @@
 import data
+
 from error import AccessError
 from error import InputError
 
-def channel_invite(token, channel_id, u_id):
+def channel_invite(token, channel_id, user_id):
     ''' Channel_invite
     Add a user to a channel (public or private) when they are invited by a user
     who is ALREADY a MEMBER of that channel.
@@ -13,140 +14,157 @@ def channel_invite(token, channel_id, u_id):
     
     '''
     
-    # Find index of channel and check channel ID is valid...
+    # Find index of channel and check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError('Invalid Channel ID')
+        raise InputError(description='Invalid Channel ID')
 
-    # Check that user ID is valid...
+    # Check that user ID is valid.
     try:
-        data.resolve_user_id_index(u_id)
+        data.resolve_user_id_index(user_id)
     except LookupError:
-        raise InputError('Invalid User ID')
+        raise InputError(description='Invalid User ID')
     
-    # Check that the token is valid...
+    # Check that the token is valid.
     try:
-        u_id_token = data.resolve_token(token)
-    except LookupError:
-        raise InputError('Invalid Token')
+        user_id_token = data.token_to_user_id(token)
+    except:
+        raise AccessError(description='Invalid Token')
 
-    # To cause less confusion:
-    invited_member = u_id
-    already_member = u_id_token
+    # To cause less confusion, name accordingly.
+    invited_member = user_id
+    already_member = user_id_token
     
-    # Check that the authorised user is already a member of the channel
-    channel_members = data.data['channels'][channel_index]['members']
+    # Check that the authorised user is already a member of the channel.
+    members = data.data['channels'][channel_index]['members']
+    channel_members = members['permission_id_1'] + members['permission_id_2']
     if already_member not in channel_members:
-        raise AccessError('Duplicate UserID')
+        raise AccessError(description='Authorised User Not Member of Channel')
 
     # Otherwise add the user to the list of permission id 2 members.
-    member['permission_id_2'].append(invited_member)
+    members['permission_id_2'].append(invited_member)
 
     return {}
 
 def channel_details(token, channel_id):
     ''' Channel_details
+    Provide details about a channel a user is a member of.
     
+    Input: Token- must be a valid int, channel_id- must be a valid int.
+    Result: A dictionary containing a channel's name, owner_members and all 
+    members (overlapping with owner_members).
     
     '''
-    # Find index of channel and check channel ID is valid...
+    
+    # Find index of channel and check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError('Invalid Channel ID')
+        raise InputError(description='Invalid Channel ID')
         
-    # Check that the token is valid...
+    # Check that the token is valid.
     try:
-        user_id = data.resolve_token(token)
-    except LookupError:
-        raise InputError('Invalid Token')
+        u_id = data.token_to_user_id(token)
+    except:
+        raise AccessError(description='Invalid Token')
 
-    # Check that the user is a member of the channel...
-    channel = data.data['channels'][channel_id_index]
-    if user_id not in channel['members']:
-        raise AccessError('Authorised User Not Member of Channel')
-
+    # Check that the user is a member of the channel.
+    channel = data.data['channels'][channel_index]
+    members = channel['members']
+    channel_members = members['permission_id_1'] + members['permission_id_2']
+    if u_id not in channel_members:
+        raise AccessError(description='Authorised User Not Member of Channel')
+    
+    # Return channel details as a dictionary.
     return {
         'name': channel['name'],
-        'owner_members': channel['members']['permission_id_1'],
-        'all_members': channel['members'],
+        'owner_members': members['permission_id_1'],
+        'all_members': channel_members,
     }
 
 
 def channel_messages(token, channel_id, start):
-    channel_id_index = -1
-
-    if start < 0: # pragma: no cover
-        raise InputError("Start out of bounds")
-
+    
+    # Find index of channel and check channel ID is valid.
     try:
-        channel_id_index = data.resolve_channel_id_index(channel_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Channel not found")
-
-    channel = data.data['channels'][channel_id_index]
-    users = channel['admins'] + channel['members']
-
-    if data.resolve_token(token) not in users:
-        raise AccessError("Not a member of the specified channel")
-
+        
+    # Check that the token is valid.
+    try:
+        u_id = data.token_to_user_id(token)
+    except:
+        raise AccessError(description='Invalid Token')
+    
+    # Check that the user is a member of the channel.
+    channel = data.data['channels'][channel_index]
+    members = channel['members']
+    channel_members = members['permission_id_1'] + members['permission_id_2']
+    if u_id not in channel_members:
+        raise AccessError(description='Authorised User Not Member of Channel')
+        
     messages = channel['messages']
-
-    if start > len(messages):
+    # Check if start param is valid.
+    if start > len(messages) or start < 0:
         raise InputError("Start is Out of Bounds")
 
-    end = start + 50 if len(messages) >= 50 else -1
-
-    return {
-        'messages': messages[start::end],
-        'start': start,
-        'end': end,
-    }
+    # Display up to 50 messages.
+    if len(messages) - start >= 50:
+        end = start + 50
+        return {
+            'messages': messages[start:end],
+            'start': start,
+            'end': end,
+        }
+    else:
+        end = -1    
+        return {
+            'messages': messages[start:],
+            'start': start,
+            'end': end,
+        }
 
 def channel_leave(token, channel_id):
-    #u_id_index = 0
-    channel_id_index = 0
-    u_id = 0
+
     try:
-        channel_id_index = data.resolve_channel_id_index(channel_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
 
     # user
     try:
-        u_id = data.resolve_token(token)
-        data.resolve_user_id_index(u_id)
+        user_id = data.token_to_user_id(token)
+        data.resolve_user_id_index(user_id)
     except LookupError: # pragma: no cover
         raise InputError("Invalid token")
 
     # remove
-    if u_id in data.data['channels'][channel_id_index]['members']:
-        data.data['channels'][channel_id_index]['members'].remove(u_id)
+    if user_id in data.data['channels'][channel_index]['members']:
+        data.data['channels'][channel_id_index]['members'].remove(user_id)
     else:
         raise AccessError("User not in a member")
 
     return {}
 
 def channel_join(token, channel_id):
-    #u_id_index = 0
-    channel_id_index = 0
 
     try:
-        channel_id_index = data.resolve_channel_id_index(channel_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
 
-    u_id = data.resolve_token(token)
+    user_id = data.token_to_user_id(token)
 
     # member in the channel already
-    for l in data.data['channels'][channel_id_index]['members']:
-        if u_id == l: # pragma: no cover
+    for l in data.data['channels'][channel_index]['members']:
+        if user_id == l: # pragma: no cover
             raise AccessError("Duplicate UserID")
-    channel = data.data['channels'][channel_id_index]
+    channel = data.data['channels'][channel_index]
 
     # append
-    user = data.resolve_token(token)
+    user = data.token_to_user_id(token)
     is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
     if channel['is_public'] or is_owner == 'owner': # pragma: no cover
         channel['members'].append(user)
@@ -155,41 +173,37 @@ def channel_join(token, channel_id):
 
     return {}
 
-def channel_addowner(token, channel_id, u_id):
-    #u_id_index = 0
-    channel_id_index = 0
+def channel_addowner(token, channel_id, user_id):
 
     # channel
     try:
-        channel_id_index = data.resolve_channel_id_index(channel_id)
+        channe_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
         raise InputError("Invalid channel ID")
 
     # user
     try:
-        data.resolve_user_id_index(u_id)
+        data.resolve_user_id_index(user_id)
     except LookupError:
         raise InputError("Invalid user ID")
 
     # user id from token
-    user = data.resolve_token(token)
+    user = data.token_to_user_id(token)
     is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
     if is_owner != 'owner':
         raise AccessError("Not an owner of the specified channel")
 
     # user id from parameter
-    is_owner = data.data['users'][data.resolve_user_id_index(u_id)]['owner']
+    is_owner = data.data['users'][data.resolve_user_id_index(user_id)]['owner']
     if is_owner == 'owner':
         raise AccessError("Target user already an owner of the channel")
 
-    data.data['channels'][channel_id_index]['admins'].append(u_id)
+    data.data['channels'][channel_id_index]['admins'].append(user_id)
 
     return {
     }
 
-def channel_removeowner(token, channel_id, u_id):
-    #u_id_index = 0
-    channel_id_index = 0
+def channel_removeowner(token, channel_id, user_id):
 
     # channel
     try:
@@ -199,25 +213,25 @@ def channel_removeowner(token, channel_id, u_id):
 
     # user
     try:
-        data.resolve_user_id_index(u_id)
+        data.resolve_user_id_index(user_id)
     except LookupError: # pragma: no cover
         raise InputError("Invalid user ID")
 
     # user id from parameter
     # remove a member that is not owner
-    is_owner = data.data['users'][data.resolve_user_id_index(u_id)]['owner']
+    is_owner = data.data['users'][data.resolve_user_id_index(user_id)]['owner']
     if is_owner != 'owner':
         raise InputError("Target user already an owner of the channel")
 
     # user id from token
     # remove not from owner
-    user = data.resolve_token(token)
+    user = data.token_to_user_id(token)
     is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
     if is_owner != 'owner':
         raise AccessError("Not an owner of the specified channel")
 
 
-    data.data['channels'][channel_id_index]['admins'].remove(u_id)
+    data.data['channels'][channel_id_index]['admins'].remove(user_id)
 
     return {
     }

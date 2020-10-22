@@ -14,8 +14,9 @@ def message_send(token, channel_id, message):
         raise InputError("Invalid Message")
 
     user_id = -1
+    
     try:
-        user_id = data.resolve_token(token)
+        user_id = data.token_to_user_id(token)
     except LookupError: # pragma: no cover
         raise AccessError('Invalid Token')
     except:
@@ -29,7 +30,7 @@ def message_send(token, channel_id, message):
         raise AccessError("User Not Permitted!")
 
     # create msg
-    new_id = next(data.generate_msg_id())
+    new_id = data.generate_message_id()
 
     msg = {
         'message_id': new_id,
@@ -43,7 +44,7 @@ def message_send(token, channel_id, message):
     msgs.append(msg)
 
     return {
-        'message_id': msg['message_id']
+        'message_id': msg['message_id'],
     }
 
 def message_remove(token, message_id):
@@ -52,7 +53,7 @@ def message_remove(token, message_id):
     try:
         channel_id, msg_index = data.resolve_message_id_index(message_id)
         channel_index = data.resolve_channel_id_index(channel_id)
-        user_id = data.resolve_token(token)
+        user_id = data.token_to_user_id(token)
     except LookupError:
         raise AccessError("invalid token")
     except:
@@ -82,7 +83,7 @@ def message_edit(token, message_id, message):
     try:
         channel_id, msg_index = data.resolve_message_id_index(message_id)
         channel_index = data.resolve_channel_id_index(channel_id)
-        user_id = data.resolve_token(token)
+        user_id = data.token_to_user_id(token)
     except LookupError:
         raise AccessError("invalid token")
     except:
