@@ -309,6 +309,7 @@ data = {
             'password': 'validpassword123',
             'handle': 'firstnamelastnam1',
             'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
+            'authorised': True,
             'permission_id': 1,
         },
         {
@@ -319,6 +320,7 @@ data = {
             'password': 'validpassword123',
             'handle': 'firstnamelastnam2',
             'token': 'lkJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
+            'authorised': True
             'permission_id': 2,
         },
     ],

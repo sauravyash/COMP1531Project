@@ -143,11 +143,11 @@ def channel_leave(token, channel_id):
     except LookupError:
         raise InputError(description='Invalid Channel ID')
 
-    # Check that user ID is valid.
+    # Check that token is valid.
     try:
         user_id = data.token_to_user_id(token)
-    except LookupError: # pragma: no cover
-        raise InputError(description='Invalid Token')
+    except:
+        raise AccessError(description='Invalid Token')
 
     # If the user is a member of the channel, then remove them.
     # Add a function that checks if the user is the only user, then delete the
@@ -161,27 +161,40 @@ def channel_leave(token, channel_id):
     return {}
 
 def channel_join(token, channel_id):
-
+    ''' Channel_join
+    Allow any member to join a public channel or a flockr owner to join any
+    channel.
+    
+    Input: token- must be a valid int, channel_id- must be a valid int
+    Result: Empty dictionary, {}
+    
+    '''
+    
+    # Find index of channel and check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError('Invalid channel ID')
+        raise InputError(description='Invalid Channel ID')
 
-    user_id = data.token_to_user_id(token)
-
-    # member in the channel already
-    for l in data.data['channels'][channel_index]['members']:
-        if user_id == l: # pragma: no cover
-            raise AccessError('Duplicate UserID')
+    # Check that token and user ID is valid.
+    try:
+        user_id = data.token_to_user_id(token)
+        user_index = data.resolve_user_id_index(user_id)
+    except:
+        raise InputError(description='Invalid Token')
+    
+    # If member is already in channel, do not add twice.
     channel = data.data['channels'][channel_index]
-
-    # append
-    user = data.token_to_user_id(token)
-    is_owner = data.data['users'][data.resolve_user_id_index(user)]['owner']
-    if channel['is_public'] or is_owner == 'owner': # pragma: no cover
-        channel['members'].append(user)
+    if data.resolve_permissions(channel['id'], user_id) is not None:
+        return {}
+    
+    # Check if member a global owner (owner of flockr)
+    global_permission = data.data['users'][user_index][permission_id]
+    # Add authorised user to the channel or raise error.
+    if channel['is_public'] or global_permission == 1:
+        channel['members'].append(user_id)
     else:
-        raise AccessError('Not authorized') # pragma: no cover
+        raise AccessError(description='User Not Authorised to Access Channel')
 
     return {}
 
