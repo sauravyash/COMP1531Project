@@ -33,8 +33,10 @@ def test_channels_list_check_return_types():
 def test_channels_list_empty_list():
     # Clear existing data...
     clear()
+    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
+    token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
 
-    assert channels.channels_list("") == []
+    assert channels.channels_list(token_dict) == []
 
 # Test list of many channels (for when we implement other functions)
 def test_channels_list_public_only():

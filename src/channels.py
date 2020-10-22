@@ -14,7 +14,7 @@ def channels_list(token):
     Checks that the user has access to a channel before listing- all public
     channels and only private channels they have joined.
     
-    Arguments: Token- must be a valid int.
+    Arguments: Token- must be a valid JWT token string.
     Return: Provide a list of all channels (and their associated details) that 
     the authorised user is part of.
     
@@ -30,7 +30,7 @@ def channels_list(token):
 
     # Flockr owner can see all channels...
     for user in data.data['users']:
-        if user['flockr_owner'] and user['id'] == user_id:
+        if user['permission_id'] == 1 and user['id'] == user_id:
             return channels_listall(token)
 
     # Otherwise, only the channels they are a member of...
@@ -47,7 +47,6 @@ def channels_list(token):
     return new_list
 
 def channels_listall(token):
-    
     ''' Channels_listall
     All channels are listed regardless of user permissions.
     
@@ -74,8 +73,7 @@ def channels_listall(token):
     except:
         return []
 
-def channels_create(token, name, is_public):
-    
+def channels_create(token, name, is_public): 
     ''' Channels_create
     A new section of the data structure is created and information about the 
     channel is added.
