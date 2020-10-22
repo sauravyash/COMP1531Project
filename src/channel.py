@@ -9,7 +9,7 @@ def channel_invite(token, channel_id, user_id):
     who is ALREADY a MEMBER of that channel.
     
     Arguments: token- must be a valid int, channel_id- must be a valid int,
-    u_id- must be a valid int
+    user_id- must be a valid int
     Result: Empty dictionary {}
     
     '''
@@ -64,13 +64,15 @@ def channel_details(token, channel_id):
         
     # Check that the token is valid.
     try:
-        u_id = data.token_to_user_id(token)
+        user_id = data.token_to_user_id(token)
     except:
         raise AccessError(description='Invalid Token')
 
     # Check that the user is a member of the channel.
     channel = data.data['channels'][channel_index]
-    if data.resolve_permissions(channel['id'], user_id):
+    members = channel['members']
+    channel_members = members['permission_id_1'] + members['permission_id_2']
+    if data.resolve_permissions(channel['id'], user_id) is None:
         raise AccessError(description='Authorised User Not Member of Channel')
     
     # Return channel details as a dictionary.
@@ -153,8 +155,11 @@ def channel_leave(token, channel_id):
     # Add a function that checks if the user is the only user, then delete the
     # channel.
     channel = data.data['channels'][channel_index]
-    if data.resolve_permissions(channel['id'], user_id):
-        channel['members'].remove(user_id)
+    if data.resolve_permissions(channel['id'], user_id) is not None:
+        if user_id in channel['members']['permission_id_1']:
+            channel['members']['permission_id_1'].remove(user_id)
+        else:
+            channel['members']['permission_id_2'].remove(user_id)
     else:
         raise AccessError(description='Authorised User Not Member of Channel')
 
@@ -181,18 +186,19 @@ def channel_join(token, channel_id):
         user_id = data.token_to_user_id(token)
         user_index = data.resolve_user_id_index(user_id)
     except:
-        raise InputError(description='Invalid Token')
+        raise AccessError(description='Invalid Token')
     
     # If member is already in channel, do not add twice.
     channel = data.data['channels'][channel_index]
     if data.resolve_permissions(channel['id'], user_id) is not None:
         return {}
     
-    # Check if member a global owner (owner of flockr)
-    global_permission = data.data['users'][user_index][permission_id]
+    # Check if member is a global owner (owner of flockr)
+    global_permission = data.data['users'][user_index]['permission_id']
+    
     # Add authorised user to the channel or raise error.
     if channel['is_public'] or global_permission == 1:
-        channel['members'].append(user_id)
+        channel['members']['permission_id_2'].append(user_id)
     else:
         raise AccessError(description='User Not Authorised to Access Channel')
 
