@@ -139,7 +139,7 @@ def email_to_user_id(email):
     raise LookupError("Email not found") # pragma: no cover
 
 # USER PERMISSIONS
-def is_user_authorised(channel_id, user_id):
+def resolve_permissions(channel_id, user_id):
     """ CHECK IF USER IS A MEMBER OF A CHANNEL & THEIR PERMISSIONS
 
     Arguments: channel_id- must be an int, user_id- must be an int
