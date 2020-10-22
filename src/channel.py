@@ -38,7 +38,7 @@ def channel_invite(token, channel_id, user_id):
     
     # Check that the authorised user is already a member of the channel.
     channel = data.data['channels'][channel_index]
-    if not data.resolve_permissions(channel['id'], already_member):
+    if data.resolve_permissions(channel['id'], already_member) is None:
         raise AccessError(description='Authorised User Not Member of Channel')
 
     # Add the user to the list of permission id 2 members.
@@ -129,24 +129,34 @@ def channel_messages(token, channel_id, start):
     }
 
 def channel_leave(token, channel_id):
-
+    ''' Channel_leave
+    Allow any member to leave any channel.
+    
+    Input: token- must be a valid int, channel_id- must be a valid int
+    Result: Empty dictionary, {}
+    
+    '''
+    
+    # Find index of channel and check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError('Invalid channel ID')
+        raise InputError(description='Invalid Channel ID')
 
-    # user
+    # Check that user ID is valid.
     try:
         user_id = data.token_to_user_id(token)
-        data.resolve_user_id_index(user_id)
     except LookupError: # pragma: no cover
-        raise InputError('Invalid token')
+        raise InputError(description='Invalid Token')
 
-    # remove
-    if user_id in data.data['channels'][channel_index]['members']:
-        data.data['channels'][channel_index]['members'].remove(user_id)
+    # If the user is a member of the channel, then remove them.
+    # Add a function that checks if the user is the only user, then delete the
+    # channel.
+    channel = data.data['channels'][channel_index]
+    if data.resolve_permissions(channel['id'], user_id):
+        channel['members'].remove(user_id)
     else:
-        raise AccessError('User not in a member')
+        raise AccessError(description='Authorised User Not Member of Channel')
 
     return {}
 
