@@ -95,27 +95,24 @@ def test_invalid_channel():
     result2 = auth.auth_login('validemail2@gmail.com', 'password123')
     
     # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    channels.channels_create(result1['token'], 'channel_1', True)
     
     # Input error is raised when fake channel is used.
     with pytest.raises(InputError):
         channel_invite(result1['token'], -1, result2['u_id'])
 
-def test_invalid_u_id():
+def test_invalid_user_id():
     
     other.clear()
     
-    # Register and login two users.
+    # Register and login one user.
     auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
     result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
     
     # Create a channel with first user.
     channel_id = channels.channels_create(result1['token'], 'channel_1', True)
     
     # Input error is raised when fake user ID is used.
     with pytest.raises(InputError):
-        channel_invite(result1['token'], channel_id, -1)
+        channel_invite(result1['token'], channel_id['channel_id'], -1)
 

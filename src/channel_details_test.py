@@ -1,4 +1,4 @@
-###############################Channel Details Tests############################
+############################# Channel Details Tests ###########################
 import pytest
 
 from error import AccessError

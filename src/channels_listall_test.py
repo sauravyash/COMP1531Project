@@ -3,7 +3,9 @@ import pytest
 import channels
 import auth
 import data
+
 from other import clear
+from error import AccessError
 
 ### BLACKBOX TESTING ###
 
@@ -14,11 +16,6 @@ def test_channels_listall_check_return_types():
     # Clear existing data...
     clear()
 
-    assert isinstance(channels.channels_listall(""), list)
-
-    for dictionary in channels.channels_listall(""):
-        assert isinstance(dictionary, dict)
-
     # Set up user and create channel...
     auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
     token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
@@ -28,14 +25,7 @@ def test_channels_listall_check_return_types():
         assert isinstance(dictionary['channel_id'], int)
         assert isinstance(dictionary['name'], str)
 
-# Test empty list (no channels)
-def test_channels_listall_empty_list():
-    # Clear existing data...
-    clear()
-
-    assert channels.channels_listall("") == []
-
-# Test list of many channels (for when we implement other functions)
+# ----- Success Listall
 def test_channels_listall_public_only():
     # Clear existing data...
     clear()
@@ -74,3 +64,19 @@ def test_channels_listall_public_private():
     {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
     {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'},
     {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}]
+
+# ----- Fail Listall
+def test_invalid_token():
+    
+    clear()
+    
+    # Register and login a user.
+    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
+    result = auth.auth_login('validemail@gmail.com', 'password123')
+    
+    # Create a channel with first user.
+    channels.channels_create(result['token'], 'channel_1', True)
+    
+    # Check that Access Error is raised when invalid token is used.
+    with pytest.raises(AccessError):
+        channels.channels_listall('fake_token')

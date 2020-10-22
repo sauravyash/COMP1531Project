@@ -9,7 +9,7 @@ from error import InputError
 from error import AccessError
 
 def channels_list(token):
-    
+
     ''' Channels_list
     Checks that the user has access to a channel before listing- all public
     channels and only private channels they have joined.
@@ -17,25 +17,32 @@ def channels_list(token):
     Arguments: Token- must be a valid JWT token string.
     Return: Provide a list of all channels (and their associated details) that 
     the authorised user is part of.
-    
+
     '''
-    
+
     new_list = []
 
+    # Check that the token is valid.
     try:
-        # Find user_id by token...
         user_id = data.token_to_user_id(token)
-    except LookupError:
-        return new_list
+        user_index = data.resolve_user_id_index(user_id)
+    except:
+        raise AccessError(description='Invalid Token')
 
+'''
     # Flockr owner can see all channels...
     for user in data.data['users']:
         if user['permission_id'] == 1 and user['id'] == user_id:
             return channels_listall(token)
+'''
+    # Flockr owner can see all channels.
+    if data.data['users'][user_index]['permission_id'] == 1:
+        return channels_listall(token)
 
-    # Otherwise, only the channels they are a member of...
+
+    # Otherwise, only the channels they are a member of.
     for channel in data.data['channels']:
-        for member in channel['members']['permission_id_2']: # pragma: no cover
+        for member in channel['members']['permission_id_2']:
             if user_id == member:
                 new_list.append(
                     {'channel_id': channel['id'], 'name': channel['name']})
@@ -49,42 +56,41 @@ def channels_list(token):
 def channels_listall(token):
     ''' Channels_listall
     All channels are listed regardless of user permissions.
-    
+
     Arguments: Token- must be a valid int.
     Return: Provide a list of all channels (and their associated details).
-    
+
     '''
-    
-    # Check that token is valid, if so return list of all channels...
+
+    # Check that the token is valid.
     try:
-        new_list = []
         data.token_to_user_id(token)
-
-        for channel in data.data['channels']:
-            new_list.append(
-                {
-                    'channel_id': channel['id'],
-                    'name': channel['name'],
-                })
-
-        return new_list
-
-    # If token doesn't exist, return empty list...
     except:
-        return []
+        raise AccessError(description='Invalid Token')
+
+    new_list = []
+
+    for channel in data.data['channels']:
+        new_list.append(
+            {
+                'channel_id': channel['id'],
+                'name': channel['name'],
+            })
+
+    return new_list
+
 
 def channels_create(token, name, is_public): 
     ''' Channels_create
-    A new section of the data structure is created and information about the 
+    A new section of the data structure is created and information about the
     channel is added.
-    
-    Arguments: Token- must be a valid int, name- must be a valid string, 
+
+    Arguments: Token- must be a valid int, name- must be a valid string,
     is_public- boolean value that controls public/private setting of channel.
     Return: Creates a new channel with that name that is either a public or
     private channel.
-    
     '''
-    
+
     # Check that token exists/ is valid.
     try:
         data.token_to_user_id(token)
