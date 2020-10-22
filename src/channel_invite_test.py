@@ -105,12 +105,9 @@ def test_invalid_user_id():
     
     other.clear()
     
-    # Register and login two users.
+    # Register and login one user.
     auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
     result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
     
     # Create a channel with first user.
     channel_id = channels.channels_create(result1['token'], 'channel_1', True)
