@@ -105,26 +105,20 @@ def channel_messages(token, channel_id, start):
     if u_id not in channel_members:
         raise AccessError(description='Authorised User Not Member of Channel')
         
-    messages = channel['messages']
+    messages = list(reversed(channel['messages']))
     # Check if start param is valid.
     if start > len(messages) or start < 0:
         raise InputError("Start is Out of Bounds")
 
     # Display up to 50 messages.
-    if len(messages) - start >= 50:
-        end = start + 50
-        return {
-            'messages': messages[start:end],
-            'start': start,
-            'end': end,
-        }
-    else:
-        end = -1    
-        return {
-            'messages': messages[start:],
-            'start': start,
-            'end': end,
-        }
+    end = start + 50 if len(messages) - start >= 50 else -1
+    returned_msgs = messages[start:end] if len(messages) - start >= 50 else messages[start:] 
+    
+    return {
+        'messages': returned_msgs,
+        'start': start,
+        'end': end,
+    }
 
 def channel_leave(token, channel_id):
 

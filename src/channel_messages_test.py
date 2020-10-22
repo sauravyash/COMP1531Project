@@ -35,7 +35,6 @@ def test_messages_empty():
     }
 
 def test_messages_simple():
-    
     other.clear()
     
     # Register and login one user.
@@ -59,13 +58,38 @@ def test_messages_simple():
     message.message_send(result['token'], channel_id['channel_id'], 'Seeya')
     message.message_send(result['token'], channel_id['channel_id'], '*waves*')
     data.print_data()
+
     # Check that user can access these messages.
     result_messages = channel_messages(result['token'], channel_id['channel_id'], 0)
     print(result_messages)
     assert len(result_messages['messages']) == 12
-    assert result_messages['messages'][0]['message'] == 'Hi'
-    assert result_messages['messages'][1]['message'] == 'Hi Guys'
-    assert result_messages['messages'][11]['message'] == '*waves*'
+    assert result_messages['messages'][11]['message'] == 'Hi'
+    assert result_messages['messages'][10]['message'] == 'Hi Guys'
+    assert result_messages['messages'][0]['message'] == '*waves*'
+
+def test_channel_messages_pagination():
+    other.clear()
+    
+    # Register and login one user.
+    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
+    result = auth.auth_login('validemail@gmail.com', 'password123')
+    
+    # Create a channel with the first user.
+    channel_id = channels.channels_create(result['token'], 'channel_1', True)
+    
+    test_msgs = [str(a) for a in range(200)]
+
+    for x in test_msgs:
+        # Send some messages.
+        message.message_send(result['token'], channel_id['channel_id'], x)
+    
+    for i in range(0, len(test_msgs), 50):
+        result_messages = channel_messages(result['token'], channel_id['channel_id'], i)
+        
+        assert result_messages['start'] == i
+        
+        for j in range(0, 50):
+            assert result_messages['messages'][j]['message'] == list(reversed(test_msgs))[i + j]
 
 # ----- Fail Messages
 def test_invalid_channel():
