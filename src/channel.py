@@ -1,3 +1,8 @@
+''' Channel.py
+File that contains all functions related to channel.
+
+'''
+
 import data
 
 from error import AccessError

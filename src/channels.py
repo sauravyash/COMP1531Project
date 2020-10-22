@@ -21,21 +21,21 @@ def channels_list(token):
     '''
     
     new_list = []
-
+    
+    # Check that the token is valid.
     try:
-        # Find user_id by token...
         user_id = data.token_to_user_id(token)
-    except LookupError:
-        return new_list
+        user_index = data.resolve_user_id_index(user_id)
+    except:
+        raise AccessError(description='Invalid Token')
+    
+    # Flockr owner can see all channels.
+    if data.data['users'][user_index]['permission_id'] == 1:
+        return channels_listall(token)
 
-    # Flockr owner can see all channels...
-    for user in data.data['users']:
-        if user['flockr_owner'] and user['id'] == user_id:
-            return channels_listall(token)
-
-    # Otherwise, only the channels they are a member of...
+    # Otherwise, only the channels they are a member of.
     for channel in data.data['channels']:
-        for member in channel['members']['permission_id_2']: # pragma: no cover
+        for member in channel['members']['permission_id_2']:
             if user_id == member:
                 new_list.append(
                     {'channel_id': channel['id'], 'name': channel['name']})
@@ -56,23 +56,22 @@ def channels_listall(token):
     
     '''
     
-    # Check that token is valid, if so return list of all channels...
+    # Check that the token is valid.
     try:
-        new_list = []
         data.token_to_user_id(token)
-
-        for channel in data.data['channels']:
-            new_list.append(
-                {
-                    'channel_id': channel['id'],
-                    'name': channel['name'],
-                })
-
-        return new_list
-
-    # If token doesn't exist, return empty list...
     except:
-        return []
+        raise AccessError(description='Invalid Token')
+    
+    new_list = []
+
+    for channel in data.data['channels']:
+        new_list.append(
+            {
+                'channel_id': channel['id'],
+                'name': channel['name'],
+            })
+
+    return new_list
 
 def channels_create(token, name, is_public):
     
@@ -118,3 +117,4 @@ def channels_create(token, name, is_public):
     return {
         'channel_id': channel_id,
     }
+    
