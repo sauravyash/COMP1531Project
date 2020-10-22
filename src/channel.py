@@ -42,7 +42,7 @@ def channel_invite(token, channel_id, user_id):
         raise AccessError(description='Authorised User Not Member of Channel')
 
     # Add the user to the list of permission id 2 members.
-    members['permission_id_2'].append(invited_member)
+    channel['members']['permission_id_2'].append(invited_member)
 
     return {}
 
@@ -106,7 +106,7 @@ def channel_messages(token, channel_id, start):
     
     # Check that the user is a member of the channel.
     channel = data.data['channels'][channel_index]
-    if data.resolve_permissions(channel['id'], user_id) is not None:
+    if data.resolve_permissions(channel['id'], user_id) is None:
         raise AccessError(description='Authorised User Not Member of Channel')
         
     # Reverse messages list, so that most recent is index 0.
