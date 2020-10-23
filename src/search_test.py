@@ -1,12 +1,15 @@
-from channel import channel_invite
-from channel import channel_messages
+import pytest
+
 from error import InputError
 from error import AccessError
+
+from channel import channel_invite
+from channel import channel_messages
+
 import auth
 import channels
 import message
 import other
-import pytest
 import random
 import string
 
