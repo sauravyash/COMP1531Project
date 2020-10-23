@@ -3,16 +3,13 @@
 
 from subprocess import Popen, PIPE
 from time import sleep
-#import json
+import json
 #import urllib
 import re
 import signal
 import requests
 #import logging
 import pytest
-import data
-
-
 
 # Use this fixture to get the URL of the server.
 @pytest.fixture
@@ -80,12 +77,12 @@ def test_system(url):
 
     #### ----- LOGOUT USER1 ----- ####
     input_value = {
-        'token': registering_token
+        'token': token_1
     }
 
     data = requests.post(f"{url}/auth/logout", json = input_value)
 
-    payload = data.json()
+    payload = data.getjson()
     assert payload['is_success'] is True
 
     #### ----- LOGIN USER1 ----- ####
@@ -161,7 +158,7 @@ def test_system(url):
     assert data.status_code == 200
 
     payload = data.json()
-    assert payload = {}
+    assert payload == {}
 
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
@@ -189,7 +186,7 @@ def test_system(url):
     assert data.status_code == 200
 
     payload = data.json()
-    assert payload = {}
+    assert payload == {}
 
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
@@ -225,7 +222,7 @@ def test_system(url):
     assert data.status_code == 200
 
     payload = data.getjson()
-    assert payload = {}
+    assert payload == {}
 
     ### --- USER3 ATTEMPTS TO HACK IN AND JOIN A CHANNEL (ACCESS ERROR) --- ###
     input_value = {
@@ -411,7 +408,7 @@ def test_system(url):
     data = requests.put(f"{url}/user/profile/setemail",json = input_value)
     payload = data.getjson()
 
-    assert payload = {}
+    assert payload == {}
 
 
     #user/profile/sethandle
