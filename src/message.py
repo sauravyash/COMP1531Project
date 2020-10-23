@@ -17,10 +17,9 @@ def message_send(token, channel_id, message):
     
     try:
         user_id = data.token_to_user_id(token)
-    except LookupError: # pragma: no cover
-        raise AccessError('Invalid Token')
     except:
         raise AccessError("Invalid token")
+
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
@@ -51,20 +50,23 @@ def message_remove(token, message_id):
     channel_id, user_id, channel_index, msg_index = tuple([-1 for _ in range(4)])
 
     try:
-        channel_id, msg_index = data.resolve_message_id_index(message_id)
-        channel_index = data.resolve_channel_id_index(channel_id)
         user_id = data.token_to_user_id(token)
-    except LookupError:
-        raise AccessError("invalid token")
     except:
         raise AccessError("invalid token")
+    try:    
+        channel_id, msg_index = data.resolve_message_id_index(message_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except:
+        raise InputError("invalid message or channel id")
+
 
     msgs = data.data.get('channels')[channel_index]['messages']
-     
+    
     is_user_author = msgs[msg_index]['u_id'] == user_id
-    if data.resolve_permissions(channel_id, user_id) != 1 or not is_user_author:
+    is_admin = data.resolve_permissions(channel_id, user_id) == 1
+    if not is_user_author and not is_admin:
         raise AccessError("user not authorised")
-
+    
     # remove msg from list
     msgs.pop(msg_index)
 
@@ -75,17 +77,23 @@ def message_edit(token, message_id, message):
         raise InputError("Invalid Message")
 
     channel_id, channel_index, msg_index = (-1, -1, -1)
+
     try:
-        channel_id, msg_index = data.resolve_message_id_index(message_id)
-        channel_index = data.resolve_channel_id_index(channel_id)
         user_id = data.token_to_user_id(token)
     except:
         raise AccessError("invalid token")
+    
+    try:    
+        channel_id, msg_index = data.resolve_message_id_index(message_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except:
+        raise InputError("invalid message or channel id")
 
     msgs = data.data.get('channels')[channel_index]['messages']
+
     is_user_author = msgs[msg_index]['u_id'] == user_id
-    
-    if not is_user_author or data.resolve_permissions(channel_id, user_id) != 1:
+    is_admin = data.resolve_permissions(channel_id, user_id) == 1
+    if not is_user_author and not is_admin:
         raise AccessError("user not authorised")
     
     data.print_data()
