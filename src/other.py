@@ -6,6 +6,8 @@ authentication, a channel and multiple channels.
 import data
 
 from error import AccessError
+from error import InputError
+
 from channels import channels_list
 
 def clear():
@@ -31,7 +33,7 @@ def users_all(token):
 
     '''
     try:
-        data.resolve_token(token)
+        data.token_to_user_id(token)
     except:
         raise AccessError(description='Invalid Token')
 
@@ -39,7 +41,7 @@ def users_all(token):
 
     for user in data.data['users']:
         user_list.append({
-            'u_id': user['id'],
+            'user_id': user['id'],
             'email': user['email'],
             'name_first': user['name_first'],
             'name_last': user['name_last'],
@@ -50,11 +52,11 @@ def users_all(token):
         'users': user_list
     }
 
-def admin_userpermission_change(token, u_id, permission_id):
+def admin_userpermission_change(token, user_id, permission_id):
     ''' User Permission Change
     Change a user's permissions based on params passed in.
 
-    Arguments: token- must be valid int, u_id must be valid int, permission_id-
+    Arguments: token- must be valid int, user_id must be valid int, permission_id-
     must be valid int
     Return: Empty dictionary, {}
 
@@ -81,12 +83,12 @@ def admin_userpermission_change(token, u_id, permission_id):
     owner_user = user_id_token
 
     # Check that the authorised user is a global owner (owner of flocker)
-    owner_index = resolve_user_id_index(owner_user)
+    owner_index = data.resolve_user_id_index(owner_user)
     if data.data['users'][owner_index]['permission_id'] == 2:
         raise AccessError(description='User Not Authorised With Flockr Owner Permissions')
 
     # Change user permissions:
-    changing_index = resolve_user_id_index(changing_user)
+    changing_index = data.resolve_user_id_index(changing_user)
     data.data['users'][changing_index]['permission_id'] = permission_id
 
     return {}
@@ -109,8 +111,8 @@ def search(token, query_str):
     list_of_messages = []
 
     # Go through the relevant channels.
-    for channel in list_of_channels: 
-        channel_index = data.resolve_channel_id_index(channel['id'])
+    for channel in list_of_channels['channels']: 
+        channel_index = data.resolve_channel_id_index(channel['channel_id'])
         selected_channel = data.data['channels'][channel_index]
 
         # Search for message within 'messages' of each channel.

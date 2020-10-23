@@ -102,26 +102,3 @@ def user_profile_sethandle(token, handle_str):
 
     return {
     }
-
-def user_all(token):
-    # validate token
-    try:
-        data.resolve_token(token)
-    except LookupError:
-        raise InputError('invalid token')
-    
-    users = []
-
-    for user in data.data["users"]:
-        users.append({
-            'u_id': user["id"],
-            'email': user["email"],
-            'name_first': user["name_first"],
-            'name_last': user["name_last"],
-            'handle_str': user["handle"]
-        })
-
-    return {
-        'users': users 
-    }
-

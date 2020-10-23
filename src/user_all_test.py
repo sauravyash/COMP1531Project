@@ -1,21 +1,27 @@
+''' Testing function: users/all (users_all)
+'''
+
+import pytest
+
 import auth
 import channels
 import other
-import pytest
 import random
 import string
+
 from channel import channel_invite
 from channel import channel_messages
+
 from error import InputError
 from error import AccessError
 
-from user import user_all
+from other import users_all
 
-# Success User_all
+# Success users_all
 # Valid user token
 # Returns a list of all users and their associated details
 
-def test_user_all():
+def test_users_all():
     other.clear()
     
     users = [
@@ -52,15 +58,13 @@ def test_user_all():
         auth.auth_register(user["email"], "GenericPwd1", user["fname"], user["lname"])
         result.append(auth.auth_login(user["email"], "GenericPwd1"))
     
-    fetched_users = user_all(result[0]['token'])['users']
+    fetched_users = users_all(result[0]['token'])['users']
 
     for i, user in enumerate(fetched_users):
         assert user['email'] == users[i]['email']
         assert user["name_last"] == users[i]['lname']
         assert user['name_first'] == users[i]['fname']
 
-
-    '''
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("validemail@gmail.com", "password123")
 
@@ -77,5 +81,4 @@ def test_user_all():
     auth.auth_register("good_email@gmail.com", "password123", "fname4", "lname4")
     result4 = auth.auth_login("awsome_awsome_email@gmail.com", "password123")
 
-    assert user_all(result["token"]) == users
-    '''
+    assert users_all(result["token"]) == users
