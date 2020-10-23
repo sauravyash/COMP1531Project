@@ -44,7 +44,7 @@ def test_url(url):
 def test_system(url):
     '''This is a test where two users access all the functions in flocker
     '''
-    
+
     #### ----- REGISTER USER1 ----- ####
     input_value = {
         'email': 'captainunderpants@gmail.com',
@@ -60,7 +60,7 @@ def test_system(url):
     # Check return values
     payload = data.json()
     assert payload['u_id'] == 1
-    
+
     token_1 = payload['token']
 
     #### ----- LOGIN USER1 ----- ####
@@ -82,9 +82,9 @@ def test_system(url):
     input_value = {
         'token': registering_token
     }
-    
+
     data = requests.post(f"{url}/auth/logout", json = input_value)
-    
+
     payload = data.json()
     assert payload['is_success'] is True
 
@@ -93,7 +93,7 @@ def test_system(url):
         'email': 'captainunderpants@gmail.com',
         'password': 'valid12345'
     }
-    
+
     requests.post(f"{url}/auth/login", json = input_value)
 
     #### ----- REGISTER & LOGIN USER2 ----- ####
@@ -103,30 +103,30 @@ def test_system(url):
         'name_first': 'Darth',
         'name_last': 'Vader',
     }
-    
+
     data = requests.post(f"{url}/auth/register", json = input_value)
 
     # Check return values
     payload = data.json()
     assert payload['u_id'] == 2
-    
+
     token_2 = payload['token']
 
     input_value = {
         'email': 'darthvader@gmail.com',
         'password': 'cool12345'
     }
-    
+
     requests.post(f"{url}/auth/login", json = input_value)
-    
+
     #### ----- USER3 ATTEMPTS TO HACK THE LOGIN (INPUT ERROR) ----- ####
-    
+
     # They remember the email, but not the password of the user.
     input_value = {
         'email': 'darthvader@gmail.com',
         'password': 'camera1234'
     }
-    
+
     data = requests.post(f"{url}/auth/login", json = input_value)
     assert data.status_code == 400
 
@@ -143,7 +143,7 @@ def test_system(url):
     data = requests.post(f"{url}/channels/create", json = input_value)
     # Checking good connection
     assert data.status_code == 200
-    
+
     payload = data.json
     assert payload['id'] == 1
     assert payload['name'] == 'Adventure'
@@ -219,7 +219,7 @@ def test_system(url):
         'token': token_2,
         'channel_id': 1
     }
-    
+
     data = requests.post(f"{url}/channel/join", json = input_value)
     # Checking good connection
     assert data.status_code == 200
@@ -232,7 +232,7 @@ def test_system(url):
         'token': 'hacker_token_will_not_work',
         'channel_id': 1
     }
-    
+
     data = requests.post(f"{url}/channel/join", json = input_value)
     assert data.status_code == 401
 
@@ -255,14 +255,14 @@ def test_system(url):
         'channel_id': 1,
         'u_id': 2
     }
-    
+
     data = requests.post(f"{url}/channel/addowner", json = input_value)
     # Checking good connection
     assert data.status_code == 200
-    
+
     payload = data.getjson()
     assert payload == {}
-    
+
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
         'token': token_1,
@@ -278,15 +278,15 @@ def test_system(url):
 
     #### ----- USER1 REMOVES USER2 AS OWNER ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'channel_id': 1,
         'u_id': 2,
     }
-    
+
     data = requests.post(f"{url}/channel/removeowner", json = input_value)
     # Checking good connection
     assert data.status_code == 200
-    
+
     payload = data.getjson()
     assert payload == {}
 
@@ -304,58 +304,62 @@ def test_system(url):
     assert payload['all_members'] == [1, 2]
 
 #------------------------------------------------------------------------------#
-    
+
     # message/send test
+    #### ---- USER1 SENDS MESSAGE ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'channel_id': 1,
         'message': 'Never underestimate the power of Captain Underpants!'
     }
 
     data = requests.post(f"{url}/message/send", json = input_value)
-    payload = data.json()
+    payload = data.getjson()
     assert payload['message_id'] == 1
 
+    #### ---- USER2 SENDS MESSAGE ----- ####
     input_value = {
-        'token': 'darthvader@gmail.com',
+        'token': token_2,
         'channel_id': 1,
         'message': 'I will show you the power of the Dark Side of the Force'
     }
 
     data = requests.post(f"{url}/message/send", json = input_value)
-    payload = data.json()
+    payload = data.getjson()
     assert payload['message_id'] == 2
 
     # message/edit test
+    #### ---- USER1 EDITS MESSAGE ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'message_id': 1,
         'message': 'Hello black tin can'
     }
 
-    data = requests.post(f"{url}/message/edit", json = input_value)
-    payload = data.json()
+    data = requests.put(f"{url}/message/edit", json = input_value)
+    payload = data.getjson()
     assert payload == {}
 
     # message/remove test
+    #### ---- USER1 DELETES MESSAGE ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'message_id': 2
     }
 
-    data = requests.post(f"{url}/message/remove", json = input_value)
-    payload = data.json()
+    data = requests.delete(f"{url}/message/remove", json = input_value)
+    payload = data.getjson()
     assert payload == {}
 
-
     #channel/messages
+    #### ---- USER1 RETRIEVES MESSAGES ----- ####
     input_value = {
         'token': 'captainunderpants@gmail.com',
         'channel_id': 1,
         'start': 1,
     }
     data = requests.get(f"{url}/channel/details", json = input_value)
-    payload = data.json()
+    payload = data.getjson()
 
     assert payload['messages'] == ['Hello black tin can']
     assert payload['start'] == 1
@@ -364,7 +368,7 @@ def test_system(url):
 
     #channels/list
     input_value = {
-        'token': 'captainunderpants@gmail.com'
+        'token': token_1
     }
 
     data = requests.get(f"{url}/channels/list", json = input_value)
@@ -373,55 +377,58 @@ def test_system(url):
     assert payload['channels'] == [ {'channel_id': 1, 'name': 'Adventure' } ]
 
     #channels/listall
-
+    #### ---- USER1 RETRIEVES ALL CHANNELS DETAILS ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com'
+        'token': token_1
     }
 
     data = requests.get(f"{url}/channels/listall", json = input_value)
     payload = data.json()
 
-    assert payload['channels'] == [ {'channel_id': 1, 'name': 'Adventure' } ]
+    assert payload['channels'] == [{'channel_id': 1, 'name': 'Adventure' }]
 
     #user/profile/setname
-
+    #### ---- USER2 CHANGES NAME ----- ####
     input_value = {
-
-        'token': 'darthvader@gmail.com',
+        'token': token_2,
         'name_first': 'Anakin',
         'name_last': 'Skywalker',
     }
 
-    requests.put(f"{url}/user/profile/setname",json = input_value)
+    data = requests.put(f"{url}/user/profile/setname",json = input_value)
+    payload = data.getjson()
 
-
+    assert payload == {}
 
     # user/profile/setemail
-
+    #### ---- USER2 CHANGES EMAIL ----- ####
     input_value = {
 
         'token': 'darthvader@gmail.com',
         'email': 'anakinskywalker@gmail.com',
     }
 
-    requests.put(f"{url}/user/profile/setemail",json = input_value)
+    data = requests.put(f"{url}/user/profile/setemail",json = input_value)
+    payload = data.getjson()
+
+    assert payload = {}
 
 
     #user/profile/sethandle
-
+    #### ---- USER2 CHANGES HANDLE ----- ####
     input_value = {
 
         'token': 'darthvader@gmail.com',
         'handlestr': 'askywalker',
     }
 
-    requests.put(f"{url}/user/profile/sethandle",json = input_value)
+    data = requests.put(f"{url}/user/profile/sethandle",json = input_value)
+    payload = data.getjson()
 
     #user/profile
-
+    #### ---- USER2 RETRIEVES USER PROFILE DETAILS ----- ####
     input_value = {
-
-        'token': 'darthvader@gmail.com',
+        'token': token_2,
         'u_id': 2,
     }
 
@@ -429,7 +436,6 @@ def test_system(url):
     payload = data.json()
 
     assert payload['user'] == {
-
             'u_id': 2,
             'email': 'anakinskywalker@gmail.com',
             'name_first': 'Anakin',
@@ -438,55 +444,47 @@ def test_system(url):
     }
 
 #users/all
-
+    #### ---- USER1 RETRIEVES ALL USER DETAILS ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
     }
 
     data = requests.get(f"{url}/users/all", json = input_value)
     payload = data.json()
 
     assert payload['users'] == [ {
-
             'u_id': 1,
             'email': 'captainunderpants@gmail.com',
             'name_first': 'Captain',
             'name_last': 'Underpants',
             'handle_str': 'cunderpants',
-
     },
     {
-
             'u_id': 2,
             'email': 'anakinskywalker@gmail.com',
             'name_first': 'Anakin',
             'name_last': 'Skywalker',
             'handle_str': 'cskywalker',
-
-
-
-
     } ]
 
 #admin/userpermission/change
-
+    #### ---- USER1 SETS USER2 PERMISSIONS TO ADMIN ----- ####
     input_value = {
 
-        'token' : 'captainunderpants@gmail.com',
+        'token' : token_1,
         'u_id' : 2,
         'permission_id' : 1,
     }
 
     data = requests.post(f"{url}/admin/userpermission/change", json = input_value)
-    payload = data.json()
+    payload = data.getjson()
 
     assert payload == {}
 
 #Search
-
+    #### ---- USER1 RETRIEVES MESSAGES MATCHING QUERY ----- ####
     input_value = {
-
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'query_str': "black tin can"
     }
 
@@ -494,7 +492,6 @@ def test_system(url):
     payload = data.json()
 
     assert payload['messages'] == [ {
-
             'message_id': 1,
             'u_id': 1,
             'message': 'Hello black tin can',
@@ -507,6 +504,6 @@ def test_system(url):
 #Clear
 
     data = requests.delete(f"{url}/delete")
-    payload = data.json()
+    payload = data.getjson()
 
     assert payload == {}
