@@ -71,8 +71,9 @@ def svr_auth_register():
     except InputError:
         # 401
         abort(401)
-    except:
+    except as e:
         # 500
+        print(e)
         abort(500)
 
 @APP.route("/auth/logout", methods=["POST"])

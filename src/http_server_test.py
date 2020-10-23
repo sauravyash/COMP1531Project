@@ -16,7 +16,7 @@ import pytest
 def url():
     '''this starts the server & generates and url'''
     url_re = re.compile(r' \* Running on ([^ ]*)')
-    server = Popen(["python3", "server.py"], stderr=PIPE, stdout=PIPE)
+    server = Popen(["python3", "src/server.py"], stderr=PIPE, stdout=PIPE)
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())
     if local_url:
@@ -35,7 +35,6 @@ def url():
 
 
 def test_url(url):
-    print(url)
     '''Check server set up properly'''
     assert url.startswith("http")
 
@@ -50,7 +49,8 @@ def test_system(url):
         'name_first': 'Captain',
         'name_last': 'Underpants'
     }
-    data = requests.post(f"{url}/auth/register", json = input_value)
+
+    data = requests.post(str(url) + "auth/register", json = input_value)
 
     # Checking good connection
     assert data.status_code == 200
