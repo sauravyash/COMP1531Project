@@ -1,4 +1,6 @@
-'''these are the tests for the http server'''
+'''Tests for the http server
+'''
+
 from subprocess import Popen, PIPE
 from time import sleep
 #import json
@@ -8,7 +10,7 @@ import signal
 import requests
 #import logging
 import pytest
-#import data
+import data
 
 
 
@@ -40,8 +42,10 @@ def test_url(url):
     assert url.startswith("http")
 
 def test_system(url):
-    '''This is a test about two users accessing all the functions in flocker'''
-    # register test
+    '''This is a test where two users access all the functions in flocker
+    '''
+    
+    #### ----- REGISTER USER1 ----- ####
     input_value = {
         'email': 'captainunderpants@gmail.com',
         'password': 'valid12345',
@@ -53,11 +57,13 @@ def test_system(url):
     # Checking good connection
     assert data.status_code == 200
 
+    # Check return values
     payload = data.json()
     assert payload['u_id'] == 1
-    assert payload['token'] == 'captainunderpants@gmail.com'
+    
+    token_1 = payload['token']
 
-    # login test
+    #### ----- LOGIN USER1 ----- ####
     input_value = {
         'email': 'captainunderpants@gmail.com',
         'password': 'valid12345'
@@ -70,86 +76,124 @@ def test_system(url):
 
     payload = data.json()
     assert payload['u_id'] == 1
-    assert payload['token'] == 'captainunderpants@gmail.com'
+    assert payload['token'] == token_1
 
-    # logout test
+    #### ----- LOGOUT USER1 ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com'
+        'token': registering_token
     }
+    
     data = requests.post(f"{url}/auth/logout", json = input_value)
+    
     payload = data.json()
     assert payload['is_success'] is True
 
-    # log back in
+    #### ----- LOGIN USER1 ----- ####
     input_value = {
         'email': 'captainunderpants@gmail.com',
         'password': 'valid12345'
     }
+    
     requests.post(f"{url}/auth/login", json = input_value)
 
-    # register and login 2nd user
+    #### ----- REGISTER & LOGIN USER2 ----- ####
     input_value = {
         'email': 'darthvader@gmail.com',
         'password': 'cool12345',
         'name_first': 'Darth',
         'name_last': 'Vader',
     }
-    requests.post(f"{url}/auth/register", json = input_value)
+    
+    data = requests.post(f"{url}/auth/register", json = input_value)
+
+    # Check return values
+    payload = data.json()
+    assert payload['u_id'] == 2
+    
+    token_2 = payload['token']
 
     input_value = {
         'email': 'darthvader@gmail.com',
         'password': 'cool12345'
     }
+    
     requests.post(f"{url}/auth/login", json = input_value)
+    
+    #### ----- USER3 ATTEMPTS TO HACK THE LOGIN (INPUT ERROR) ----- ####
+    
+    # They remember the email, but not the password of the user.
+    input_value = {
+        'email': 'darthvader@gmail.com',
+        'password': 'camera1234'
+    }
+    
+    data = requests.post(f"{url}/auth/login", json = input_value)
+    assert data.status_code == 400
 
-    # channel create test
+#------------------------------------------------------------------------------#
+
+    #### ----- USER1 CREATES A CHANNEL ----- ####
     # create public server
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'name': 'Adventure',
         'is_public': True,
     }
 
     data = requests.post(f"{url}/channels/create", json = input_value)
+    # Checking good connection
+    assert data.status_code == 200
+    
     payload = data.json
-    assert payload['channel_id'] == 1
+    assert payload['id'] == 1
+    assert payload['name'] == 'Adventure'
+    assert payload['is_public'] == True
 
-    # channel invite + channel_detail test
+    #### ----- USER1 INVITES USER2 TO CHANNEL ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'channel_id': 1,
         'u_id': 2,
     }
 
     data = requests.post(f"{url}/channel/invite", json = input_value)
-    #payload = data.json()
-    #assert payload = {}
+    # Checking good connection
+    assert data.status_code == 200
 
+    payload = data.json()
+    assert payload = {}
+
+    #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'channel_id': 1,
     }
 
     data = requests.get(f"{url}/channel/details", json = input_value)
-    payload = data.json()
+    # Checking good connection
+    assert data.status_code == 200
 
+    payload = data.json()
     assert payload['name'] == 'Adventure'
     assert payload['owner_members'] == [1]
-    assert payload['all_members'] == [2]
+    assert payload['all_members'] == [1, 2]
 
-
-    # channel leave
+    #### ----- USER2 LEAVES THE CHANNEL ----- ####
     input_value = {
-        'token': 'darthvader@gmail.com',
+        'token': token_2,
         'channel_id': 1
     }
 
     data = requests.post(f"{url}/channel/leave", json = input_value)
-    #payload = data.json()
-    #assert payload = {}
+    # Checking good connection
+    assert data.status_code == 200
 
+    payload = data.json()
+    assert payload = {}
+
+    #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'channel_id': 1
     }
 
@@ -158,17 +202,43 @@ def test_system(url):
 
     assert payload['name'] == 'Adventure'
     assert payload['owner_members'] == [1]
-    assert payload['all_members'] == []
+    assert payload['all_members'] == [1]
 
-    # channel join
+    #### ----- USER2 CHECKS CHANNEL DETAILS (ACCESS ERROR) ----- ####
     input_value = {
-        'token': 'darthvader@gmail.com',
+        'token': token_2,
         'channel_id': 1
     }
+
+    data = requests.get(f"{url}/channel/details", json = input_value)
+
+    assert data.status_code == 403
+
+    #### ----- USER2 JOINS THE CHANNEL ----- ####
+    input_value = {
+        'token': token_2,
+        'channel_id': 1
+    }
+    
     data = requests.post(f"{url}/channel/join", json = input_value)
+    # Checking good connection
+    assert data.status_code == 200
 
+    payload = data.getjson()
+    assert payload = {}
+
+    ### --- USER3 ATTEMPTS TO HACK IN AND JOIN A CHANNEL (ACCESS ERROR) --- ###
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': 'hacker_token_will_not_work',
+        'channel_id': 1
+    }
+    
+    data = requests.post(f"{url}/channel/join", json = input_value)
+    assert data.status_code == 401
+
+    #### ----- USER2 CHECKS CHANNEL DETAILS ----- ####
+    input_value = {
+        'token': token_2,
         'channel_id': 1
     }
 
@@ -177,39 +247,53 @@ def test_system(url):
 
     assert payload['name'] == 'Adventure'
     assert payload['owner_members'] == [1]
-    assert payload['all_members'] == [2]
+    assert payload['all_members'] == [1, 2]
 
-    # channel addowner
+    #### ----- USER1 ADDS USER2 AS OWNER ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
+        'token': token_1,
         'channel_id': 1,
         'u_id': 2
     }
+    
     data = requests.post(f"{url}/channel/addowner", json = input_value)
-
+    # Checking good connection
+    assert data.status_code == 200
+    
+    payload = data.getjson()
+    assert payload == {}
+    
+    #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
-        'channel_id': 1
+        'token': token_1,
+        'channel_id': 1,
     }
 
     data = requests.get(f"{url}/channel/details", json = input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
-    assert payload['owner_members'] == [1,2]
-    assert payload['all_members'] == []
+    assert payload['owner_members'] == [1, 2]
+    assert payload['all_members'] == [1, 2]
 
-    # channel removeowner
+    #### ----- USER1 REMOVES USER2 AS OWNER ----- ####
     input_value = {
         'token': 'captainunderpants@gmail.com',
         'channel_id': 1,
-        'u_id': 2
+        'u_id': 2,
     }
+    
     data = requests.post(f"{url}/channel/removeowner", json = input_value)
+    # Checking good connection
+    assert data.status_code == 200
+    
+    payload = data.getjson()
+    assert payload == {}
 
+    #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
-        'channel_id': 1
+        'token': token_1,
+        'channel_id': 1,
     }
 
     data = requests.get(f"{url}/channel/details", json = input_value)
@@ -217,8 +301,10 @@ def test_system(url):
 
     assert payload['name'] == 'Adventure'
     assert payload['owner_members'] == [1]
-    assert payload['all_members'] == [2]
+    assert payload['all_members'] == [1, 2]
 
+#------------------------------------------------------------------------------#
+    
     # message/send test
     input_value = {
         'token': 'captainunderpants@gmail.com',
