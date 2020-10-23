@@ -15,16 +15,16 @@ def auth_login(email, password):
     """
     if not data.check_email(email):
         raise InputError
-    elif not data.search_emails(email):
+    elif not data.resolve_email(email):
         raise InputError
     elif not data.password_match(email, password):
         raise InputError
 
-    data.data["users"][data.find_user_id_index(email) - 1]["authenticated"] = True
+    data.data["users"][data.email_to_user_id(email) - 1]["authenticated"] = True
 
     return {
-        'u_id': data.find_user_id_index(email),
-        'token': jwt.encode({"u_id": data.find_user_id_index(email)}, data.JWT_KEY, algorithm='HS256'),
+        'u_id': data.email_to_user_id(email),
+        'token': jwt.encode({"u_id": data.email_to_user_id(email)}, data.JWT_KEY, algorithm='HS256'),
     }
 
 def auth_logout(token):
@@ -33,12 +33,12 @@ def auth_logout(token):
     Arguments: token, must be string
     Returns: is_success
     """
-    if not data.data["users"][data.token_index(token)]["authenticated"]:
+    if not data.data["users"][data.resolve_token_index(token)]["authenticated"]:
         return {
             'is_success': False,
         }
     #deauthenticate token
-    data.data["users"][data.token_index(token)]["authenticated"] = False
+    data.data["users"][data.resolve_token_index(token)]["authenticated"] = False
 
     return {
         'is_success': True,
@@ -56,7 +56,7 @@ def auth_register(email, password, name_first, name_last):
 
     if not data.check_email(email):
         raise InputError
-    elif data.search_emails(email) and user_one == 0:
+    elif data.resolve_email(email) and user_one == 0:
         raise InputError
     elif not data.check_password(password):
         raise InputError
@@ -85,10 +85,10 @@ def auth_register(email, password, name_first, name_last):
             'handle': handle,
             'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
             'authenticated': True,
-            'owner': "owner"
+            'permission_id': 1,
         })
     else:
-        new_id = max(data.load_ids()) + 1
+        new_id = max(data.all_users()) + 1
         data.data.get("users").append({
             'id': new_id,
             'name_first': name_first,
@@ -98,7 +98,7 @@ def auth_register(email, password, name_first, name_last):
             'handle': handle,
             'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
             'authenticated': True,
-            'owner': "user"
+            'permission_id': 2,
         })
 
     return {

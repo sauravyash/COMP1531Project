@@ -84,7 +84,7 @@ def test_invalid_message_token():
     result, result1, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    with pytest.raises(InputError):
+    with pytest.raises(AccessError):
         message_remove("Invalid token", m_id["message_id"])
 
 
@@ -121,10 +121,10 @@ def test_invalid_message_remove_not_sender():
 
     auth.auth_register("awsome_email2@gmail.com", "password123", "fname2", "lname2")
     result2 = auth.auth_login("awsome_email2@gmail.com", "password123")
-    channel_invite(result2["token"], channel_id["channel_id"], result2["u_id"])
+    channel_invite(result1["token"], channel_id["channel_id"], result2["u_id"])
 
     message_send(result["token"], channel_id["channel_id"], "Edit next message")
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    m_id = message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
 
     with pytest.raises(AccessError):
         message_remove(result2["token"], m_id["message_id"])
