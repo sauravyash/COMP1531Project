@@ -21,15 +21,12 @@ def test_invalid_user_profile():
     '''
     When the token is valid but the user id is invalid
     '''
-
-
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("validemail@gmail.com", "password123")
 
     with pytest.raises(InputError):
         user_profile(result["token"], 0)
-
 
 
 def test_invalid_user_profile_token():

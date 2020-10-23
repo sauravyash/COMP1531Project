@@ -12,8 +12,10 @@ def user_profile(token, u_id):
     '''
 
     try:
-        data.resolve_token(token)
-    except LookupError:
+        data.token_to_user_id(token)
+    except LookupError: # pragma: no cover
+        raise AccessError("Token not found")
+    except:
         raise AccessError("Token not found")
 
     try:
@@ -40,7 +42,7 @@ def user_profile_setname(token, name_first, name_last):
     Returns: empty dictionary
     '''
     try:
-        u_id = data.resolve_token(token)
+        u_id = data.token_to_user_id(token)
     except LookupError:
         raise AccessError("Token not found")
 
@@ -62,7 +64,7 @@ def user_profile_setemail(token, email):
     Return: empty dictionary
     '''
     try:
-        u_id = data.resolve_token(token)
+        u_id = data.token_to_user_id(token)
     except LookupError:
         raise AccessError("Token not found")
 
@@ -70,7 +72,7 @@ def user_profile_setemail(token, email):
 
     if not data.check_email(email):
         raise InputError
-    elif data.search_emails(email):
+    elif data.resolve_email(email):
         raise InputError
 
     data.data["users"][user_index]["email"] = email
@@ -85,13 +87,13 @@ def user_profile_sethandle(token, handle_str):
     Returns: empty dictionary
     '''
     try:
-        u_id = data.resolve_token(token)
+        u_id = data.token_to_user_id(token)
     except LookupError:
         raise AccessError("Token not found")
 
     user_index = data.resolve_user_id_index(u_id)
 
-    if data.search_handle(handle_str):
+    if data.resolve_handle(handle_str):
         raise InputError
     elif len(handle_str) < 3:
         raise InputError
