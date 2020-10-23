@@ -13,10 +13,10 @@ import pytest
 
 # Use this fixture to get the URL of the server.
 @pytest.fixture
-def url_start_server():
+def url():
     '''this starts the server & generates and url'''
     url_re = re.compile(r' \* Running on ([^ ]*)')
-    server = Popen(["python3", "simple.py"], stderr=PIPE, stdout=PIPE)
+    server = Popen(["python3", "server.py"], stderr=PIPE, stdout=PIPE)
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())
     if local_url:
@@ -35,6 +35,7 @@ def url_start_server():
 
 
 def test_url(url):
+    print(url)
     '''Check server set up properly'''
     assert url.startswith("http")
 
