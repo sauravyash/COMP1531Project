@@ -64,11 +64,9 @@ def test_users_all():
 
     result = []
 
-    #i = 0
     for user in users:
         auth.auth_register(user["email"], "GenericPwd1", user["fname"], user["lname"])
         result.append(auth.auth_login(user["email"], "GenericPwd1"))
-        #i += 1
 
     fetched_users = users_all(result[0]['token'])['users']
 
