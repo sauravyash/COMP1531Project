@@ -9,6 +9,7 @@ def is_message_valid(message):
     return isinstance(message, str) and len(message) <= 1000
 
 def message_send(token, channel_id, message):
+    
     # check permissions
     if not is_message_valid(message):
         raise InputError("Invalid Message")

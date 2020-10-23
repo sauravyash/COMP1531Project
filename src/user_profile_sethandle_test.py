@@ -1,75 +1,44 @@
-from channel import channel_invite
-from channel import channel_messages
-from error import InputError
-from error import AccessError
-import auth
-import channels
-import other
+'''tests for user_profile_sethandle'''
 import pytest
-import random
-import string
+from error import InputError
+import auth
+import other
 from user import user_profile_sethandle
 
-def create_user_1():
-
+def test_valid_handle():
+    '''test for valid handle'''
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("validemail@gmail.com", "password123")
 
+    user_profile_sethandle(result["token"], "newhandle")
 
-def test_valid():
-
-    create_user_1()
-    assert ( user_profile_sethandle(result['token'],"Nabriu") == {} )
-
-
-def test_invalid_less_than_3():
-
-    create_user_1()
-    with pytest.raises(InputError):
-        user_profile_sethandle(result['token'], "Na")
-
-
-def test_invalid_more_than_20():
-
-    create_user_1()
-    with pytest.raises(InputError):
-        user_profile_sethandle(result['token'], "Nabriu_AMHunter_Winny")
-
-
-def test_invalid_sethandle_used():
-
-    create_user_1()
-    auth.auth_register("cool_email@gmail.com", "password123", "funkey", "monkey")
-    result_1 = auth.auth_login("cool_email@gmail.com", "password123")
-
-    user_profile_sethandle(result['token'], "Nabriu_AMHunter")
+def test_invalid_handle_short():
+    '''test for invalid short handle'''
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
     with pytest.raises(InputError):
-        user_profile_sethandle(result_1['token'], "Nabriu_AMHunter")
+        user_profile_sethandle(result["token"], "ah")
 
-def test_invalid_empty_string():
+def test_invalid_handle_long():
+    '''test for invalid long handle'''
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
-    create_user_1()
     with pytest.raises(InputError):
-        user_profile_sethandle(result_1['token'], "")
+        user_profile_sethandle(result["token"], "handlehasmorethantwentycharacters")
 
-def test_invalid_white_spaces():
+def test_handle_already_used():
+    '''tests for handle which is already used'''
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
-    create_user_1()
+    auth.auth_register("validemail2@gmail.com", "password", "Andy", "Huang")
+    auth.auth_login("validemail2@gmail.com", "password")
+
     with pytest.raises(InputError):
-        user_profile_sethandle(result_1['token'], "    ")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        user_profile_sethandle(result["token"], "andyhuang")

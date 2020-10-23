@@ -14,13 +14,14 @@ data = {
     'channels': []
 }
 
+
+
 JWT_KEY = 'b0ggers'
 
 #### ---- ALL FUNCTIONS THAT ACCESS AN ELEMENT IN THE DATA DICTIONARY ---- ####
 # (Raises a LookupError if the element is not found.)
 
-
-### TOKENS:
+# TOKENS:
 def token_to_user_id(token):
     """ FIND CORRESPONDING USER ID TO TOKEN
     Looks up tokens to determine corresponding user ID.

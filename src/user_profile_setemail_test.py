@@ -1,80 +1,35 @@
-from channel import channel_invite
-from channel import channel_messages
-from error import InputError
-from error import AccessError
-import auth
-import channels
-import other
+'''tests for user_profile_setemail'''
 import pytest
-import random
-import string
+from error import InputError
+import auth
+import other
 from user import user_profile_setemail
 
-def create_user_1():
-
+def test_valid_email():
+    '''tests valid email'''
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("validemail@gmail.com", "password123")
 
-def test_valid_1():
+    user_profile_setemail(result["token"], "newvalidemail@gmail.com")
 
-    create_user_1()
-    assert ( user_profile_setemail(result['token'],"address@gmail.com") == {} )
+def test_invalid_email():
+    '''tests invalid email'''
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
-def test_valid_2():
-
-    create_user_1()
-    assert ( user_profile_setemail(result['token'],"cool.email@gmail.com") == {} )
-
+    with pytest.raises(InputError):
+        user_profile_setemail(result["token"], "invalidemail.com")
 
 def test_email_used():
+    '''tests email used'''
+    other.clear()
+    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
+    result = auth.auth_login("validemail@gmail.com", "password123")
 
-    create_user_1()
-
-    auth.auth_register("cool_email@yahoo.com", "password123", "fname1", "lname1")
-    result_1 = auth.auth_login("cool_email@yahoo.com", "password123")
+    auth.auth_register("alsovalidemail@gmail.com", "password123", "fname1", "lname1")
+    auth.auth_login("alsovalidemail@gmail.com", "password123")
 
     with pytest.raises(InputError):
-        user_profile_setemail( result['token'] , "cool_email@yahoo.com")
-
-
-def test_invalid_email_1():
-
-    create_user_1()
-    with pytest.raises(InputError):
-        user_profile_setemail( result['token'] , "iluvfortnite.com" )
-
-def test_invalid_email_2():
-    
-    create_user_1()
-    with pytest.raises(InputError):
-        user_profile_setemail( result['token'] , "hello123@gmail ")
-
-
-def test_empty_email():
-
-    create_user_1()
-    with pytest.raises(InputError):
-        user_profile_setemail( result['token'] , "")
-
-
-def test_empty_spaces_email():
-
-    create_user_1()
-    with pytest.raises(InputError):
-        user_profile_setemail( result['token'] , "    ")
-    
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
+        user_profile_setemail(result["token"], "alsovalidemail@gmail.com")

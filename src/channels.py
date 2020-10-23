@@ -84,7 +84,8 @@ def channels_listall(token):
         'channels': new_list 
     }
 
-def channels_create(token, name, is_public): 
+def channels_create(token, name, is_public):
+
     ''' Channels_create
     A new section of the data structure is created and information about the
     channel is added.
