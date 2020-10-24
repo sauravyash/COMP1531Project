@@ -24,7 +24,7 @@ def auth_login(email, password):
 
     return {
         'u_id': data.email_to_user_id(email),
-        'token': jwt.encode({"u_id": data.email_to_user_id(email)}, data.JWT_KEY, algorithm='HS256'),
+        'token': jwt.decode(jwt.encode({"u_id": data.email_to_user_id(email)}, data.JWT_KEY, algorithm='HS256'), data.JWT_KEY, algorithms=['HS256']),
     }
 
 def auth_logout(token):
@@ -101,7 +101,11 @@ def auth_register(email, password, name_first, name_last):
             'permission_id': 2,
         })
 
+    encoded_jwt = jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256')
+    decoded_jwt = jwt.decode(encoded_jwt, data.JWT_KEY, algorithms=['HS256'])
+
     return {
         'u_id': new_id, #next user_id
-        'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
+        #'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
+        'token': decoded_jwt
     }
