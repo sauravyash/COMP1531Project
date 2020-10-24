@@ -339,7 +339,7 @@ def test_system(url):
     
     payload = data.json()
     assert isinstance(payload['message_id'], int)
-    message_2 = payload['message_id']
+    payload['message_id']
 
     #### ---- USER2 CHECKS CHANNEL MESSAGES ----- ####
     input_value = {
@@ -439,7 +439,7 @@ def test_system(url):
 
     payload = data.json()
     assert isinstance(payload['channel_id'], int)
-    channel_1 = payload['channel_id']
+    payload['channel_id']
 
     #### ---- USER1 RETRIEVES ALL CHANNELS DETAILS ----- ####
     input_value = {
