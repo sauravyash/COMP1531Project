@@ -64,7 +64,9 @@ def resolve_user_id_index(user_id):
 
     """
     for i, user in enumerate(data["users"]):
+        print("this is the user:", user)
         if user['id'] == user_id:
+            print("the user index ", i, " has been found for user", user)
             return i
 
     raise LookupError("user id not found")

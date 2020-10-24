@@ -10,16 +10,13 @@ def user_profile(token, u_id):
     Arguments: token, u_id, token is is string, u_id is integer
     Returns: user
     '''
-
     try:
         data.token_to_user_id(token)
-    except LookupError: # pragma: no cover
-        raise AccessError("Token not found")
     except:
         raise AccessError("Token not found")
-
+    
     try:
-        u_id_index = data.resolve_user_id_index(u_id)
+        u_id_index = data.resolve_user_id_index(u_id) 
     except LookupError:
         raise InputError("User id not found")
 

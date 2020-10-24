@@ -11,6 +11,8 @@ import channels
 import message
 import user
 import other
+import data
+import traceback
 
 def defaultHandler(err):
     response = err.get_response()
@@ -71,7 +73,7 @@ def svr_auth_register():
     except InputError:
         # 401
         abort(401)
-    except as e:
+    except Exception as e:
         # 500
         print(e)
         abort(500)
@@ -97,8 +99,8 @@ def svr_channel_invite():
     try:
         req = request.get_json()
         token = req['token']
-        channel_id = req['channel_id']
-        user_id = req['user_id']
+        channel_id = int(req['channel_id'])
+        user_id = int(req['u_id'])
         return json.dumps(channel.channel_invite(token, channel_id, user_id))
     except KeyError: 
         # 400
@@ -113,11 +115,15 @@ def svr_channel_invite():
 @APP.route("/channel/details", methods=["GET"])
 def svr_channel_details():
     try:
-        req = request.get_json()
+        req = request.args
         token = req['token']
-        channel_id = req['channel_id']
+        try:
+            channel_id = int(req['channel_id'])
+        except:
+            abort(501)
         return json.dumps(channel.channel_details(token, channel_id))
     except KeyError: 
+        #traceback.print_exc()
         # 400
         abort(400)
     except InputError:
@@ -130,9 +136,9 @@ def svr_channel_details():
 @APP.route("/channel/messages", methods=["GET"])
 def svr_channel_messages():
     try:
-        req = request.get_json()
+        req = request.args
         token = req['token']
-        channel_id = req['channel_id']
+        channel_id = int(req['channel_id'])
         start = req['start']
         return json.dumps(channel.channel_messages(token, channel_id, start))
     except KeyError: 
@@ -150,9 +156,9 @@ def svr_channel_leave():
     try:
         req = request.get_json()
         token = req['token']
-        channel_id = req['channel_id']
+        channel_id = int(req['channel_id'])
         return json.dumps(channel.channel_leave(token, channel_id))
-    except KeyError: 
+    except KeyError:
         # 400
         abort(400)
     except InputError:
@@ -168,7 +174,7 @@ def svr_channel_join():
     try:
         req = request.get_json()
         token = req['token']
-        channel_id = req['channel_id']
+        channel_id = int(req['channel_id'])
         return json.dumps(channel.channel_join(token, channel_id))
     except KeyError: 
         # 400
@@ -186,8 +192,8 @@ def svr_channel_addowner():
     try:
         req = request.get_json()
         token = req['token']
-        channel_id = req['channel_id']
-        user_id = req['user_id']
+        channel_id = int(req['channel_id'])
+        user_id = int(req['u_id'])
         return json.dumps(channel.channel_addowner(token, channel_id, user_id))
     except KeyError: 
         # 400
@@ -206,8 +212,8 @@ def svr_channel_removeowner():
     try:
         req = request.get_json()
         token = req['token']
-        channel_id = req['channel_id']
-        user_id = req['user_id']
+        channel_id = int(req['channel_id'])
+        user_id = int(req['u_id'])
         return json.dumps(channel.channel_removeowner(token, channel_id, user_id))
     except KeyError: 
         # 400
@@ -223,24 +229,25 @@ def svr_channel_removeowner():
 @APP.route("/channels/list", methods=["GET"])
 def svr_channels_list():
     try:
-        req = request.get_json()
+        req = request.args
         token = req['token']
-        return json.dumps(channels.channels_list(token))
+        res = channels.channels_list(token)
+        return json.dumps(res)
     except KeyError: 
         # 400
         abort(400)
     except InputError:
         # 401
         abort(401)
-    except:
+    except Exception as e:
         # 500
+        print(e)
         abort(500)
-
 
 @APP.route("/channels/listall", methods=["GET"])
 def svr_channels_listall():
     try:
-        req = request.get_json()
+        req = request.args
         token = req['token']
         return json.dumps(channels.channels_listall(token))
     except KeyError:
@@ -276,7 +283,7 @@ def svr_message_send():
     try:
         req = request.get_json()
         token = req['token']
-        channel_id = req['channel_id']
+        channel_id = int(req['channel_id'])
         message = req['message']
         return json.dumps(message.message_send(token, channel_id, message))
     except KeyError:
@@ -295,7 +302,7 @@ def svr_message_remove():
     try:
         req = request.get_json()
         token = req['token']
-        message_id = req['message_id']
+        message_id = int(req['message_id'])
         return json.dumps(message.message_remove(token, message_id))
     except KeyError:
         # 400
@@ -313,7 +320,7 @@ def svr_message_edit():
     try:
         req = request.get_json()
         token = req['token']
-        message_id = req['message_id']
+        message_id = int(req['message_id'])
         message = req['message']
         return json.dumps(message.message_edit(token, message_id, message))
     except KeyError:
@@ -330,19 +337,22 @@ def svr_message_edit():
 @APP.route("/user/profile", methods=["GET"])
 def svr_user_profile():
     try:
-        req = request.get_json()
+        req = request.args
         token = req['token']
-        u_id = req['u_id']
+        u_id = int(req['u_id'])
         return json.dumps(user.user_profile(token, u_id))
     except KeyError:
         # 400
         abort(400)
-    except InputError:
+    except InputError as e:
+        traceback.print_exc()
         # 401
         abort(401)
     except:
         # 500
         abort(500)
+    finally:
+        print(data.data)
 
 @APP.route("/user/profile/setname", methods=["PUT"])
 def svr_user_profile_setname():
@@ -400,7 +410,7 @@ def svr_user_profile_sethandle():
 @APP.route("/users/all", methods=["GET"])
 def svr_users_all():
     try:
-        req = request.get_json()
+        req = request.args
         token = req['token']
         return json.dumps(other.users_all(token))
     except KeyError:
@@ -419,8 +429,11 @@ def svr_admin_userpermission_change():
     try:
         req = request.get_json()
         token = req['token']
-        u_id = req['u_id']
-        p_id = req['permission_id']
+        try:
+            u_id = int(req['u_id'])
+            p_id = int(req['permission_id'])
+        except:
+            raise InputError("Invalid parameters")
         return json.dumps(other.admin_userpermission_change(token, u_id, p_id))
     except KeyError:
         # 400
@@ -436,7 +449,7 @@ def svr_admin_userpermission_change():
 @APP.route("/search", methods=["GET"])
 def svr_search():
     try:
-        req = request.get_json()
+        req = request.args
         token = req['token']
         query = req['query_str']
         return json.dumps(other.search(token, query))
