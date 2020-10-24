@@ -4,11 +4,11 @@
 from subprocess import Popen, PIPE
 from time import sleep
 import json
-#import urllib
+import urllib
 import re
 import signal
 import requests
-#import logging
+import logging
 import pytest
 
 # Use this fixture to get the URL of the server.
