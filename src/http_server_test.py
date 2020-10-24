@@ -50,7 +50,7 @@ def test_system(url):
         'name_last': 'Underpants'
     }
 
-    data = requests.post(str(url) + "auth/register", json = input_value)
+    data = requests.post(str(url) + "auth/register", json=input_value)
 
     # Checking good connection
     assert data.status_code == 200
@@ -60,6 +60,7 @@ def test_system(url):
     assert payload['u_id'] == 1
 
     token_1 = payload['token']
+    user_1 = payload['u_id']
 
     #### ----- LOGIN USER1 ----- ####
     input_value = {
@@ -67,14 +68,13 @@ def test_system(url):
         'password': 'valid12345'
     }
 
-    data = requests.post(f"{url}/auth/login", json = input_value)
+    data = requests.post(f"{url}/auth/login", json=input_value)
 
     # Checking good connection
     assert data.status_code == 200
 
     payload = data.json()
-    assert payload['u_id'] == 1
-    user_1 = payload['u_id']
+    assert payload['u_id'] == user_1
     assert payload['token'] == token_1
 
     #### ----- LOGOUT USER1 ----- ####
@@ -82,7 +82,7 @@ def test_system(url):
         'token': token_1
     }
 
-    data = requests.post(f"{url}/auth/logout", json = input_value)
+    data = requests.post(f"{url}/auth/logout", json=input_value)
     
     payload = data.json()
     assert payload['is_success'] is True
@@ -93,7 +93,7 @@ def test_system(url):
         'password': 'valid12345'
     }
 
-    requests.post(f"{url}/auth/login", json = input_value)
+    requests.post(f"{url}/auth/login", json=input_value)
 
     #### ----- REGISTER & LOGIN USER2 ----- ####
     input_value = {
@@ -103,13 +103,14 @@ def test_system(url):
         'name_last': 'Vader',
     }
 
-    data = requests.post(f"{url}/auth/register", json = input_value)
+    print(url)
+    data = requests.post(f"{url}/auth/register", json=input_value)
 
     # Check return values
     payload = data.json()
+
     user_2 = payload['u_id']
     assert isinstance(user_2, int)
-
     token_2 = payload['token']
 
     input_value = {
@@ -117,7 +118,11 @@ def test_system(url):
         'password': 'cool12345'
     }
 
-    requests.post(f"{url}/auth/login", json = input_value)
+    data = requests.post(f"{url}/auth/login", json=input_value)
+    
+    payload = data.json()
+    assert payload['u_id'] == user_2
+    assert payload['token'] == token_2
 
     #### ----- USER3 ATTEMPTS TO HACK THE LOGIN (INPUT ERROR) ----- ####
 
@@ -127,7 +132,7 @@ def test_system(url):
         'password': 'camera1234'
     }
 
-    data = requests.post(f"{url}/auth/login", json = input_value)
+    data = requests.post(f"{url}/auth/login", json=input_value)
     assert data.status_code == 401
 
 #------------------------------------------------------------------------------#
@@ -140,7 +145,7 @@ def test_system(url):
         'is_public': True
     }
 
-    data = requests.post(f"{url}/channels/create", json = input_value)
+    data = requests.post(f"{url}/channels/create", json=input_value)
     
     # Checking good connection
     assert data.status_code == 200
@@ -156,7 +161,7 @@ def test_system(url):
         'u_id': user_2
     }
 
-    data = requests.post(f"{url}/channel/invite", json = input_value)
+    data = requests.post(f"{url}/channel/invite", json=input_value)
     # Checking good connection
     assert data.status_code == 200
 
@@ -166,11 +171,11 @@ def test_system(url):
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
         'token': token_1,
-        'channel_id': channel_0
+        'channel_id': channel_0,
     }
-
-    data = requests.get(f"{url}channel/details", json = input_value)
-    print(data.json())
+    print(input_value['token'])
+    print(input_value['channel_id'])
+    data = requests.get(f"{url}/channel/details", json=input_value)
     # Checking good connection
     assert data.status_code == 200
 
@@ -185,7 +190,7 @@ def test_system(url):
         'channel_id': 1
     }
 
-    data = requests.post(f"{url}/channel/leave", json = input_value)
+    data = requests.post(f"{url}/channel/leave", json=input_value)
     # Checking good connection
     assert data.status_code == 200
 
@@ -198,7 +203,7 @@ def test_system(url):
         'channel_id': 1
     }
 
-    data = requests.get(f"{url}/channel/details", json = input_value)
+    data = requests.get(f"{url}/channel/details", json=input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
@@ -211,7 +216,7 @@ def test_system(url):
         'channel_id': 1
     }
 
-    data = requests.get(f"{url}/channel/details", json = input_value)
+    data = requests.get(f"{url}/channel/details", json=input_value)
 
     assert data.status_code == 403
 
@@ -221,11 +226,11 @@ def test_system(url):
         'channel_id': 1
     }
 
-    data = requests.post(f"{url}/channel/join", json = input_value)
+    data = requests.post(f"{url}/channel/join", json=input_value)
     # Checking good connection
     assert data.status_code == 200
 
-    payload = data.getjson()
+    payload = data.json()
     assert payload == {}
 
     ### --- USER3 ATTEMPTS TO HACK IN AND JOIN A CHANNEL (ACCESS ERROR) --- ###
@@ -234,16 +239,16 @@ def test_system(url):
         'channel_id': 1
     }
 
-    data = requests.post(f"{url}/channel/join", json = input_value)
+    data = requests.post(f"{url}/channel/join", json=input_value)
     assert data.status_code == 401
 
     #### ----- USER2 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
         'token': token_2,
-        'channel_id': 1
+        'channel_id': 1,
     }
 
-    data = requests.get(f"{url}/channel/details", json = input_value)
+    data = requests.get(f"{url}/channel/details", json=input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
@@ -257,11 +262,11 @@ def test_system(url):
         'u_id': 2
     }
 
-    data = requests.post(f"{url}/channel/addowner", json = input_value)
+    data = requests.post(f"{url}/channel/addowner", json=input_value)
     # Checking good connection
     assert data.status_code == 200
 
-    payload = data.getjson()
+    payload = data.json()
     assert payload == {}
 
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
@@ -270,7 +275,7 @@ def test_system(url):
         'channel_id': 1,
     }
 
-    data = requests.get(f"{url}/channel/details", json = input_value)
+    data = requests.get(f"{url}/channel/details", json=input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
@@ -284,11 +289,11 @@ def test_system(url):
         'u_id': 2,
     }
 
-    data = requests.post(f"{url}/channel/removeowner", json = input_value)
+    data = requests.post(f"{url}/channel/removeowner", json=input_value)
     # Checking good connection
     assert data.status_code == 200
 
-    payload = data.getjson()
+    payload = data.json()
     assert payload == {}
 
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
@@ -297,7 +302,7 @@ def test_system(url):
         'channel_id': 1,
     }
 
-    data = requests.get(f"{url}/channel/details", json = input_value)
+    data = requests.get(f"{url}/channel/details", json=input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
@@ -314,8 +319,8 @@ def test_system(url):
         'message': 'Never underestimate the power of Captain Underpants!'
     }
 
-    data = requests.post(f"{url}/message/send", json = input_value)
-    payload = data.getjson()
+    data = requests.post(f"{url}/message/send", json=input_value)
+    payload = data.json()
     assert payload['message_id'] == 1
 
     #### ---- USER2 SENDS MESSAGE ----- ####
@@ -325,8 +330,8 @@ def test_system(url):
         'message': 'I will show you the power of the Dark Side of the Force'
     }
 
-    data = requests.post(f"{url}/message/send", json = input_value)
-    payload = data.getjson()
+    data = requests.post(f"{url}/message/send", json=input_value)
+    payload = data.json()
     assert payload['message_id'] == 2
 
     # message/edit test
@@ -337,8 +342,8 @@ def test_system(url):
         'message': 'Hello black tin can'
     }
 
-    data = requests.put(f"{url}/message/edit", json = input_value)
-    payload = data.getjson()
+    data = requests.put(f"{url}/message/edit", json=input_value)
+    payload = data.json()
     assert payload == {}
 
     # message/remove test
@@ -348,8 +353,8 @@ def test_system(url):
         'message_id': 2
     }
 
-    data = requests.delete(f"{url}/message/remove", json = input_value)
-    payload = data.getjson()
+    data = requests.delete(f"{url}/message/remove", json=input_value)
+    payload = data.json()
     assert payload == {}
 
     #channel/messages
@@ -359,8 +364,8 @@ def test_system(url):
         'channel_id': 1,
         'start': 1,
     }
-    data = requests.get(f"{url}/channel/details", json = input_value)
-    payload = data.getjson()
+    data = requests.get(f"{url}/channel/details", json=input_value)
+    payload = data.json()
 
     assert payload['messages'] == ['Hello black tin can']
     assert payload['start'] == 1
@@ -372,7 +377,7 @@ def test_system(url):
         'token': token_1
     }
 
-    data = requests.get(f"{url}/channels/list", json = input_value)
+    data = requests.get(f"{url}/channels/list", json=input_value)
     payload = data.json()
 
     assert payload['channels'] == [ {'channel_id': 1, 'name': 'Adventure' } ]
@@ -383,7 +388,7 @@ def test_system(url):
         'token': token_1
     }
 
-    data = requests.get(f"{url}/channels/listall", json = input_value)
+    data = requests.get(f"{url}/channels/listall", json=input_value)
     payload = data.json()
 
     assert payload['channels'] == [{'channel_id': 1, 'name': 'Adventure' }]
@@ -396,8 +401,8 @@ def test_system(url):
         'name_last': 'Skywalker',
     }
 
-    data = requests.put(f"{url}/user/profile/setname",json = input_value)
-    payload = data.getjson()
+    data = requests.put(f"{url}/user/profile/setname",json=input_value)
+    payload = data.json()
 
     assert payload == {}
 
@@ -409,8 +414,8 @@ def test_system(url):
         'email': 'anakinskywalker@gmail.com',
     }
 
-    data = requests.put(f"{url}/user/profile/setemail",json = input_value)
-    payload = data.getjson()
+    data = requests.put(f"{url}/user/profile/setemail",json=input_value)
+    payload = data.json()
 
     assert payload == {}
 
@@ -423,8 +428,8 @@ def test_system(url):
         'handlestr': 'askywalker',
     }
 
-    data = requests.put(f"{url}/user/profile/sethandle",json = input_value)
-    payload = data.getjson()
+    data = requests.put(f"{url}/user/profile/sethandle",json=input_value)
+    payload = data.json()
 
     #user/profile
     #### ---- USER2 RETRIEVES USER PROFILE DETAILS ----- ####
@@ -433,7 +438,7 @@ def test_system(url):
         'u_id': 2,
     }
 
-    data = requests.get(f"{url}/user/profile", json = input_value)
+    data = requests.get(f"{url}/user/profile", json=input_value)
     payload = data.json()
 
     assert payload['user'] == {
@@ -450,7 +455,7 @@ def test_system(url):
         'token': token_1,
     }
 
-    data = requests.get(f"{url}/users/all", json = input_value)
+    data = requests.get(f"{url}/users/all", json=input_value)
     payload = data.json()
 
     assert payload['users'] == [ {
@@ -477,8 +482,8 @@ def test_system(url):
         'permission_id' : 1,
     }
 
-    data = requests.post(f"{url}/admin/userpermission/change", json = input_value)
-    payload = data.getjson()
+    data = requests.post(f"{url}/admin/userpermission/change", json=input_value)
+    payload = data.json()
 
     assert payload == {}
 
@@ -489,7 +494,7 @@ def test_system(url):
         'query_str': "black tin can"
     }
 
-    data = requests.get(f"{url}/search", json = input_value)
+    data = requests.get(f"{url}/search", json=input_value)
     payload = data.json()
 
     assert payload['messages'] == [ {
@@ -505,6 +510,6 @@ def test_system(url):
 #Clear
 
     data = requests.delete(f"{url}/delete")
-    payload = data.getjson()
+    payload = data.json()
 
     assert payload == {}

@@ -1,0 +1,8 @@
+int() argument must be a string, a bytes-like object or a number, not 'NoneType'Traceback (most recent call last):
+  File "src/server.py", line 119, in svr_channel_details
+    channel_id = int(req.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+int() argument must be a string, a bytes-like object or a number, not 'NoneType'Traceback (most recent call last):
+  File "src/server.py", line 119, in svr_channel_details
+    channel_id = int(req.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'

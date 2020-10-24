@@ -1,0 +1,8 @@
+name 'reqs' is not definedTraceback (most recent call last):
+  File "src/server.py", line 118, in svr_channel_details
+    token = reqs.get('token')
+NameError: name 'reqs' is not defined
+'dict' object is not callableTraceback (most recent call last):
+  File "src/server.py", line 118, in svr_channel_details
+    token = req('token')
+TypeError: 'dict' object is not callable

@@ -73,9 +73,8 @@ def svr_auth_register():
     except InputError:
         # 401
         abort(401)
-    except Exception as e:
+    except Exception:
         # 500
-        print(e)
         abort(500)
 
 @APP.route("/auth/logout", methods=["POST"])
@@ -115,22 +114,23 @@ def svr_channel_invite():
 @APP.route("/channel/details", methods=["GET"])
 def svr_channel_details():
     try:
-        req = request.args
+        req = request.get_json()
         token = req['token']
-        try:
-            channel_id = int(req['channel_id'])
-        except:
-            abort(501)
+        channel_id = int(req['channel_id'])
         return json.dumps(channel.channel_details(token, channel_id))
-    except KeyError: 
-        #traceback.print_exc()
-        # 400
+    except KeyError as response: 
         abort(400)
-    except InputError:
+    except InputError as retro:
         # 401
+        with open('logero.txt', 'a') as f:
+            f.write(str(retro))
+            f.write(traceback.format_exc())
         abort(401)
-    except:
+    except Exception as response:
         # 500
+        with open('logitt.txt', 'a') as f:
+            f.write(str(response))
+            f.write(traceback.format_exc())
         abort(500)
 
 @APP.route("/channel/messages", methods=["GET"])
@@ -344,8 +344,7 @@ def svr_user_profile():
     except KeyError:
         # 400
         abort(400)
-    except InputError as e:
-        traceback.print_exc()
+    except InputError:
         # 401
         abort(401)
     except:
