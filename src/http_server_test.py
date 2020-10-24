@@ -11,6 +11,8 @@ import requests
 import logging
 import pytest
 
+from data import print_data
+
 # Use this fixture to get the URL of the server.
 @pytest.fixture
 def url():
@@ -103,7 +105,6 @@ def test_system(url):
         'name_last': 'Vader',
     }
 
-    print(url)
     data = requests.post(f"{url}/auth/register", json=input_value)
 
     # Check return values
@@ -173,9 +174,8 @@ def test_system(url):
         'token': token_1,
         'channel_id': channel_0,
     }
-    print(input_value['token'])
-    print(input_value['channel_id'])
-    data = requests.get(f"{url}/channel/details", json=input_value)
+
+    data = requests.get(f"{url}/channel/details", params=input_value)
     # Checking good connection
     assert data.status_code == 200
 
@@ -203,7 +203,7 @@ def test_system(url):
         'channel_id': channel_0
     }
 
-    data = requests.get(f"{url}/channel/details", json=input_value)
+    data = requests.get(f"{url}/channel/details", params=input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
@@ -216,7 +216,7 @@ def test_system(url):
         'channel_id': channel_0
     }
 
-    data = requests.get(f"{url}/channel/details", json=input_value)
+    data = requests.get(f"{url}/channel/details", params=input_value)
 
     assert data.status_code == 403
 
@@ -248,7 +248,7 @@ def test_system(url):
         'channel_id': channel_0,
     }
 
-    data = requests.get(f"{url}/channel/details", json=input_value)
+    data = requests.get(f"{url}/channel/details", params=input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
@@ -275,7 +275,7 @@ def test_system(url):
         'channel_id': channel_0,
     }
 
-    data = requests.get(f"{url}/channel/details", json=input_value)
+    data = requests.get(f"{url}/channel/details", params=input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
@@ -302,7 +302,7 @@ def test_system(url):
         'channel_id': channel_0,
     }
 
-    data = requests.get(f"{url}/channel/details", json=input_value)
+    data = requests.get(f"{url}/channel/details", params=input_value)
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
@@ -311,89 +311,148 @@ def test_system(url):
 
 #------------------------------------------------------------------------------#
 
-    # message/send test
     #### ---- USER1 SENDS MESSAGE ----- ####
     input_value = {
         'token': token_1,
-        'channel_id': 1,
+        'channel_id': channel_0,
         'message': 'Never underestimate the power of Captain Underpants!'
     }
 
     data = requests.post(f"{url}/message/send", json=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+    
     payload = data.json()
-    assert payload['message_id'] == 1
+    assert isinstance(payload['message_id'], int)
+    message_1 = payload['message_id']
 
     #### ---- USER2 SENDS MESSAGE ----- ####
     input_value = {
         'token': token_2,
-        'channel_id': 1,
+        'channel_id': channel_0,
         'message': 'I will show you the power of the Dark Side of the Force'
     }
 
     data = requests.post(f"{url}/message/send", json=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+    
     payload = data.json()
-    assert payload['message_id'] == 2
+    assert isinstance(payload['message_id'], int)
+    message_2 = payload['message_id']
 
-    # message/edit test
+    #### ---- USER2 CHECKS CHANNEL MESSAGES ----- ####
+    input_value = {
+        'token': token_2,
+        'channel_id': channel_0,
+        'start': 0
+    }
+    
+    data = requests.get(f"{url}/channel/messages", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+    
+    payload = data.json()
+    assert len(payload['messages']) == 2
+    
     #### ---- USER1 EDITS MESSAGE ----- ####
     input_value = {
         'token': token_1,
-        'message_id': 1,
+        'message_id': message_1,
         'message': 'Hello black tin can'
     }
 
     data = requests.put(f"{url}/message/edit", json=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
     payload = data.json()
     assert payload == {}
+    
+    #### ---- USER1 RETRIEVES CHANNEL MESSAGES ----- ####
+    input_value = {
+        'token': token_1,
+        'channel_id': channel_0,
+        'start': 0,
+    }
+    
+    data = requests.get(f"{url}/channel/messages", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
 
-    # message/remove test
+    payload = data.json()
+    
+    assert len(payload['messages']) == 2
+
     #### ---- USER1 DELETES MESSAGE ----- ####
     input_value = {
         'token': token_1,
-        'message_id': 2
+        'message_id': message_1
     }
 
     data = requests.delete(f"{url}/message/remove", json=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
     payload = data.json()
     assert payload == {}
 
-    #channel/messages
-    #### ---- USER1 RETRIEVES MESSAGES ----- ####
+    #### ---- USER1 RETRIEVES CHANNEL MESSAGES ----- ####
     input_value = {
-        'token': 'captainunderpants@gmail.com',
-        'channel_id': 1,
-        'start': 1,
+        'token': token_1,
+        'channel_id': channel_0,
+        'start': 0,
     }
-    data = requests.get(f"{url}/channel/details", json=input_value)
+    
+    data = requests.get(f"{url}/channel/messages", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
     payload = data.json()
+    assert len(payload['messages']) == 1
+    assert payload['messages'][0]['message'] == 'I will show you the power of the Dark Side of the Force'
 
-    assert payload['messages'] == ['Hello black tin can']
-    assert payload['start'] == 1
-    assert payload['end'] == 51
-
-
-    #channels/list
+    #### ---- USER1 RETRIEVES CHANNEL LIST ----- ####
     input_value = {
         'token': token_1
     }
 
-    data = requests.get(f"{url}/channels/list", json=input_value)
+    data = requests.get(f"{url}/channels/list", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
     payload = data.json()
+    assert len(payload['channels']) == 1
+    assert payload['channels'] == [{'channel_id': 0, 'name': 'Adventure' }]
+    
+    #### ---- USER2 CREATES A CHANNEL ----- ####
+    input_value = {
+        'token': token_2,
+        'name': 'Advent',
+        'is_public': False
+    }
 
-    assert payload['channels'] == [ {'channel_id': 1, 'name': 'Adventure' } ]
+    data = requests.post(f"{url}/channels/create", json=input_value)
+    
+    # Checking good connection
+    assert data.status_code == 200
 
-    #channels/listall
+    payload = data.json()
+    assert isinstance(payload['channel_id'], int)
+    channel_1 = payload['channel_id']
+
     #### ---- USER1 RETRIEVES ALL CHANNELS DETAILS ----- ####
     input_value = {
         'token': token_1
     }
 
-    data = requests.get(f"{url}/channels/listall", json=input_value)
+    data = requests.get(f"{url}/channels/listall", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
     payload = data.json()
+    assert len(payload['channels']) == 2
 
-    assert payload['channels'] == [{'channel_id': 1, 'name': 'Adventure' }]
-
-    #user/profile/setname
     #### ---- USER2 CHANGES NAME ----- ####
     input_value = {
         'token': token_2,
@@ -402,114 +461,113 @@ def test_system(url):
     }
 
     data = requests.put(f"{url}/user/profile/setname",json=input_value)
-    payload = data.json()
+    # Checking good connection
+    assert data.status_code == 200
 
+    payload = data.json()
     assert payload == {}
 
-    # user/profile/setemail
     #### ---- USER2 CHANGES EMAIL ----- ####
     input_value = {
 
-        'token': 'darthvader@gmail.com',
+        'token': token_2,
         'email': 'anakinskywalker@gmail.com',
     }
 
     data = requests.put(f"{url}/user/profile/setemail",json=input_value)
-    payload = data.json()
+    # Checking good connection
+    assert data.status_code == 200
 
+    payload = data.json()
     assert payload == {}
 
-
-    #user/profile/sethandle
     #### ---- USER2 CHANGES HANDLE ----- ####
     input_value = {
-
-        'token': 'darthvader@gmail.com',
-        'handlestr': 'askywalker',
+        'token': token_2,
+        'handle_str': 'askywalker',
     }
 
-    data = requests.put(f"{url}/user/profile/sethandle",json=input_value)
-    payload = data.json()
+    data = requests.put(f"{url}/user/profile/sethandle", json=input_value)
+    # Checking good connection
+    assert data.status_code == 200
 
-    #user/profile
+    payload = data.json()
+    assert payload == {}
+
     #### ---- USER2 RETRIEVES USER PROFILE DETAILS ----- ####
     input_value = {
         'token': token_2,
-        'u_id': 2,
+        'u_id': user_2,
     }
 
-    data = requests.get(f"{url}/user/profile", json=input_value)
+    data = requests.get(f"{url}/user/profile", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
     payload = data.json()
+    assert payload['user']['email'] == 'anakinskywalker@gmail.com'
+    assert payload['user']['name_first'] == 'Anakin'
+    assert payload['user']['name_last'] == 'Skywalker'
+    assert payload['user']['handle_str'] == 'askywalker'
 
-    assert payload['user'] == {
-            'u_id': 2,
-            'email': 'anakinskywalker@gmail.com',
-            'name_first': 'Anakin',
-            'name_last': 'Skywalker',
-            'handle_str': 'askywalker',
-    }
-
-#users/all
     #### ---- USER1 RETRIEVES ALL USER DETAILS ----- ####
     input_value = {
         'token': token_1,
     }
 
-    data = requests.get(f"{url}/users/all", json=input_value)
+    data = requests.get(f"{url}/users/all", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
     payload = data.json()
+    assert len(payload['users']) == 2
 
-    assert payload['users'] == [ {
-            'u_id': 1,
-            'email': 'captainunderpants@gmail.com',
-            'name_first': 'Captain',
-            'name_last': 'Underpants',
-            'handle_str': 'cunderpants',
-    },
-    {
-            'u_id': 2,
-            'email': 'anakinskywalker@gmail.com',
-            'name_first': 'Anakin',
-            'name_last': 'Skywalker',
-            'handle_str': 'cskywalker',
-    } ]
-
-#admin/userpermission/change
     #### ---- USER1 SETS USER2 PERMISSIONS TO ADMIN ----- ####
     input_value = {
 
         'token' : token_1,
-        'u_id' : 2,
+        'u_id' : user_2,
         'permission_id' : 1,
     }
 
     data = requests.post(f"{url}/admin/userpermission/change", json=input_value)
-    payload = data.json()
+    # Checking good connection
+    assert data.status_code == 200
 
+    payload = data.json()
     assert payload == {}
 
-#Search
+    #### ---- USER1 RETRIEVES CHANNEL MESSAGES ----- ####
+    input_value = {
+        'token': token_1,
+        'channel_id': channel_0,
+        'start': 0,
+    }
+    
+    data = requests.get(f"{url}/channel/messages", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
+    payload = data.json()
+    assert len(payload['messages']) == 1
+    assert payload['messages'][0]['message'] == 'I will show you the power of the Dark Side of the Force'
+    
     #### ---- USER1 RETRIEVES MESSAGES MATCHING QUERY ----- ####
     input_value = {
         'token': token_1,
-        'query_str': "black tin can"
+        'query_str': 'show'
     }
 
-    data = requests.get(f"{url}/search", json=input_value)
+    data = requests.get(f"{url}/search", params=input_value)
+    # Checking good connection
+    assert data.status_code == 200
+
     payload = data.json()
-
-    assert payload['messages'] == [ {
-            'message_id': 1,
-            'u_id': 1,
-            'message': 'Hello black tin can',
-
-            #Check this before merging it together
-            'time_created': 1582426789,
-
-    } ]
+    assert len(payload['messages']) == 1
 
 #Clear
 
-    data = requests.delete(f"{url}/delete")
+    data = requests.delete(f"{url}/clear")
     payload = data.json()
 
     assert payload == {}

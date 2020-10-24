@@ -22,7 +22,8 @@ def clear():
         'users': [],
         'channels': []
     }
-    pass
+    
+    return {}
 
 def users_all(token):
     ''' All Users

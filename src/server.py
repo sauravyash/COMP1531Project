@@ -126,7 +126,7 @@ def svr_channel_invite():
 @APP.route("/channel/details", methods=["GET"])
 def svr_channel_details():
     try:
-        req = request.get_json()
+        req = request.args
         token = req['token']
         channel_id = int(req['channel_id'])
         return json.dumps(channel.channel_details(token, channel_id))
@@ -151,7 +151,7 @@ def svr_channel_messages():
         req = request.args
         token = req['token']
         channel_id = int(req['channel_id'])
-        start = req['start']
+        start = int(req['start'])
         return json.dumps(channel.channel_messages(token, channel_id, start))
     except KeyError: 
         # 400
@@ -343,8 +343,8 @@ def svr_message_send():
         req = request.get_json()
         token = req['token']
         channel_id = int(req['channel_id'])
-        message = req['message']
-        return json.dumps(message.message_send(token, channel_id, message))
+        msg = req['message']
+        return json.dumps(message.message_send(token, channel_id, msg))
     except KeyError:
         # 400
         abort(400)
@@ -357,8 +357,10 @@ def svr_message_send():
             abort(401)
         else:
             abort(403)
-    except:
+    except Exception as e:
         # 500
+        with open('log.txt', 'a') as f:
+            f.write(str(e))
         abort(500)
 
 
@@ -392,8 +394,8 @@ def svr_message_edit():
         req = request.get_json()
         token = req['token']
         message_id = int(req['message_id'])
-        message = req['message']
-        return json.dumps(message.message_edit(token, message_id, message))
+        msg = req['message']
+        return json.dumps(message.message_edit(token, message_id, msg))
     except KeyError:
         # 400
         abort(400)
@@ -490,7 +492,7 @@ def svr_user_profile_sethandle():
         req = request.get_json()
         token = req['token']
         handle = req['handle_str']
-        return json.dumps(user.user_profile_setemail(token, handle))
+        return json.dumps(user.user_profile_sethandle(token, handle))
     except KeyError:
         # 400
         abort(400)
