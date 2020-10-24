@@ -30,9 +30,10 @@ def token_to_user_id(token):
     Returns: Token index
 
     """
-    #decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
+    token = token.encode('UTF-8')
+    decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data['users']:
-        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == token and user['authenticated']:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
     raise LookupError("Token not found")
@@ -45,8 +46,10 @@ def resolve_token_index(token):
     Returns: Token index
 
     """
+    token = token.encode('UTF-8')
+    decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data["users"]:
-        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == token:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt:
             return user["id"] - 1
 
     raise LookupError("Token not found") # pragma: no cover
