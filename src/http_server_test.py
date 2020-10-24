@@ -187,7 +187,7 @@ def test_system(url):
     #### ----- USER2 LEAVES THE CHANNEL ----- ####
     input_value = {
         'token': token_2,
-        'channel_id': 1
+        'channel_id': channel_0
     }
 
     data = requests.post(f"{url}/channel/leave", json=input_value)
@@ -200,7 +200,7 @@ def test_system(url):
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
         'token': token_1,
-        'channel_id': 1
+        'channel_id': channel_0
     }
 
     data = requests.get(f"{url}/channel/details", json=input_value)
@@ -213,7 +213,7 @@ def test_system(url):
     #### ----- USER2 CHECKS CHANNEL DETAILS (ACCESS ERROR) ----- ####
     input_value = {
         'token': token_2,
-        'channel_id': 1
+        'channel_id': channel_0
     }
 
     data = requests.get(f"{url}/channel/details", json=input_value)
@@ -223,7 +223,7 @@ def test_system(url):
     #### ----- USER2 JOINS THE CHANNEL ----- ####
     input_value = {
         'token': token_2,
-        'channel_id': 1
+        'channel_id': channel_0
     }
 
     data = requests.post(f"{url}/channel/join", json=input_value)
@@ -236,7 +236,7 @@ def test_system(url):
     ### --- USER3 ATTEMPTS TO HACK IN AND JOIN A CHANNEL (ACCESS ERROR) --- ###
     input_value = {
         'token': 'hacker_token_will_not_work',
-        'channel_id': 1
+        'channel_id': channel_0
     }
 
     data = requests.post(f"{url}/channel/join", json=input_value)
@@ -245,7 +245,7 @@ def test_system(url):
     #### ----- USER2 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
         'token': token_2,
-        'channel_id': 1,
+        'channel_id': channel_0,
     }
 
     data = requests.get(f"{url}/channel/details", json=input_value)
@@ -258,8 +258,8 @@ def test_system(url):
     #### ----- USER1 ADDS USER2 AS OWNER ----- ####
     input_value = {
         'token': token_1,
-        'channel_id': 1,
-        'u_id': 2
+        'channel_id': channel_0,
+        'u_id': user_2
     }
 
     data = requests.post(f"{url}/channel/addowner", json=input_value)
@@ -272,7 +272,7 @@ def test_system(url):
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
         'token': token_1,
-        'channel_id': 1,
+        'channel_id': channel_0,
     }
 
     data = requests.get(f"{url}/channel/details", json=input_value)
@@ -285,8 +285,8 @@ def test_system(url):
     #### ----- USER1 REMOVES USER2 AS OWNER ----- ####
     input_value = {
         'token': token_1,
-        'channel_id': 1,
-        'u_id': 2,
+        'channel_id': channel_0,
+        'u_id': user_2,
     }
 
     data = requests.post(f"{url}/channel/removeowner", json=input_value)
@@ -299,7 +299,7 @@ def test_system(url):
     #### ----- USER1 CHECKS CHANNEL DETAILS ----- ####
     input_value = {
         'token': token_1,
-        'channel_id': 1,
+        'channel_id': channel_0,
     }
 
     data = requests.get(f"{url}/channel/details", json=input_value)

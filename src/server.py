@@ -89,6 +89,12 @@ def svr_auth_logout():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -107,6 +113,12 @@ def svr_channel_invite():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -120,17 +132,17 @@ def svr_channel_details():
         return json.dumps(channel.channel_details(token, channel_id))
     except KeyError as response: 
         abort(400)
-    except InputError as retro:
+    except InputError:
         # 401
-        with open('logero.txt', 'a') as f:
-            f.write(str(retro))
-            f.write(traceback.format_exc())
         abort(401)
-    except Exception as response:
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
+    except:
         # 500
-        with open('logitt.txt', 'a') as f:
-            f.write(str(response))
-            f.write(traceback.format_exc())
         abort(500)
 
 @APP.route("/channel/messages", methods=["GET"])
@@ -147,6 +159,12 @@ def svr_channel_messages():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -164,6 +182,12 @@ def svr_channel_leave():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -182,6 +206,12 @@ def svr_channel_join():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -201,6 +231,12 @@ def svr_channel_addowner():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -221,6 +257,12 @@ def svr_channel_removeowner():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -239,9 +281,14 @@ def svr_channels_list():
     except InputError:
         # 401
         abort(401)
-    except Exception as e:
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
+    except:
         # 500
-        print(e)
         abort(500)
 
 @APP.route("/channels/listall", methods=["GET"])
@@ -256,6 +303,12 @@ def svr_channels_listall():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -274,6 +327,12 @@ def svr_channels_create():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -292,6 +351,12 @@ def svr_message_send():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -310,6 +375,12 @@ def svr_message_remove():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -329,6 +400,12 @@ def svr_message_edit():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -347,6 +424,12 @@ def svr_user_profile():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -367,6 +450,12 @@ def svr_user_profile_setname():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -384,6 +473,12 @@ def svr_user_profile_setemail():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -402,6 +497,12 @@ def svr_user_profile_sethandle():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -418,6 +519,12 @@ def svr_users_all():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -440,6 +547,12 @@ def svr_admin_userpermission_change():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
@@ -458,6 +571,12 @@ def svr_search():
     except InputError:
         # 401
         abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
     except:
         # 500
         abort(500)
