@@ -1,0 +1,30 @@
+400 Bad Request: Invalid Channel IDTraceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 66, in channel_details
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 88, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 120, in svr_channel_details
+    return json.dumps(channel.channel_details(token, channel_id))
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 68, in channel_details
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+400 Bad Request: Invalid Channel IDTraceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 66, in channel_details
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 88, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 120, in svr_channel_details
+    return json.dumps(channel.channel_details(token, channel_id))
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 68, in channel_details
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID

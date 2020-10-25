@@ -5,7 +5,7 @@ import re
 import data
 import hashlib
 import jwt
-from error import InputError
+from error import InputError, AccessError
 
 def auth_login(email, password):
     """ Logs in the user, authenticating their token
@@ -33,6 +33,12 @@ def auth_logout(token):
     Arguments: token, must be string
     Returns: is_success
     """
+
+    try:
+        data.resolve_token_index(token)
+    except:
+        raise AccessError
+
     if not data.data["users"][data.resolve_token_index(token)]["authenticated"]:
         return {
             'is_success': False,
