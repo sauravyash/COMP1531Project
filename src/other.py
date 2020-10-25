@@ -42,7 +42,7 @@ def users_all(token):
 
     for user in data.data['users']:
         user_list.append({
-            'user_id': user['id'],
+            'u_id': user['id'],
             'email': user['email'],
             'name_first': user['name_first'],
             'name_last': user['name_last'],
