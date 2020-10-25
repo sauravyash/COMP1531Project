@@ -1,5 +1,5 @@
 ''' Data.py
-This file contains the application state data that is shared throughout the 
+This file contains the application state data that is shared throughout the
 entire program.
 
 '''
@@ -28,8 +28,9 @@ def token_to_user_id(token):
 
     Arguments: token- must be string
     Returns: Token index
-    
+
     """
+    token = token.encode('UTF-8')
     decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data['users']:
         if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
@@ -43,10 +44,12 @@ def resolve_token_index(token):
 
     Arguments: token- must be string
     Returns: Token index
-    
+
     """
+    token = token.encode('UTF-8')
+    decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data["users"]:
-        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == jwt.decode(token, JWT_KEY, algorithms=['HS256']):
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt:
             return user["id"] - 1
 
     raise LookupError("Token not found") # pragma: no cover
@@ -58,10 +61,12 @@ def resolve_user_id_index(user_id):
 
     Arguments: user id- must be an int
     Returns: User index
-    
+
     """
     for i, user in enumerate(data["users"]):
+        print("this is the user:", user)
         if user['id'] == user_id:
+            print("the user index ", i, " has been found for user", user)
             return i
 
     raise LookupError("user id not found")
@@ -73,9 +78,9 @@ def resolve_channel_id_index(channel_id):
 
     Arguments: channel id- must be an int
     Returns: Channel index
-    
+
     """
-    
+
     for i, channel in enumerate(data["channels"]):
         if channel['id'] == channel_id:
             return i
@@ -89,7 +94,7 @@ def resolve_message_id_index(message_id):
 
     Arguments: message id- must be an int
     Returns: Message index
-    
+
     """
     for channel in data["channels"]:
         for i, msg in enumerate(channel["messages"]):
@@ -100,10 +105,10 @@ def resolve_message_id_index(message_id):
 
 def resolve_message_id(msg_id):
     ''' CHECK IF MESSAGE ID EXISTS WITHIN DICTIONARY
-    
+
     Arguments: msg_id- must be an int
     Result: Either dictionary of channel_id and msg_index, or None
-    
+
     '''
     try:
         channel_id, msg_index = resolve_message_id_index(msg_id)
@@ -118,7 +123,7 @@ def resolve_email(email):
 
     Arguments: email, must be string
     Returns: True/False
-    
+
     """
     for user in data["users"]:
         if user["email"] == email:
@@ -131,7 +136,7 @@ def email_to_user_id(email):
 
     Arguments: email, must be string
     Returns: user_id
-    
+
     """
     for user in data["users"]: # pragma: no cover
         if user["email"] == email:
@@ -145,17 +150,17 @@ def resolve_permissions(channel_id, user_id):
 
     Arguments: channel_id- must be an int, user_id- must be an int
     Returns: Either 1 or 2- to indicate permissions; otherwise None
-    
+
     """
-    
+
     try:
         # Check if the user is a flockr owner.
         user_index = resolve_user_id_index(user_id)
         permission = data['users'][user_index]['permission_id']
-        
+
         channel_index = resolve_channel_id_index(channel_id)
         members = data['channels'][channel_index]['members']
-        
+
         # If user is a CHANNEL owner or FLOCKR owner, return 1.
         if user_id in members['permission_id_1']:
             return 1
@@ -180,7 +185,7 @@ def check_email(email):
 
     Arguments: email, must be string
     Returns: True/False
-    
+
     """
     regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
@@ -189,10 +194,10 @@ def check_email(email):
 def check_password(password):
     """ CHECK IF PASSWORD IS VALID
     Checks if input password is valid (i.e. has length more than 5 characters).
-    
+
     Input arguments: password, must be string
     Returns: True/False
-    
+
     """
     return len(password) >= 6
 
@@ -202,7 +207,7 @@ def check_name(name_first, name_last):
 
     Input arguments: name_first, name_last, must be strings
     Returns: True/False
-    
+
     """
     return len(name_first) > 0 and len(name_first) < 51 and len(name_last) > 0 and len(name_last) < 51
 
@@ -211,7 +216,7 @@ def all_users():
     Loads user IDs from data.py
 
     Returns: id_list
-    
+
     """
     id_list = []
     for user in data["users"]:
@@ -222,10 +227,10 @@ def all_users():
 def password_match(email, password):
     """ CHECK IF PASSWORD MATCHES EMAIL
     Compares password to that stored in the dictionary with email.
-    
+
     Arguments: email, password, must be strings
     Returns: True/False
-    
+
     """
     return data["users"][email_to_user_id(email) - 1]["password"] == hashlib.sha256(password.encode()).hexdigest()
 
@@ -235,7 +240,7 @@ def resolve_handle(handle):
 
     Arguments: handle, must be string
     Returns: True/False
-    
+
     """
     for user in data["users"]:
         if user["handle"] == handle:
@@ -249,7 +254,7 @@ def generate_handle(handle):
 
     Arguments: handle- must be string
     Returns: Handle
-    
+
     """
     while resolve_handle(handle):
         nums = []
@@ -275,7 +280,7 @@ def generate_message_id():
 
     Arguments: msg_id- must be an int
     Returns: ID
-    
+
     """
     generated_id = 0
     while resolve_message_id(generated_id):
@@ -287,7 +292,7 @@ def generate_channel_id():
 
     Arguments: channel_id- must be an int
     Returns: ID
-    
+
     """
     generated_id = 0
     while True:
