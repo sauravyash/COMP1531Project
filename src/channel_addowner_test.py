@@ -29,23 +29,11 @@ def test_addowner_simple():
     
     # Invite the second user to the channel.
     channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
-    
-    # Result data
-    data_before = {
-        'name': 'channel_1',
-        'owner_members': [1],
-        'all_members': [1, 2],
-    }
-    data_after = {
-        'name': 'channel_1',
-        'owner_members': [1, 2],
-        'all_members': [1, 2],
-    }
-    
+       
     # Check that the second user successfully becomes an owner in the channel.
-    assert channel_details(result1['token'], channel_id['channel_id']) == data_before
+    assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 1
     assert channel_addowner(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
-    assert channel_details(result1['token'], channel_id['channel_id']) == data_after
+    assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 2  
 
 def test_flockr_owner():
     
@@ -80,10 +68,11 @@ def test_flockr_owner():
         'all_members': [2, 3, 1],
     }
     
-    # Check that the flockr owner can still make other members owners.
-    assert channel_details(result2['token'], channel_id['channel_id']) == data_before
+    # Check that the flockr owner can still make other members owners. 
+    assert len(channel_details(result2['token'], channel_id['channel_id'])['owner_members']) == 1
     assert channel_addowner(result1['token'], channel_id['channel_id'], result3['u_id']) == {}
-    assert channel_details(result2['token'], channel_id['channel_id']) == data_after
+    assert len(channel_details(result2['token'], channel_id['channel_id'])['owner_members']) == 2  
+
 
 
 # ----- Fail Addowner
