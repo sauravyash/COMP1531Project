@@ -1,0 +1,12 @@
+400 Bad Request: Authorised User Not Member of ChannelTraceback (most recent call last):
+  File "src/server.py", line 120, in svr_channel_details
+    return json.dumps(channel.channel_details(token, channel_id))
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 81, in channel_details
+    raise AccessError(description='Authorised User Not Member of Channel')
+error.AccessError: 400 Bad Request: Authorised User Not Member of Channel
+400 Bad Request: Authorised User Not Member of ChannelTraceback (most recent call last):
+  File "src/server.py", line 120, in svr_channel_details
+    return json.dumps(channel.channel_details(token, channel_id))
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 81, in channel_details
+    raise AccessError(description='Authorised User Not Member of Channel')
+error.AccessError: 400 Bad Request: Authorised User Not Member of Channel
