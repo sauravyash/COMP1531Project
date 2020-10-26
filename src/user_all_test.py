@@ -17,11 +17,13 @@ from error import AccessError
 
 from other import users_all
 
-# Success users_all
-# Valid user token
-# Returns a list of all users and their associated details
-
 def test_users_all():
+    '''
+    Success users_all
+    Valid user token
+    Returns a list of all users and their associated details
+    '''
+
     other.clear()
 
     users = [
@@ -76,20 +78,3 @@ def test_users_all():
         assert user['name_first'] == users[i]['fname']
         assert user['handle_str'] == users[i]['handle']
         assert user['u_id'] == users[i]['id']
-
-#    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-#    result = auth.auth_login("validemail@gmail.com", "password123")
-
-#    auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
-#    result1 = auth.auth_login("validemail1@gmail.com", "password123")
-
-#    auth.auth_register("validemail2@gmail.com", "password123", "fname2", "lname2")
-#    result2 = auth.auth_login("validemail2@gmail.com", "password123")
-
-#    auth.auth_register("validemail3@gmail.com", "password123", "fname3", "lname3")
-#    result3 = auth.auth_login("validemail3@gmail.com", "password123")
-
-#    auth.auth_register("validemail4@gmail.com", "password123", "fname4", "lname4")
-#    result4 = auth.auth_login("validemail4@gmail.com", "password123")
-
-    #assert users_all(result[0]["token"]) == users
