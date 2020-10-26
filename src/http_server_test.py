@@ -603,3 +603,55 @@ def test_system(url):
     ''' Checking good connection '''
     assert data.status_code == 200
     assert payload == {}
+
+
+    ''' ----- REGISTER & LOGIN USER4 ----- '''
+    input_value = {
+        'email': 'bamvader@gmail.com',
+        'password': 'cool12345',
+        'name_first': 'Bam',
+        'name_last': 'Vader',
+    }
+
+    data = requests.post(f"{url}/auth/register", json=input_value)
+    payload = data.json()
+    token_4 = payload['token']
+
+    input_value = {
+        'email': 'bamvader@gmail.com',
+        'password': 'cool12345'
+    }
+
+    data = requests.post(f"{url}/auth/login", json=input_value)
+
+    ''' ---- MESSAGE_SEND- 400 ERROR ----- '''
+
+    data = requests.post(f"{url}/message/send", json={})
+    assert data.status_code == 400
+
+    ''' ---- MESSAGE_SEND- 403 ERROR (ACCESS ERROR- INVALID TOKEN) ----- '''
+    input_value = {
+        'token': 99,
+        'channel_id': channel_0,
+        'message': 'Never underestimate the power of Captain Underpants!'
+    }
+
+    data = requests.post(f"{url}/message/send", json=input_value)
+    assert data.status_code == 403
+
+    ''' ---- MESSAGE_SEND- 401 ERROR (ACCESS ERROR- NOT AUTHORISED) ----- '''
+    input_value = {
+        'token': token_4,
+        'channel_id': channel_0,
+        'message': 'Never underestimate the power of Captain Underpants!'
+    }
+
+    data = requests.post(f"{url}/message/send", json=input_value)
+    assert data.status_code == 401
+
+
+    ''' ---- MESSAGE_REMOVE- 400 ERROR ----- '''
+
+    data = requests.delete(f"{url}/message/remove", json={})
+    assert data.status_code == 400
+

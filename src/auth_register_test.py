@@ -18,7 +18,7 @@ def test_invalid_email():
     other.clear()
     # Check that an error is raised for invalid email.
     with pytest.raises(InputError):
-        result = auth.auth_register('invalidemail.com', '123abc!@#', 'fname', 'lname')
+        auth.auth_register('invalidemail.com', '123abc!@#', 'fname', 'lname')
 
 def test_invalid_password():
     other.clear()
