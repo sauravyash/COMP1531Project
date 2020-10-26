@@ -48,6 +48,7 @@ def user_profile_setname(token, name_first, name_last):
     if not data.check_name(name_first, name_last):
         raise InputError
 
+    # storing user's new first and last names
     data.data["users"][user_index]["name_first"] = name_first
     data.data["users"][user_index]["name_last"] = name_last
 
@@ -72,6 +73,7 @@ def user_profile_setemail(token, email):
     elif data.resolve_email(email):
         raise InputError
 
+    # storing user's new email address
     data.data["users"][user_index]["email"] = email
 
     return {
@@ -97,6 +99,7 @@ def user_profile_sethandle(token, handle_str):
     elif len(handle_str) > 20:
         raise InputError
 
+    # storing user's new handle
     data.data["users"][user_index]["handle"] = handle_str
 
     return {
