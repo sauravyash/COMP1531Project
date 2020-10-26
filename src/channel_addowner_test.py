@@ -55,19 +55,7 @@ def test_flockr_owner():
     # Invite the second user to the channel.
     channel_invite(result2['token'], channel_id['channel_id'], result1['u_id'])
     channel_invite(result2['token'], channel_id['channel_id'], result3['u_id'])
-    
-    # Result data
-    data_before = {
-        'name': 'channel_1',
-        'owner_members': [2],
-        'all_members': [2, 1, 3],
-    }
-    data_after = {
-        'name': 'channel_1',
-        'owner_members': [2, 3],
-        'all_members': [2, 3, 1],
-    }
-    
+       
     # Check that the flockr owner can still make other members owners. 
     assert len(channel_details(result2['token'], channel_id['channel_id'])['owner_members']) == 1
     assert channel_addowner(result1['token'], channel_id['channel_id'], result3['u_id']) == {}

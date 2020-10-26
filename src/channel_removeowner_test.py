@@ -47,10 +47,9 @@ def test_addowner_simple():
     }
     
     # Check that second user's owner status is removed.
-    assert channel_details(result1['token'], channel_id['channel_id']) == data_before
+    assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 2
     assert channel_removeowner(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
-    channel_details(result1['token'], channel_id['channel_id']) == data_after
-    
+    assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 1 
 
 def test_flockr_owner():
     
@@ -89,9 +88,9 @@ def test_flockr_owner():
     }
     
     # Check that flockr owner can also remove a channel owner.
-    assert channel_details(result2['token'], channel_id['channel_id']) == data_before
+    assert len(channel_details(result2['token'], channel_id['channel_id'])["owner_members"]) == 2
     assert channel_removeowner(result3['token'], channel_id['channel_id'], result2['u_id']) == {}
-    channel_details(result3['token'], channel_id['channel_id']) == data_after
+    assert len(channel_details(result3['token'], channel_id['channel_id'])["owner_members"]) == 1
     
 
 # ----- Fail Removeowner
