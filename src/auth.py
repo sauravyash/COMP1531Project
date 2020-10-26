@@ -1,6 +1,8 @@
 """ Authentication functions
-
+This file contains all function to do with the authentication and setup of a
+flockr user.
 """
+
 import re
 import data
 import hashlib
@@ -13,6 +15,7 @@ def auth_login(email, password):
     Arguments: email, password, must be string
     Returns u_id, token
     """
+    # Check that the email is valid and matches a password.
     if not data.check_email(email):
         raise InputError
     elif not data.resolve_email(email):
@@ -20,6 +23,7 @@ def auth_login(email, password):
     elif not data.password_match(email, password):
         raise InputError
 
+    # Autheticate the user (as being logged in)
     data.data["users"][data.email_to_user_id(email) - 1]["authenticated"] = True
 
     return {
@@ -33,7 +37,7 @@ def auth_logout(token):
     Arguments: token, must be string
     Returns: is_success
     """
-
+    # Check that token exists.
     try:
         data.resolve_token_index(token)
     except:
@@ -43,7 +47,7 @@ def auth_logout(token):
         return {
             'is_success': False,
         }
-    #deauthenticate token
+    # Deauthenticate token for log out.
     data.data["users"][data.resolve_token_index(token)]["authenticated"] = False
 
     return {
@@ -56,10 +60,12 @@ def auth_register(email, password, name_first, name_last):
     Arguments: email, password, name_first, name_last, must be strings
     Returns: u_id, token
     """
+    # Register the first user.
     user_one = 0
     if data.data["users"] == []:
         user_one = 1
 
+    # Check that the email, password and names are valid input.
     if not data.check_email(email):
         raise InputError
     elif data.resolve_email(email) and user_one == 0:
@@ -69,6 +75,7 @@ def auth_register(email, password, name_first, name_last):
     elif not data.check_name(name_first, name_last):
         raise InputError
 
+    # Create a handle.
     handle = name_first.lower() + name_last.lower()
 
     if len(handle) > 20: # pragma: no cover
@@ -76,11 +83,11 @@ def auth_register(email, password, name_first, name_last):
 
     handle = data.generate_handle(handle)
 
-    #store password, handle, names
-    #generate user id by incrementing largest user_id in database
-    #store email, user_id
+    # store password, handle, names
+    # generate user id by incrementing largest user_id in database
+    # store email, user_id
 
-    if user_one: #generate first user
+    if user_one: # generate first user. (flockr owner)
         new_id = 1
         data.data.get("users").append({
             'id': new_id,
@@ -93,7 +100,7 @@ def auth_register(email, password, name_first, name_last):
             'authenticated': True,
             'permission_id': 1,
         })
-    else:
+    else: # generate any other user.
         new_id = max(data.all_users()) + 1
         data.data.get("users").append({
             'id': new_id,
