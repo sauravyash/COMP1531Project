@@ -21,7 +21,7 @@ def test_already_logged_out():
 
 def test_invalid_token():
     other.clear()
-    result = auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
+    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
     auth.auth_login('validemail@gmail.com', 'validpassword')
 
     with pytest.raises(AccessError):
