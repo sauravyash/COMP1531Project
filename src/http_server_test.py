@@ -49,6 +49,21 @@ def test_system(url):
         'name_first': 'Captain',
         'name_last': 'Underpants'
     }
+    
+    data = requests.post(str(url) + "auth/register", json={})
+
+    ''' Checking Error 400 (KeyError) '''
+    assert data.status_code == 400
+
+    data = requests.post(str(url) + "auth/register", json={
+        'email': 'captainunderpantsgmailcom',
+        'password': 'valid12345',
+        'name_first': 'Captain',
+        'name_last': 'Underpants' 
+    })
+
+    ''' Checking Error 401 '''
+    assert data.status_code == 401
 
     data = requests.post(str(url) + "auth/register", json=input_value)
 
@@ -81,6 +96,16 @@ def test_system(url):
     input_value = {
         'token': token_1
     }
+
+    # error 400
+    data = requests.post(f"{url}/auth/logout", json={})
+    assert data.status_code == 400
+
+    # error 403
+    data = requests.post(f"{url}/auth/logout", json={'token': "hi"})
+    assert data.status_code == 403
+
+
 
     data = requests.post(f"{url}/auth/logout", json=input_value)
     
@@ -124,6 +149,9 @@ def test_system(url):
     assert payload['token'] == token_2
 
     ''' ----- USER3 ATTEMPTS TO HACK THE LOGIN (INPUT ERROR) ----- '''
+    # Check error 400
+    data = requests.post(f"{url}/auth/login", json={})
+    assert data.status_code == 400
 
     ''' They remember the email, but not the password of the user.'''
     input_value = {
@@ -154,6 +182,10 @@ def test_system(url):
     channel_0 = payload['channel_id']
 
     ''' ----- USER1 INVITES USER2 TO CHANNEL ----- '''
+    ''' error 400 '''
+    data = requests.post(f"{url}/channel/invite", json={}) 
+    assert data.status_code == 400
+
     input_value = {
         'token': token_1,
         'channel_id': channel_0,
