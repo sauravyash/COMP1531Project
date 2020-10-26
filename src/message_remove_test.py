@@ -8,12 +8,13 @@ import other
 from channel import channel_invite
 from error import InputError
 from error import AccessError
-# assume message id is an int
+
 from message import message_send
 from message import message_remove
 
 def create_test_channel():
     '''
+    assume message id is an int
     create test channel for messages
     '''
     other.clear()
@@ -28,10 +29,6 @@ def create_test_channel():
 
     return (result, result1, channel_id)
 
-# Success Messages Remove
-# Remove must be from owner of the channel or sender of the message
-# Owner/Sender token must be valid
-# Channel id must be valid
 def test_valid_message_remove():
     '''
     Success Messages Remove
@@ -75,9 +72,10 @@ def test_valid_message_remove_flockr_owner():
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     assert message_remove(result["token"], m_id["message_id"]) == {}
 
-# Fail
+
 def test_invalid_message_token():
     '''
+    Fail
     When the token is Invalid
     '''
 
