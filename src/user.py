@@ -14,15 +14,15 @@ def user_profile(token, u_id):
         data.token_to_user_id(token)
     except:
         raise AccessError("Token not found")
-    
+
     try:
-        u_id_index = data.resolve_user_id_index(u_id) 
+        u_id_index = data.resolve_user_id_index(u_id)
     except LookupError:
         raise InputError("User id not found")
 
-    user_details = data.data["users"][u_id_index]
+    user_details = data.data["users"][u_id_index] # pragma: no cover
 
-    return {
+    return { # pragma: no cover
         'user': {
     	'u_id': user_details["id"],
     	'email': user_details["email"],
@@ -40,7 +40,7 @@ def user_profile_setname(token, name_first, name_last):
     '''
     try:
         u_id = data.token_to_user_id(token)
-    except LookupError:
+    except: # pragma: no cover
         raise AccessError("Token not found")
 
     user_index = data.resolve_user_id_index(u_id)
@@ -62,7 +62,7 @@ def user_profile_setemail(token, email):
     '''
     try:
         u_id = data.token_to_user_id(token)
-    except LookupError:
+    except: # pragma: no cover
         raise AccessError("Token not found")
 
     user_index = data.resolve_user_id_index(u_id)
@@ -85,7 +85,7 @@ def user_profile_sethandle(token, handle_str):
     '''
     try:
         u_id = data.token_to_user_id(token)
-    except LookupError:
+    except: # pragma: no cover
         raise AccessError("Token not found")
 
     user_index = data.resolve_user_id_index(u_id)
