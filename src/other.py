@@ -1,5 +1,5 @@
 ''' Other.py
-Functions that do not relate to the more specific purpose of managing 
+Functions that do not relate to the more specific purpose of managing
 authentication, a channel and multiple channels.
 '''
 
@@ -22,7 +22,7 @@ def clear():
         'users': [],
         'channels': []
     }
-    
+
     return {}
 
 def users_all(token):
@@ -35,14 +35,14 @@ def users_all(token):
     '''
     try:
         data.token_to_user_id(token)
-    except:
+    except: # pragma: no cover
         raise AccessError(description='Invalid Token')
 
     user_list = []
 
     for user in data.data['users']:
         user_list.append({
-            'user_id': user['id'],
+            'u_id': user['id'],
             'email': user['email'],
             'name_first': user['name_first'],
             'name_last': user['name_last'],
@@ -72,11 +72,11 @@ def admin_userpermission_change(token, user_id, permission_id):
     valid_ids = [1, 2]
     if permission_id not in valid_ids:
         raise InputError(description='Invalid Permission ID')
-    
+
     # Check that the token is valid.
     try:
         user_id_token = data.token_to_user_id(token)
-    except:
+    except: # pragma: no cover
         raise AccessError(description='Invalid Token')
 
     # Naming to avoid confusion
@@ -112,7 +112,7 @@ def search(token, query_str):
     list_of_messages = []
 
     # Go through the relevant channels.
-    for channel in list_of_channels['channels']: 
+    for channel in list_of_channels['channels']:
         channel_index = data.resolve_channel_id_index(channel['channel_id'])
         selected_channel = data.data['channels'][channel_index]
 

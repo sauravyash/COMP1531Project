@@ -540,7 +540,7 @@ def svr_admin_userpermission_change():
         try:
             u_id = int(req['u_id'])
             p_id = int(req['permission_id'])
-        except:
+        except ValueError:
             raise InputError("Invalid parameters")
         return json.dumps(other.admin_userpermission_change(token, u_id, p_id))
     except KeyError:
@@ -555,7 +555,7 @@ def svr_admin_userpermission_change():
             abort(401)
         else:
             abort(403)
-    except:
+    except Exception:
         # 500
         abort(500)
 
@@ -594,3 +594,4 @@ def svr_clear():
 
 if __name__ == "__main__":
     APP.run(port=0) # Do not edit this port
+    #APP.run(port=8080, debug=True) # Debugger

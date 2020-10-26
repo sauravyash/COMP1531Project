@@ -33,24 +33,11 @@ def test_addowner_simple():
     
     # Add the second user as an owner.
     assert channel_addowner(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
-    
-    # Result data
-    data_before = {
-        'name': 'channel_1',
-        'owner_members': [1, 2],
-        'all_members': [1, 2],
-    }
-    data_after = {
-        'name': 'channel_1',
-        'owner_members': [1],
-        'all_members': [1, 2],
-    }
-    
+     
     # Check that second user's owner status is removed.
-    assert channel_details(result1['token'], channel_id['channel_id']) == data_before
+    assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 2
     assert channel_removeowner(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
-    channel_details(result1['token'], channel_id['channel_id']) == data_after
-    
+    assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 1 
 
 def test_flockr_owner():
     
@@ -75,23 +62,11 @@ def test_flockr_owner():
     
     # Second user (owner of channel) adds third user as a channel owner.
     assert channel_addowner(result2['token'], channel_id['channel_id'], result3['u_id']) == {}
-    
-    # Result data
-    data_before = {
-        'name': 'channel_1',
-        'owner_members': [2, 3],
-        'all_members': [2, 3, 1],
-    }
-    data_after = {
-        'name': 'channel_1',
-        'owner_members': [3],
-        'all_members': [3, 1, 2],
-    }
-    
+       
     # Check that flockr owner can also remove a channel owner.
-    assert channel_details(result2['token'], channel_id['channel_id']) == data_before
+    assert len(channel_details(result2['token'], channel_id['channel_id'])["owner_members"]) == 2
     assert channel_removeowner(result3['token'], channel_id['channel_id'], result2['u_id']) == {}
-    channel_details(result3['token'], channel_id['channel_id']) == data_after
+    assert len(channel_details(result3['token'], channel_id['channel_id'])["owner_members"]) == 1
     
 
 # ----- Fail Removeowner

@@ -5,7 +5,7 @@ import re
 import data
 import hashlib
 import jwt
-from error import InputError
+from error import InputError, AccessError
 
 def auth_login(email, password):
     """ Logs in the user, authenticating their token
@@ -25,7 +25,6 @@ def auth_login(email, password):
     return {
         'u_id': data.email_to_user_id(email),
         'token': jwt.encode({"u_id": data.email_to_user_id(email)}, data.JWT_KEY, algorithm='HS256').decode('UTF-8')
-        #'token': jwt.decode(jwt.encode({"u_id": data.email_to_user_id(email)}, data.JWT_KEY, algorithm='HS256'), data.JWT_KEY, algorithms=['HS256']),
     }
 
 def auth_logout(token):
@@ -34,6 +33,12 @@ def auth_logout(token):
     Arguments: token, must be string
     Returns: is_success
     """
+
+    try:
+        data.resolve_token_index(token)
+    except:
+        raise AccessError
+
     if not data.data["users"][data.resolve_token_index(token)]["authenticated"]:
         return {
             'is_success': False,
@@ -104,10 +109,8 @@ def auth_register(email, password, name_first, name_last):
 
     encoded_jwt = jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256')
     decoded_string = encoded_jwt.decode('UTF-8')
-    #jwt.decode(encoded_jwt, data.JWT_KEY, algorithms=['HS256'])
 
     return {
         'u_id': new_id, #next user_id
-        #'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
         'token': decoded_string
     }

@@ -29,24 +29,12 @@ def test_leave_member():
     channel_id = channels.channels_create(result1['token'], 'channel_1', True)
     
     # Add second user to channel
-    channel_join(result2['token'], channel_id['channel_id'])
-    
-    # Result data:
-    data_before = {
-        'name': 'channel_1',
-        'owner_members': [1],
-        'all_members': [1, 2],
-    }
-    data_after = {
-        'name': 'channel_1',
-        'owner_members': [1],
-        'all_members': [1],
-    }
-    
+    channel_join(result2['token'], channel_id['channel_id']) 
+   
     # Check that second user leaves channel.
-    assert channel_details(result1['token'], channel_id['channel_id']) == data_before
+    assert len(channel_details(result1['token'], channel_id['channel_id'])['all_members']) == 2
     assert channel_leave(result2['token'], channel_id['channel_id']) == {}
-    assert channel_details(result1['token'], channel_id['channel_id']) == data_after
+    assert len(channel_details(result1['token'], channel_id['channel_id'])['all_members']) == 1
 
 def test_leave_owner():
     
@@ -64,23 +52,11 @@ def test_leave_owner():
     
     # Add second user to channel
     channel_join(result2['token'], channel_id['channel_id'])
-    
-    # Result data:
-    data_before = {
-        'name': 'channel_1',
-        'owner_members': [1],
-        'all_members': [1, 2],
-    }
-    data_after = {
-        'name': 'channel_1',
-        'owner_members': [],
-        'all_members': [2],
-    }
-    
+ 
     # Check that second user leaves channel.
-    assert channel_details(result1['token'], channel_id['channel_id']) == data_before
+    assert len(channel_details(result1['token'], channel_id['channel_id'])["all_members"]) == 2
     assert channel_leave(result1['token'], channel_id['channel_id']) == {}
-    assert channel_details(result2['token'], channel_id['channel_id']) == data_after
+    assert len(channel_details(result2['token'], channel_id['channel_id'])["all_members"]) == 1
 
 # ----- Fail Leave
 def test_not_member():

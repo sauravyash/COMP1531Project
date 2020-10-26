@@ -181,8 +181,8 @@ def test_system(url):
 
     payload = data.json()
     assert payload['name'] == 'Adventure'
-    assert payload['owner_members'] == [1]
-    assert payload['all_members'] == [1, 2]
+    assert len(payload['owner_members']) == 1
+    assert len(payload['all_members']) == 2
 
     #### ----- USER2 LEAVES THE CHANNEL ----- ####
     input_value = {
@@ -207,8 +207,8 @@ def test_system(url):
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
-    assert payload['owner_members'] == [1]
-    assert payload['all_members'] == [1]
+    assert len(payload['owner_members']) == 1
+    assert len(payload['all_members']) == 1
 
     #### ----- USER2 CHECKS CHANNEL DETAILS (ACCESS ERROR) ----- ####
     input_value = {
@@ -252,8 +252,8 @@ def test_system(url):
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
-    assert payload['owner_members'] == [1]
-    assert payload['all_members'] == [1, 2]
+    assert len(payload['owner_members']) == 1
+    assert len(payload['all_members']) == 2
 
     #### ----- USER1 ADDS USER2 AS OWNER ----- ####
     input_value = {
@@ -279,8 +279,8 @@ def test_system(url):
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
-    assert payload['owner_members'] == [1, 2]
-    assert payload['all_members'] == [1, 2]
+    assert len(payload['owner_members']) == 2
+    assert len(payload['all_members']) == 2
 
     #### ----- USER1 REMOVES USER2 AS OWNER ----- ####
     input_value = {
@@ -306,9 +306,9 @@ def test_system(url):
     payload = data.json()
 
     assert payload['name'] == 'Adventure'
-    assert payload['owner_members'] == [1]
-    assert payload['all_members'] == [1, 2]
-
+    assert len(payload['owner_members']) == 1
+    assert len(payload['all_members']) == 2
+    
 #------------------------------------------------------------------------------#
 
     #### ---- USER1 SENDS MESSAGE ----- ####
