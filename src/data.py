@@ -32,11 +32,11 @@ def token_to_user_id(token):
     """
     token = token.encode('UTF-8')
     decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
-    for user in data['users']:
+    for user in data['users']: # pragma: no cover
         if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
-    raise LookupError("Token not found")
+    raise LookupError("Token not found") # pragma: no cover
 
 def resolve_token_index(token):
     """ FIND INDEX FOR TOKEN WITHIN DICTIONARY
@@ -49,7 +49,7 @@ def resolve_token_index(token):
     token = token.encode('UTF-8')
     decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data["users"]:
-        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt: # pragma: no cover
             return user["id"] - 1
 
     raise LookupError("Token not found") # pragma: no cover
@@ -64,9 +64,7 @@ def resolve_user_id_index(user_id):
 
     """
     for i, user in enumerate(data["users"]):
-        print("this is the user:", user)
         if user['id'] == user_id:
-            print("the user index ", i, " has been found for user", user)
             return i
 
     raise LookupError("user id not found")
