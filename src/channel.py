@@ -76,10 +76,11 @@ def channel_details(token, channel_id):
     # Check that the user is a member of the channel.
     channel = data.data['channels'][channel_index]
     members = channel['members']
-    
+
     if data.resolve_permissions(channel['id'], user_id) is None:
         raise AccessError(description='Authorised User Not Member of Channel')
-    
+
+    # Add admin to owner list
     owners = []
     user_list = data.data["users"]
     for mem_id in members['permission_id_1']:
@@ -89,7 +90,8 @@ def channel_details(token, channel_id):
             'name_first': user_list[index]['name_first'],
             'name_last': user_list[index]['name_last']
             })
-    
+
+    # Add user to member list
     member_list = [] + owners
     for mem_id in members['permission_id_2']:
         index = data.resolve_user_id_index(mem_id)
