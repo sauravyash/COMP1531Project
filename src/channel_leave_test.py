@@ -56,7 +56,7 @@ def test_leave_owner():
     # Check that second user leaves channel.
     assert len(channel_details(result1['token'], channel_id['channel_id'])["all_members"]) == 2
     assert channel_leave(result1['token'], channel_id['channel_id']) == {}
-    assert len(channel_details(result1['token'], channel_id['channel_id'])["all_members"]) == 1
+    assert len(channel_details(result2['token'], channel_id['channel_id'])["all_members"]) == 1
 
 # ----- Fail Leave
 def test_not_member():
