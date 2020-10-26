@@ -263,7 +263,7 @@ def channel_addowner(token, channel_id, user_id):
     channel = data.data['channels'][channel_index]
     # If authorised user (already_member) does not have owner permissions, raise
     # an Access Error.
-    if data.resolve_permissions(channel['id'], already_member) is not 1:
+    if data.resolve_permissions(channel['id'], already_member) != 1:
         raise AccessError(description='User Not Authorised With Channel Owner Permissions')
 
     # Check if invited user is a member of channel.
@@ -315,7 +315,7 @@ def channel_removeowner(token, channel_id, user_id):
     channel = data.data['channels'][channel_index]
     # If authorised user (already_member) does not have owner permissions, raise
     # an Access Error.
-    if data.resolve_permissions(channel['id'], already_member) is not 1:
+    if data.resolve_permissions(channel['id'], already_member) != 1:
         raise AccessError(description='User Not Authorised With Channel Owner Permissions')
 
     # Check if invited user is a member of channel.
