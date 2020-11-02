@@ -6,13 +6,17 @@ import channels
 import other
 from error import InputError
 from error import AccessError
-from user import user_profile_uploadphoto
+#from user import user_profile_uploadphoto
 
 ####### NOTE ###########
 
 #InputError- when img_url returns an HTTP status other than 200.
 
 ########################
+
+def user_profile_uploadphoto(token, url, x_start, x_end, y_start, y_end):
+    pass
+
 
 def test_user_profile_uploadphoto():
     ''' Success upload photo'''
