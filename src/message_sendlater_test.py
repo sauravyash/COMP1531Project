@@ -8,7 +8,13 @@ import auth
 import channels
 import channel
 from error import InputError, AccessError
-from message import message_sendlater
+#from message import message_sendlater
+
+
+def message_sendlater(token, ch_id, strings, datetime):
+    ''' stub '''
+    pass
+
 
 def test_message_sendlater_success():
     ''' Success message sendlater case'''
@@ -19,7 +25,7 @@ def test_message_sendlater_success():
 
     channels.channels_create(result["token"], "channel_1", True)
 
-    send_time = dt.datetime(2020,11,11,8,0)
+    send_time = dt.datetime(2020, 11, 11, 8, 0)
 
     assert (isinstance(message_sendlater(result["token"], channel_id["channel_id"], "Hello There!", send_time), int))
 
@@ -33,7 +39,7 @@ def test_invalid_channel_id():
 
     channels.channels_create(result["token"], "channel_1", True)
 
-    send_time = dt.datetime(2020,11,11,9,30)
+    send_time = dt.datetime(2020, 11, 11, 9, 30)
 
     with pytest.raises(InputError):
         message_sendlater(result["token"], 999, "Funky Monkey", send_time)
@@ -48,7 +54,7 @@ def test_exceed_word_limit():
 
     channels.channels_create(result["token"], "channel_1", True)
 
-    send_time = dt.datetime(2020,11,11,9,30)
+    send_time = dt.datetime(2020, 11, 11, 9, 30)
 
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for i in range(1005))
@@ -66,7 +72,7 @@ def test_invalid_time():
 
     channels.channels_create(result["token"], "channel_1", True)
 
-    send_time = dt.datetime(2000,9,11,8,0)
+    send_time = dt.datetime(2000, 9, 11, 8, 0)
 
     with pytest.raises(InputError):
         message_sendlater(result["token"], channel_id["channel_id"], "Stay safe next year!", send_time)
@@ -84,7 +90,7 @@ def test_not_authorized():
 
     channel_id = channels.channels_create(result["token"], "channel_1", True)
 
-    send_time = dt.datetime(2020,11,11,9,30)
+    send_time = dt.datetime(2020, 11, 11, 9, 30)
 
     with pytest.raises(AccessError):
         message_sendlater(result1["token"], channel_id["channel_id"], "Not in channel", send_time)
