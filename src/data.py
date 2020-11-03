@@ -1,4 +1,9 @@
-# This file contains the appliation state data that is shared by the entire program
+''' Data.py
+This file contains the application state data that is shared throughout the
+entire program.
+
+'''
+
 import re
 import hashlib
 import jwt
@@ -9,81 +14,207 @@ data = {
     'channels': []
 }
 
+
+
 JWT_KEY = 'b0ggers'
 
-# returns user id of given user token
-# Raises a LookupError if token is not found
+#### ---- ALL FUNCTIONS THAT ACCESS AN ELEMENT IN THE DATA DICTIONARY ---- ####
+# (Raises a LookupError if the element is not found.)
 
-def resolve_token(token):
+# TOKENS:
+def token_to_user_id(token):
+    """ FIND CORRESPONDING USER ID TO TOKEN
+    Looks up tokens to determine corresponding user ID.
+
+    Arguments: token- must be string
+    Returns: Token index
+
+    """
+    token = token.encode('UTF-8')
     decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
-    for user in data['users']:
+    for user in data['users']: # pragma: no cover
         if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
-    raise LookupError("Token not found")
+    raise LookupError("Token not found") # pragma: no cover
 
-def resolve_user_id_index(user_id):
-    i = 0
+def resolve_token_index(token):
+    """ FIND INDEX FOR TOKEN WITHIN DICTIONARY
+    Looks up tokens to determine token index.
+
+    Arguments: token- must be string
+    Returns: Token index
+
+    """
+    token = token.encode('UTF-8')
+    decoded_jwt = jwt.decode(token, JWT_KEY, algorithms=['HS256'])
     for user in data["users"]:
+        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt: # pragma: no cover
+            return user["id"] - 1
+
+    raise LookupError("Token not found") # pragma: no cover
+
+# User ID
+def resolve_user_id_index(user_id):
+    """ FIND INDEX FOR USER ID WITHIN DICTIONARY
+    Looks up user IDs to determine user ID index.
+
+    Arguments: user id- must be an int
+    Returns: User index
+
+    """
+    for i, user in enumerate(data["users"]):
         if user['id'] == user_id:
             return i
-        else:
-            i += 1
-    raise LookupError("user_id not found")
 
+    raise LookupError("user id not found")
+
+# Channel ID
 def resolve_channel_id_index(channel_id):
-    i = 0
-    for channel in data["channels"]:
+    """ FIND INDEX FOR CHANNEL ID WITHIN DICTIONARY
+    Looks up channel IDs to determine channel ID index.
+
+    Arguments: channel id- must be an int
+    Returns: Channel index
+
+    """
+
+    for i, channel in enumerate(data["channels"]):
         if channel['id'] == channel_id:
             return i
-        else:
-            i += 1
-    raise LookupError("channel_id not found")
 
-def resolve_message_id_index(channel_id, user_id):
-    pass
+    raise LookupError("channel id not found")
 
-def print_data():
-    print(data)
+# MESSAGE
+def resolve_message_id_index(message_id):
+    """ FIND INDEX FOR MESSAGE ID WITHIN DICTIONARY
+    Looks up message IDs to determine message ID index.
 
-#NOT MINE, from spec sheet
-def check_email(email):
-    """ Checks if email is valid
+    Arguments: message id- must be an int
+    Returns: Message index
+
+    """
+    for channel in data["channels"]:
+        for i, msg in enumerate(channel["messages"]):
+            if msg['message_id'] == message_id:
+                return (channel['id'], i)
+
+    raise LookupError("message id not found")
+
+def resolve_message_id(msg_id):
+    ''' CHECK IF MESSAGE ID EXISTS WITHIN DICTIONARY
+
+    Arguments: msg_id- must be an int
+    Result: Either dictionary of channel_id and msg_index, or None
+
+    '''
+    try:
+        channel_id, msg_index = resolve_message_id_index(msg_id)
+        return {'channel_id': channel_id, 'msg_index': msg_index}
+    except LookupError:
+        return None
+
+# EMAIL
+def resolve_email(email):
+    """ CHECK IF EMAIL HAS BEEN REGISTERED
+    Searches through registered emails in dictionary.
 
     Arguments: email, must be string
     Returns: True/False
+
+    """
+    for user in data["users"]:
+        if user["email"] == email:
+            return True
+    return False
+
+def email_to_user_id(email):
+    """ FIND CORRESPONDING USER ID TO EMAIL
+    Looks up email to find corresponding user ID.
+
+    Arguments: email, must be string
+    Returns: user_id
+
+    """
+    for user in data["users"]: # pragma: no cover
+        if user["email"] == email:
+            return user["id"]
+
+    raise LookupError("Email not found") # pragma: no cover
+
+# USER PERMISSIONS
+def resolve_permissions(channel_id, user_id):
+    """ CHECK IF USER IS A MEMBER OF A CHANNEL & THEIR PERMISSIONS
+
+    Arguments: channel_id- must be an int, user_id- must be an int
+    Returns: Either 1 or 2- to indicate permissions; otherwise None
+
+    """
+
+    try:
+        # Check if the user is a flockr owner.
+        user_index = resolve_user_id_index(user_id)
+        permission = data['users'][user_index]['permission_id']
+
+        channel_index = resolve_channel_id_index(channel_id)
+        members = data['channels'][channel_index]['members']
+
+        # If user is a CHANNEL owner or FLOCKR owner, return 1.
+        if user_id in members['permission_id_1']:
+            return 1
+        elif user_id in members['permission_id_2'] and permission == 1:
+            return 1
+        elif user_id in members['permission_id_2']:
+            return 2
+        else:
+            return None
+    except LookupError: # pragma: no cover
+        return None
+
+# FOR TROUBLESHOOTING- PRINT THE CURRENT STATE OF THE DICTIONARY.
+def print_data():
+    print(data)
+
+#### ---- ALL FUNCTIONS THAT AUTHENTICATE INPUT (FOR AUTH FUNCTIONS) ---- ####
+
+#NOT MINE, from spec sheet.
+def check_email(email):
+    """ CHECK IF EMAIL IS VALID
+
+    Arguments: email, must be string
+    Returns: True/False
+
     """
     regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
-    if re.search(regex, email):
-        return True
-    return False
+    return bool(re.search(regex, email))
 
-# Checks if input password is valid (i.e. has length more than 5 characters)
 def check_password(password):
-    """ Checks if password is valid
+    """ CHECK IF PASSWORD IS VALID
+    Checks if input password is valid (i.e. has length more than 5 characters).
 
     Input arguments: password, must be string
     Returns: True/False
-    """
-    if len(password) >= 6:
-        return True
-    return False
 
-# Check is first and last names are between 1 and 50 characters inclusively
+    """
+    return len(password) >= 6
+
 def check_name(name_first, name_last):
-    """ Determines if names are valid, i.e. if name is between 1-50 characters
+    """ CHECK IF NAME IS VALID
+    Determines if names are valid, i.e. if name is between 1-50 characters.
 
     Input arguments: name_first, name_last, must be strings
     Returns: True/False
+
     """
     return len(name_first) > 0 and len(name_first) < 51 and len(name_last) > 0 and len(name_last) < 51
 
-# Loads all user_ids from database into id_list
-def load_ids():
-    """ Loads user_ids from data.py
+def all_users():
+    """ CREATES A LIST OF ALL USERS WITHIN DICTIONARY
+    Loads user IDs from data.py
 
     Returns: id_list
+
     """
     id_list = []
     for user in data["users"]:
@@ -91,72 +222,39 @@ def load_ids():
 
     return id_list
 
-# Returns token index
-def token_index(token):
-    """ Looks up tokens to determine u_id index/token index
-
-    Arguments: token, must be string
-    Returns: Token index
-    """
-    for user in data["users"]:
-        if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == jwt.decode(token, JWT_KEY, algorithms=['HS256']):
-            return user["id"] - 1
-
-    raise LookupError("Token not found")
-
-# Determines if email has been registered
-def search_emails(email):
-    """ Searches through registered emails
-
-    Arguments: email, must be string
-    Returns: True/False
-    """
-    for user in data["users"]:
-        if user["email"] == email:
-            return True
-    return False
-
-# Returns user_id with respect to the email
-def find_user_id_index(email):
-    """ Looks up user id with respect to email
-
-    Arguments: email, must be string
-    Returns: user_id
-    """
-    for user in data["users"]:
-        if user["email"] == email:
-            return user["id"]
-
-    raise LookupError("Email not found")
-
-# Returns whether or not password matches respective email
 def password_match(email, password):
-    """ Compares password
+    """ CHECK IF PASSWORD MATCHES EMAIL
+    Compares password to that stored in the dictionary with email.
 
     Arguments: email, password, must be strings
     Returns: True/False
-    """
-    return data["users"][find_user_id_index(email) - 1]["password"] == hashlib.sha256(password.encode()).hexdigest()
 
-# Searches list of all stored handles and checks if handle has been found
-def search_handle(handle):
-    """ Searches through handles
+    """
+    return data["users"][email_to_user_id(email) - 1]["password"] == hashlib.sha256(password.encode()).hexdigest()
+
+def resolve_handle(handle):
+    """ CHECK IF HANDLE EXISTS WITHIN DICTIONARY
+    Searches list of all stored handles and checks if handle exists.
 
     Arguments: handle, must be string
     Returns: True/False
+
     """
     for user in data["users"]:
         if user["handle"] == handle:
             return True
     return False
 
-def generate_handle(handle):
-    """ Generates unique handle
+######## ----- ALL FUNCTIONS THAT GENERATE UNIQUE IDs OR HANDLES ----- ########
 
-    Arguments: handle, must be string
-    Returns: handle
+def generate_handle(handle):
+    """ GENERATE UNIQUE HANDLE
+
+    Arguments: handle- must be string
+    Returns: Handle
+
     """
-    while search_handle(handle):
+    while resolve_handle(handle):
         nums = []
         for i in range(len(handle)):
             if handle[i].isdigit():
@@ -175,38 +273,75 @@ def generate_handle(handle):
 
     return handle
 
+def generate_message_id():
+    """ GENERATE UNIQUE MESSAGE ID
+
+    Arguments: msg_id- must be an int
+    Returns: ID
+
+    """
+    generated_id = 0
+    while resolve_message_id(generated_id):
+        generated_id += 1
+    return generated_id
+
+def generate_channel_id():
+    """ GENERATE UNIQUE CHANNEL ID
+
+    Arguments: channel_id- must be an int
+    Returns: ID
+
+    """
+    generated_id = 0
+    while True:
+        try:
+            resolve_channel_id_index(generated_id)
+            generated_id += 1
+        except LookupError:
+            return generated_id
+
 '''
+EXAMPLE
 EXAMPLE
 data = {
     'users': [
         {
             'id': 1,
-            'name_first': 'firstname',
-            'name_last': 'lastname',
-            'email': 'validemail@gmail.com',
+            'name_first': 'firstname1',
+            'name_last': 'lastname1',
+            'email': 'validemail1@gmail.com',
             'password': 'validpassword123',
-            'handle': 'firstnamelastname',
+            'handle': 'firstnamelastnam1',
             'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
-            'authenticated': True,
-            'owner': 'user'
+            'authorised': True,
+            'permission_id': 1,
         },
         {
             'id': 2,
-            'name' : 'user2',
-            ...
+            'name_first': 'firstname2',
+            'name_last': 'lastname2',
+            'email': 'validemail2@gmail.com',
+            'password': 'validpassword123',
+            'handle': 'firstnamelastnam2',
+            'token': 'lkJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6InRva2VuIn0.x8h0L 57fWirONi_9_ydVAcP41ObMCkf9HRsr2qJd00',
+            'authorised': True
+            'permission_id': 2,
         },
     ],
     'channels': [
         {
             'id': 1,
             'name' : 'channel1',
-            'admins': [ 'exampleID1', 'exampleID2'],
-            'members': [ 'mbr1', 'mbr2'] ,
+            'members': [
+                'permission_id_1': [],
+                'permission_id_2': [],
+            ]
             'messages' [
                   {
-                      'msg_id': 1,
-                      'msg_author': "mbr1",
-                      'msg_content': "hi"
+                      'message_id': 1,
+                      'u_id': "mbr1",
+                      'message': "hi"
+                      'time_created': 1582426789
                   }
              ]
             'is_public': True

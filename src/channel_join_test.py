@@ -1,83 +1,104 @@
-############################################Channel Join Tests###################################
-from channel import channel_invite
-from channel import channel_join
+############################### Channel Join Tests ############################
+import pytest
+
 from error import InputError
 from error import AccessError
+
+from channel import channel_join
+from channel import channel_invite
+
 import auth
 import channels
 import other
-import pytest
-# Success Join
-def test_valid_join_public_owner():
+
+# ----- Success Join
+def test_join_public():
+    
     other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    
+    # Register and login three users.
+    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
+    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
 
-    auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
-    auth.auth_login("validemail1@gmail.com", "password123")
+    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
+    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
+    
+    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
+    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
+    
+    # Create a channel with the second user.
+    channel_id = channels.channels_create(result2['token'], 'channel_1', True)
+    
+    # When any member joins a public channel, they should be able to:
+    # -- Firstly, the flockr owner should be able to join.
+    assert channel_join(result1['token'], channel_id['channel_id']) == {}
+    # -- Secondly, a non-flockr owner should be able to join.
+    assert channel_join(result3['token'], channel_id['channel_id']) == {}
 
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-
-    assert channel_join(result["token"], channel_id["channel_id"]) == {}
-
-def test_valid_join_public_memeber():
+def test_join_private_owner():
+    
     other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    
+    # Register and login two users.
+    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
+    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
 
-    auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("validemail1@gmail.com", "password123")
+    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
+    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
+    
+    # Create a channel with the first user.
+    channel_id = channels.channels_create(result2['token'], 'channel_1', False)
+    
+    # The flockr owner can join a private channel.
+    assert channel_join(result1['token'], channel_id['channel_id']) == {}
 
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-
-    assert channel_join(result1["token"], channel_id["channel_id"]) == {}
-
-
-def test_valid_join_private_owner():
+# ----- Fail Join
+def test_join_private_member():
+    
     other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    
+    # Register and login two users.
+    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
+    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
 
-    channel_id = channels.channels_create(result["token"], "channel_1", False)
-    assert channel_join(result["token"], channel_id["channel_id"]) == {}
-
-
-# Fail Join
-def test_invalid_public_channel_id():
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
-
-    auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("validemail1@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
-    with pytest.raises(InputError):
-        channel_join(result1["token"], -1)
-
-def test_invalid_private_channel_id():
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
-
-    auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("validemail1@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", False)
-    channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
-    with pytest.raises(InputError):
-        channel_join(result1["token"], -1)
-
-def test_invalid_join_not_authorized():
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
-
-    auth.auth_register("validemail1@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("validemail1@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", False)
-    channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])   
+    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
+    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
+    
+    # Create a channel with the first user.
+    channel_id = channels.channels_create(result1['token'], 'channel_1', False)
+    
     with pytest.raises(AccessError):
-        channel_join(result1["token"], channel_id["channel_id"])
+        channel_join(result2['token'], channel_id['channel_id'])
+
+def test_invalid_channel():
+    
+    other.clear()
+    
+    # Register and login two users.
+    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
+    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
+
+    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
+    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
+    
+    # Create a channel with first user.
+    channels.channels_create(result1['token'], 'channel_1', True)
+    
+    # Input error is raised when fake channel is used.
+    with pytest.raises(InputError):
+        channel_join(result2['token'], -1)
+        
+def test_invalid_token():
+    
+    other.clear()
+    
+    # Register and login a user.
+    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
+    result = auth.auth_login('validemail@gmail.com', 'password123')
+    
+    # Create a channel with first user.
+    channel_id = channels.channels_create(result['token'], 'channel_1', True)
+    
+    # Access error is raised when a fake token is used.
+    with pytest.raises(AccessError):
+        channel_join('fake_token', channel_id['channel_id'])

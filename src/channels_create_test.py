@@ -11,16 +11,15 @@ from channels import channels_create
 # - Token must be a string
 # - Token cannot be empty
 # - Token must be unique
-#def test_channels_create_valid_token():
-#    other.clear()
-#    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', '#fname')
-#    with pytest.raises(AccessError):
-#        channels_create(0, "namee", True)
-#    with pytest.raises(AccessError):
-#        channels_create("", "namee", True)
-#    with pytest.raises(AccessError):
-#        channels_create(None, "namee", True)
-
+def test_channels_create_valid_token():
+    other.clear()
+    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'lname')
+    with pytest.raises(AccessError):
+        channels_create(0, "namee", True)
+    with pytest.raises(AccessError):
+        channels_create("", "namee", True)
+    with pytest.raises(AccessError):
+        channels_create(None, "namee", True)
 
 # Test for Valid Name
 # - Name must be a string
