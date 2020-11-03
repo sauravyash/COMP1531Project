@@ -137,10 +137,6 @@ def auth_passwordreset_request(email):
     port = 465
     smtp_server = "smtp.gmail.com"
     receiver_email = email
-    #message = """\
-    #Subject: flockr password reset request
-
-    #Your reset code is: """ + str(reset_key)
     SUBJECT = "flockr password reset request"
     TEXT = "Your reset code is: " + str(reset_key)
 
