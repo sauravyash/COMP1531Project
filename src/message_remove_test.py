@@ -8,12 +8,13 @@ import other
 from channel import channel_invite
 from error import InputError
 from error import AccessError
-# assume message id is an int
+
 from message import message_send
 from message import message_remove
 
 def create_test_channel():
     '''
+    assume message id is an int
     create test channel for messages
     '''
     other.clear()
@@ -28,10 +29,6 @@ def create_test_channel():
 
     return (result, result1, channel_id)
 
-# Success Messages Remove
-# Remove must be from owner of the channel or sender of the message
-# Owner/Sender token must be valid
-# Channel id must be valid
 def test_valid_message_remove():
     '''
     Success Messages Remove
@@ -75,16 +72,17 @@ def test_valid_message_remove_flockr_owner():
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     assert message_remove(result["token"], m_id["message_id"]) == {}
 
-# Fail
+
 def test_invalid_message_token():
     '''
+    Fail
     When the token is Invalid
     '''
 
     result, result1, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    with pytest.raises(InputError):
+    with pytest.raises(AccessError):
         message_remove("Invalid token", m_id["message_id"])
 
 
@@ -121,10 +119,10 @@ def test_invalid_message_remove_not_sender():
 
     auth.auth_register("awsome_email2@gmail.com", "password123", "fname2", "lname2")
     result2 = auth.auth_login("awsome_email2@gmail.com", "password123")
-    channel_invite(result2["token"], channel_id["channel_id"], result2["u_id"])
+    channel_invite(result1["token"], channel_id["channel_id"], result2["u_id"])
 
     message_send(result["token"], channel_id["channel_id"], "Edit next message")
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    m_id = message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
 
     with pytest.raises(AccessError):
         message_remove(result2["token"], m_id["message_id"])

@@ -9,7 +9,7 @@ import auth
 import channels
 import channel
 from error import InputError, AccessError
-# assume message id is an int
+'''assume message id is an int'''
 from message import message_send, message_edit
 
 
@@ -38,7 +38,6 @@ def test_valid_message_edit():
     Edit authorized by owner or sender
     '''
     _, result1, channel_id = create_test_channel()
-    #message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
     assert message_edit(result1["token"], m_id["message_id"], "Monkey Funky") == {}
     msgs = channel.channel_messages(result1["token"], channel_id["channel_id"], 0)
@@ -78,7 +77,7 @@ def test_authorized_edit_flockr_owner():
     assert message_edit(result["token"], m_id["message_id"], "Monkey Funky") == {}
 
 
-#Fail
+'''Fail'''
 def test_invalid_token():
     '''
     Invalid sender/owner token
@@ -86,7 +85,7 @@ def test_invalid_token():
     result, result1, channel_id = create_test_channel()
     message_send(result["token"], channel_id["channel_id"], "Hello")
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    with pytest.raises(InputError):
+    with pytest.raises(AccessError):
         message_edit("Invalid token", m_id["message_id"], "Monkey Funky")
 
 def test_invalid_message_id():
