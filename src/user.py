@@ -104,3 +104,7 @@ def user_profile_sethandle(token, handle_str):
 
     return {
     }
+
+def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
+    ''' user can uploadphoto'''
+    pass
