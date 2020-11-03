@@ -6,15 +6,8 @@ import pytest
 import other
 import auth
 import channels
-import channel
 from error import InputError, AccessError
-#from message import message_sendlater
-
-
-def message_sendlater(token, ch_id, strings, datetime):
-    ''' stub '''
-    pass
-
+from message import message_sendlater
 
 def test_message_sendlater_success():
     ''' Success message sendlater case'''
@@ -23,11 +16,12 @@ def test_message_sendlater_success():
     auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("coolemail@gmail.com", "password123")
 
-    channels.channels_create(result["token"], "channel_1", True)
+    channel_id = channels.channels_create(result["token"], "channel_1", True)
 
     send_time = dt.datetime(2020, 11, 11, 8, 0)
 
-    assert (isinstance(message_sendlater(result["token"], channel_id["channel_id"], "Hello There!", send_time), int))
+    return_value = message_sendlater(result["token"], channel_id['channel_id'], "Hello There!", send_time)
+    assert isinstance(return_value, int)
 
 
 def test_invalid_channel_id():
@@ -52,7 +46,7 @@ def test_exceed_word_limit():
     auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("coolemail@gmail.com", "password123")
 
-    channels.channels_create(result["token"], "channel_1", True)
+    channel_id = channels.channels_create(result["token"], "channel_1", True)
 
     send_time = dt.datetime(2020, 11, 11, 9, 30)
 
@@ -60,7 +54,7 @@ def test_exceed_word_limit():
     result_str = ''.join(random.choice(letters) for i in range(1005))
 
     with pytest.raises(InputError):
-        message_sendlater(result["token"], channel_id["channel_id"], result_str, send_time)
+        message_sendlater(result["token"], channel_id['channel_id'], result_str, send_time)
 
 
 def test_invalid_time():
@@ -70,12 +64,12 @@ def test_invalid_time():
     auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
     result = auth.auth_login("coolemail@gmail.com", "password123")
 
-    channels.channels_create(result["token"], "channel_1", True)
+    channel_id = channels.channels_create(result["token"], "channel_1", True)
 
     send_time = dt.datetime(2000, 9, 11, 8, 0)
 
     with pytest.raises(InputError):
-        message_sendlater(result["token"], channel_id["channel_id"], "Stay safe next year!", send_time)
+        message_sendlater(result["token"], channel_id['channel_id'], "Stay safe next year!", send_time)
 
 
 def test_not_authorized():
@@ -93,4 +87,4 @@ def test_not_authorized():
     send_time = dt.datetime(2020, 11, 11, 9, 30)
 
     with pytest.raises(AccessError):
-        message_sendlater(result1["token"], channel_id["channel_id"], "Not in channel", send_time)
+        message_sendlater(result1["token"], channel_id['channel_id'], "Not in channel", send_time)

@@ -6,17 +6,7 @@ import channels
 import other
 from error import InputError
 from error import AccessError
-from message import message_send
-
-
-def message_react(token, message_id):
-    '''stub'''
-    pass
-
-
-def message_unreact(token, message_id):
-    '''stub'''
-    pass
+from message import message_send, message_react, message_unreact
 
 def create_test_channel():
     '''creates the channel for testing'''

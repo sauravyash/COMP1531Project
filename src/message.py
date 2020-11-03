@@ -101,3 +101,27 @@ def message_edit(token, message_id, message):
     msgs[msg_index]['message'] = message
 
     return {}
+
+def message_sendlater(token, channel_id, messages, time_send):
+    ''' stub '''
+    return 0
+
+
+def message_react(token, message_id, react_id):
+    '''stub'''
+
+    pass
+
+
+def message_unreact(token, message_id, react_id):
+    '''stub'''
+
+    pass
+
+def message_pin(token, message_id):
+    '''stub'''
+    pass
+
+def message_unpin(token, message_id):
+    '''stub'''
+    pass

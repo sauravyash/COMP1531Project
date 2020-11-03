@@ -26,18 +26,18 @@ def test_messages_empty():
     auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
     result = auth.auth_login('validemail@gmail.com', 'password123')
 
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    channel_invite(result1["token"], channel_id["channel_id"], result1["u_id"])
-    message_send(result1["token"], channel_id["channel_id"], "Hello There")
-    check = channel_messages(result1["token"], channel_id["channel_id"], 0)
-    assert check["end"] == -1
-    assert check["start"] == 0
-    assert check["messages"][0]["u_id"] == 2
-    assert check["messages"][0]["message"] == "Hello There"
+    # Create a channel with the first user.
+    channel_id = channels.channels_create(result['token'], 'channel_1', True)
 
-# Fail
-def test_invalid_channel_messages_id():
-    ''' Invalid Channel ID'''
+    # Check that user can access empty messages.
+    result_messages = channel_messages(result['token'], channel_id['channel_id'], 0)
+    assert result_messages == {
+        'messages': [],
+        'start': 0,
+        'end': -1,
+    }
+
+def test_messages_simple():
     other.clear()
 
     # Register and login one user.
@@ -148,8 +148,6 @@ def test_invalid_start():
 
 def test_invalid_token():
 
-def test_invalid_channel_messages_authorised():
-    ''' not a member of the channel'''
     other.clear()
 
     # Register and login a user.

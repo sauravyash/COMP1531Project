@@ -6,11 +6,8 @@ import channels
 import other
 from error import InputError
 from error import AccessError
-from message import message_send
+from message import message_send, message_pin
 
-def message_pin(token, message_id):
-    '''stub'''
-    pass
 
 def create_test_channel():
     '''creates the channel for testing'''
