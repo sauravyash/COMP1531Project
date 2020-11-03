@@ -7,13 +7,11 @@ import other
 from channel import channel_invite
 from other import clear
 
-
-
 # Success
 # return the program to its orginal state
 def test_user_all():
     '''
-    test if the clear function return the system to its original state
+    Test if the clear function return the system to its original state
     '''
     other.clear()
     auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
@@ -25,4 +23,4 @@ def test_user_all():
     channel_id = channels.channels_create(result["token"], "channel_1", True)
     channel_invite(result["token"], channel_id["channel_id"], result1["u_id"])
 
-    clear()
+    assert clear() == {}
