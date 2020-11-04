@@ -80,32 +80,30 @@ def channel_details(token, channel_id):
     if data.resolve_permissions(channel['id'], user_id) is None:
         raise AccessError(description='Authorised User Not Member of Channel')
 
-    # Add admin to owner list
+    # Add admin and members to respective lists
     owners = []
+    member_list = []
+    selected_list = []
     user_list = data.data["users"]
-    for mem_id in members['permission_id_1']:
-        index = data.resolve_user_id_index(mem_id)
-        owners.append({
-            'u_id': mem_id,
-            'name_first': user_list[index]['name_first'],
-            'name_last': user_list[index]['name_last']
-            })
+    
+    for mem_id in members['permission_id_1'] + members['permission_id_2']:
+        if mem_id in members['permission_id_1']:
+            selected_list = owners
+        else:
+            selected_list = member_list  
 
-    # Add user to member list
-    member_list = [] + owners
-    for mem_id in members['permission_id_2']:
         index = data.resolve_user_id_index(mem_id)
-        member_list.append({
+        selected_list.append({
             'u_id': mem_id,
             'name_first': user_list[index]['name_first'],
             'name_last': user_list[index]['name_last']
-            })
+        })
 
     # Return channel details as a dictionary.
     return {
         'name': channel['name'],
         'owner_members': owners,
-        'all_members': member_list
+        'all_members': member_list + owners
     }
 
 def channel_messages(token, channel_id, start):

@@ -1,4 +1,5 @@
 ''' Import Functions '''
+''' Won't work yet as standup doesn't exist.
 import random
 import string
 import pytest
@@ -10,7 +11,7 @@ from error import InputError, AccessError
 from standup import standup_start
 
 def test_standup_start_success():
-    ''' Success standup start case'''
+    # Success standup start case
     other.clear()
 
     auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
@@ -22,7 +23,7 @@ def test_standup_start_success():
 
 
 def test_invalid_channel_id():
-    '''When the standup is started to an invalid channel ID'''
+    # When the standup is started to an invalid channel ID
     other.clear()
 
     auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
@@ -34,7 +35,7 @@ def test_invalid_channel_id():
         standup_start(result["token"], -999, 100)
 
 def test_standup_exists():
-    '''When the standup already exists'''
+    # When the standup already exists
     other.clear()
 
     auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
@@ -46,3 +47,4 @@ def test_standup_exists():
 
     with pytest.raises(InputError):
         standup_start(result["token"],channel_id["channel_id"],1)
+'''

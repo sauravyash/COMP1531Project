@@ -1,4 +1,5 @@
 ''' Import Functions '''
+''' Won't work yet as standup doesn't exist.
 import datetime as dt
 import random
 import string
@@ -11,7 +12,7 @@ from error import InputError, AccessError
 from standup import standup_active, standup_start
 
 def test_standup_active_success():
-    ''' Success standup active case'''
+    # Success standup active case
     other.clear()
 
     auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
@@ -30,7 +31,7 @@ def test_standup_active_success():
 
 
 def test_invalid_channel_id():
-    '''When the standup is started to an invalid channel ID'''
+    # When the standup is started to an invalid channel ID
     other.clear()
 
     auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
@@ -41,3 +42,4 @@ def test_invalid_channel_id():
 
     with pytest.raises(InputError):
         standup_active(result["token"], -999)
+'''
