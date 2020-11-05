@@ -15,9 +15,8 @@ import auth
 import channels
 import other
 
-# ----- Success Addowner
-def test_addowner_simple():
-
+@pytest.fixture()
+def setup_test_interface():
     other.clear()
 
     # Register and login two users.
@@ -27,8 +26,17 @@ def test_addowner_simple():
     auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
     result2 = auth.auth_login('validemail2@gmail.com', 'password123')
 
+    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
+    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
+
     # Create a channel with the first user.
     channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    
+    return result1, result2, channel_id, result3
+
+# ----- Success Addowner
+def test_addowner_simple(setup_test_interface):
+    result1, result2, channel_id, _ = setup_test_interface
 
     # Invite the second user to the channel.
     channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
@@ -38,23 +46,12 @@ def test_addowner_simple():
     assert channel_addowner(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
     assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 2
 
-def test_flockr_owner():
-
-    other.clear()
-
-   # Register and login three users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
-    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result2['token'], 'channel_1', True)
-
+def test_flockr_owner(setup_test_interface):
+    result1, result2, channel_id, result3 = setup_test_interface
+ 
+    # Override channel with the second user for testing different admin configurations
+    channel_id = channels.channels_create(result2['token'], 'channel_2', True)
+       
     # Invite the second user to the channel.
     channel_invite(result2['token'], channel_id['channel_id'], result1['u_id'])
     channel_invite(result2['token'], channel_id['channel_id'], result3['u_id'])
@@ -64,41 +61,17 @@ def test_flockr_owner():
     assert channel_addowner(result1['token'], channel_id['channel_id'], result3['u_id']) == {}
     assert len(channel_details(result2['token'], channel_id['channel_id'])['owner_members']) == 2
 
-
-
 # ----- Fail Addowner
-def test_not_member():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+def test_not_member(setup_test_interface):
+    result1, result2, channel_id, _ = setup_test_interface
 
     # Test that second user is not a member of channel- cannot become owner.
     with pytest.raises(InputError):
         channel_addowner(result1['token'], channel_id['channel_id'], result2['u_id'])
 
-def test_invalid_token():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
-
+def test_invalid_token(setup_test_interface):
+    result1, result2, channel_id, _ = setup_test_interface
+    
     # Invite the second user to the channel.
     channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
 
@@ -106,20 +79,9 @@ def test_invalid_token():
     with pytest.raises(AccessError):
         channel_addowner('fake_token', channel_id['channel_id'], result2['u_id'])
 
-def test_invalid_user_id():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
-
+def test_invalid_user_id(setup_test_interface):
+    result1, result2, channel_id, _ = setup_test_interface
+    
     # Invite the second user to the channel.
     channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
 
@@ -127,19 +89,8 @@ def test_invalid_user_id():
     with pytest.raises(InputError):
         channel_addowner('fake_token', channel_id['channel_id'], -1)
 
-def test_invalid_channel():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+def test_invalid_channel(setup_test_interface):
+    result1, result2, channel_id, _ = setup_test_interface
 
     # Invite the second user to the channel.
     channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
@@ -148,22 +99,8 @@ def test_invalid_channel():
     with pytest.raises(InputError):
         channel_addowner(result1['token'], -1, result2['u_id'])
 
-def test_not_authorized():
-
-    other.clear()
-
-    # Register and login three users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
-    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+def test_not_authorized(setup_test_interface):
+    result1, result2, channel_id, result3 = setup_test_interface
 
     # Invite the second & third users to the channel.
     channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
@@ -173,23 +110,9 @@ def test_not_authorized():
     with pytest.raises(AccessError):
         channel_addowner(result2['token'], channel_id['channel_id'], result3['u_id'])
 
-def test_already_owner():
-
-    other.clear()
-
-    # Register and login three users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
-    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
-
+def test_already_owner(setup_test_interface):
+    result1, result2, channel_id, result3 = setup_test_interface
+    
     # Invite the second & third users to the channel.
     channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
     channel_invite(result2['token'], channel_id['channel_id'], result3['u_id'])
