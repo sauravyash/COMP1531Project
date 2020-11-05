@@ -1,159 +1,92 @@
+############################ Channels List Tests #############################
+'''
+Functions to test channels_list functionality
+'''
+
 import pytest
 
 from error import AccessError
 
 from channels import channels_list
 from channels import channels_create
-import channels
+
 import channel
 import data
 import auth
 import other
+
+from testing_fixtures.channels_test_fixtures import setup_test_interface_lists
+from testing_fixtures.channels_test_fixtures import setup_test_interface_create
 
 ### BLACKBOX TESTING ###
 
 # Test function output types
 # - channel_id is an int
 # - name is a string
-def test_channels_list_check_return_types():
-    # Clear existing data...
-    other.clear()
+def test_channels_list_check_return_types(setup_test_interface_create):
+    user1, _ = setup_test_interface_create
+    channels_create(user1['token'], 'Hola_Seniora', True)
 
-    # Set up user and create channel...
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channels_create(token_dict['token'], 'Hola_Seniora', True)
-
-    for dictionary in channels_list(token_dict['token'])["channels"]:
+    for dictionary in channels_list(user1['token'])["channels"]:
         assert isinstance(dictionary['channel_id'], int)
         assert isinstance(dictionary['name'], str)
 
 # Test empty list (no channels)
-def test_channels_list_empty_list():
-    # Clear existing data...
-    other.clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    login_info = auth.auth_login('validemail@gmail.com', '123abc!@#')
+def test_channels_list_empty_list(setup_test_interface_create):
+    user1, _ = setup_test_interface_create
 
-    assert channels.channels_list(login_info["token"]) == {
+    assert channels_list(user1["token"]) == {
         'channels': [] 
     }
 
-# Test list of many channels (for when we implement other functions)
 # ----- Success List
-def test_channels_list_public_only():
-    # Clear existing data.
-    other.clear()
+def test_simple(setup_test_interface_lists):
+    users, channels1, channels2, channels3 = setup_test_interface_lists
+    created_channel_ids = [channels1, channels2, channels3]
 
-    # Set up user and create a channel.
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channel_1 = channels_create(token_dict['token'], 'Hola_Seniora', True)
-    channel_2 = channels_create(token_dict['token'], 'ILoveIcecream', True)
+    # For each user, test if they can see the channels they are a member of.
+    for user in users:
+        channel_list = channels_list(user['token'])
+        channel_ids = [ item['channel_id'] for item in channel_list['channels'] ]
+        
+        index = (user['u_id'] - 1)
+        assert sorted(channel_ids) == sorted(created_channel_ids[index])
+        
 
-    # (Only public)
-    assert channels_list(token_dict['token']) == {
-        'channels': [
-            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'}
-        ]
-    }
+def test_complex(setup_test_interface_lists):
+    users, channels1, channels2, channels3 = setup_test_interface_lists
 
-def test_channels_list_public_private():
-    # Clear data
-    other.clear()
+    # Separate users
+    tok1 = users[0]['token']
+    tok2 = users[1]['token']
+    tok3 = users[2]['token']
 
-    # Set up 3 users and create multiple channels...
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    auth.auth_login('validemail@gmail.com', '123abc!@#')
+    # Keep track of new members joining channels.
+    channel.channel_join(tok1, channels2[0])
+    channels1.append(channels2[0])
+    channel.channel_join(tok2, channels1[0])
+    channels2.append(channels1[0])
 
-    auth.auth_register('validemail1@gmail.com', '123abc!@#', 'Genine', 'Buggsies')
-    token_1 = auth.auth_login('validemail1@gmail.com', '123abc!@#')
+    # Test that new channels are listed correctly.
+    channel_list1 = channels_list(tok1)
+    channel_ids_1 = [item['channel_id'] for item in channel_list1['channels']]
+    assert sorted(channel_ids_1) == sorted(channels1)
 
-    auth.auth_register('validemail2@gmail.com', '1234abc!@#', 'Jess', 'Apples')
-    token_2 = auth.auth_login('validemail2@gmail.com', '1234abc!@#')
+    channel_list2 = channels_list(tok2)
+    channel_ids_2 = [item['channel_id'] for item in channel_list2['channels']]
+    assert sorted(channel_ids_2) == sorted(channels2)
 
-    channel_1 = channels_create(token_1['token'], 'Hola_Seniora', True)
-    channel_2 = channels_create(token_2['token'], 'ILoveIcecream', True)
-    channel_3 = channels_create(token_1['token'], 'ImAnEngineer', False)
-    channel_4 = channels_create(token_2['token'], 'HugsOnly', False)
-    
-    channel.channel_join(token_1['token'], channel_2['channel_id'])
-    channel.channel_join(token_2['token'], channel_1['channel_id'])
-    channel.channel_addowner(token_2['token'], channel_2['channel_id'], token_1['u_id'])
-
-    # (Public & private)
-    assert channels_list(token_1['token']) == {
-        'channels': [
-            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-            {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'}
-        ]
-    }
-
-    assert channels_list(token_2['token']) == {
-        'channels': [
-            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-            {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}
-        ]
-    }
-
-
-def test_channels_list_owner_priv():
-    # Clear data
-    other.clear()
-
-    # Set up 3 users (including owner) and create multiple channels...
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token_owner = auth.auth_login('validemail@gmail.com', '123abc!@#')
-
-    auth.auth_register('validemail1@gmail.com', '123abc!@#', 'Genine', 'Buggsies')
-    token_1 = auth.auth_login('validemail1@gmail.com', '123abc!@#')
-
-    auth.auth_register('validemail2@gmail.com', '1234abc!@#', 'Jess', 'Apples')
-    token_2 = auth.auth_login('validemail2@gmail.com', '1234abc!@#')
-
-    channel_1 = channels_create(token_1['token'], 'Hola_Seniora', True)
-    channel_2 = channels_create(token_2['token'], 'ILoveIcecream', True)
-    channel_3 = channels_create(token_1['token'], 'ImAnEngineer', False)
-    channel_4 = channels_create(token_2['token'], 'HugsOnly', False)
-
-    # (owner vs member of Flockr)
-    assert channels_list(token_owner['token']) == {
-        'channels': [
-            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-            {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'},
-            {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}
-        ]
-    }
-
-    assert channels_list(token_1['token']) == {
-        'channels': [
-            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-            {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'}
-        ]
-    }
-
-    assert channels_list(token_2['token']) == {
-        'channels': [
-            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-            {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}
-        ]
-    }
+    channel_list3 = channels_list(tok3)
+    channel_ids_3 = [item['channel_id'] for item in channel_list3['channels']]
+    assert sorted(channel_ids_3) == sorted(channels3)
 
 # ----- Fail List
-def test_invalid_token():
+def test_invalid_token(setup_test_interface_create):
     
-    other.clear()
-    
-    # Register and login a user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
+    user1, _ = setup_test_interface_create
     
     # Create a channel with first user.
-    channels_create(result['token'], 'channel_1', True)
+    channels_create(user1['token'], 'channel_1', True)
     
     # Check that Access Error is raised when invalid token is used.
     with pytest.raises(AccessError):
