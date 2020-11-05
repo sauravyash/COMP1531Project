@@ -153,5 +153,29 @@ def message_pin(token, message_id):
 
 
 def message_unpin(token, message_id):
-    '''stub'''
-    pass
+
+    #Captures the userID
+    user_id = data.token_to_user_id(token)
+
+    #If messageID is not valid
+    try:
+        channel_id,msg_index = data.resolve_message_id_index(message_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except:
+        raise InputError("Invalid messageID")
+
+
+
+    msgs = data.data.get('channels')[channel_index]['messages']
+
+    #If user is not owner of the channel or the owner of the flockr
+    is_admin = data.resolve_permissions(channel_id, user_id) == 1
+    if not is_admin:
+        raise AccessError("User not authorised")
+
+    if msgs[msg_index]['pin'] == False:
+        raise InputError("Message is not pinned!")
+
+    msgs[msg_index]['pin'] = False
+
+    return {}
