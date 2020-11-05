@@ -7,6 +7,8 @@ entire program.
 import re
 import hashlib
 import jwt
+import random
+import string
 
 global data
 data = {
@@ -14,9 +16,9 @@ data = {
     'channels': []
 }
 
-
-
 JWT_KEY = 'b0ggers'
+EMAIL_PASSWORD = "comp1531admin"
+EMAIL = "comp1531wed13grape3noreply@gmail.com"
 
 #### ---- ALL FUNCTIONS THAT ACCESS AN ELEMENT IN THE DATA DICTIONARY ---- ####
 # (Raises a LookupError if the element is not found.)
@@ -232,6 +234,20 @@ def password_match(email, password):
     """
     return data["users"][email_to_user_id(email) - 1]["password"] == hashlib.sha256(password.encode()).hexdigest()
 
+def reset_key_match(reset_key):
+    """ CHECKS IF RESET KEY MATCHES
+    Compares reset_key to reset the users password if it matches
+
+    Arguments: reset_key, must be string
+    Returns: True/False
+
+    """
+    for user in data["users"]:
+        if user.get("reset_code") == hashlib.sha256(reset_key.encode()).hexdigest():
+            user.pop("reset_code", None)
+            return user.get("id")
+    return 0
+
 def resolve_handle(handle):
     """ CHECK IF HANDLE EXISTS WITHIN DICTIONARY
     Searches list of all stored handles and checks if handle exists.
@@ -299,6 +315,18 @@ def generate_channel_id():
             generated_id += 1
         except LookupError:
             return generated_id
+
+def generate_reset_key(length):
+    """ GENERATE RANDOM PASSWORD RESET CODE
+
+    Arguments: length- must be an integer
+    Returns: key
+
+    """
+    alphabet = string.ascii_letters
+    key = ''.join(random.choice(alphabet) for i in range(length))
+
+    return key
 
 '''
 EXAMPLE
