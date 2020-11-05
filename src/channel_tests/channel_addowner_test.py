@@ -32,10 +32,10 @@ def test_addowner_simple(setup_test_interface):
     assert len(channel_details(tok1, channel_id)['owner_members']) == 2
 
 def test_flockr_owner(setup_test_interface):
-    tok1, uid2, channel_1, tok3, uid3 = setup_test_interface
+    tok1, uid2, channel_id, tok3, uid3 = setup_test_interface
  
-    # Create new channel with the second user for testing different admin configurations
-    channel_id = channels.channels_create(tok3, 'channel_2', True)
+    # Overwrite channel_id with the second user for testing different admin configurations
+    channel_id = channels.channels_create(tok3, 'channel_2', True)['channel_id']
        
     # Invite the second user to the channel.
     channel_join(tok1, channel_id)
