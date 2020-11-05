@@ -46,14 +46,14 @@ def test_invalid_message_id():
 
 def test_pin_already():
     '''Invalid message react ID'''
-    _, result1, channel_id = create_test_channel()
+    result,result1, channel_id = create_test_channel()
 
     m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
 
-    message_pin(result1["token"], m_id["message_id"])
+    message_pin(result["token"], m_id["message_id"])
 
     with pytest.raises(InputError):
-        message_pin(result1["token"], m_id["message_id"])
+        message_pin(result["token"], m_id["message_id"])
 
 
 def test_not_in_channel():
