@@ -11,19 +11,14 @@ from channels import channels_list
 from channels import channels_create
 
 import channel
-import data
-import auth
-import other
 
 from testing_fixtures.channels_test_fixtures import setup_test_interface_lists
 from testing_fixtures.channels_test_fixtures import setup_test_interface_create
 
-### BLACKBOX TESTING ###
-
 # Test function output types
 # - channel_id is an int
 # - name is a string
-def test_channels_list_check_return_types(setup_test_interface_create):
+def test_return_types(setup_test_interface_create):
     user1, _ = setup_test_interface_create
     channels_create(user1['token'], 'Hola_Seniora', True)
 
@@ -47,10 +42,10 @@ def test_simple(setup_test_interface_lists):
     # For each user, test if they can see the channels they are a member of.
     for user in users:
         channel_list = channels_list(user['token'])
-        channel_ids = [ item['channel_id'] for item in channel_list['channels'] ]
+        returned_channel_ids = [ item['channel_id'] for item in channel_list['channels'] ]
         
         index = (user['u_id'] - 1)
-        assert sorted(channel_ids) == sorted(created_channel_ids[index])
+        assert sorted(returned_channel_ids) == sorted(created_channel_ids[index])
         
 
 def test_complex(setup_test_interface_lists):

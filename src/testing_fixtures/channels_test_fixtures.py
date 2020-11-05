@@ -21,7 +21,8 @@ def setup_test_interface_create():
 @pytest.fixture()
 def setup_test_interface_lists():
     other.clear()
-
+    
+    # Register and login three users.
     auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
     user1 = auth.auth_login('validemail1@gmail.com', 'password123')
 

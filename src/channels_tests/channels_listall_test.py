@@ -1,88 +1,48 @@
+########################### Channels Listall Tests ############################
+'''
+Functions to test channels_listall functionality
+'''
+
 import pytest
 
-import channels
-import auth
-import data
-
-from other import clear
 from error import AccessError
 
-### BLACKBOX TESTING ###
+from channels import channels_create
+from channels import channels_listall
+
+from testing_fixtures.channels_test_fixtures import setup_test_interface_lists
+from testing_fixtures.channels_test_fixtures import setup_test_interface_create
 
 # Test function output types
 # - channel_id is an int
 # - name is a string
-def test_channels_listall_check_return_types():
-    # Clear existing data...
-    clear()
+def test_return_types(setup_test_interface_create):
+    user1, _ = setup_test_interface_create
+    channels_create(user1['token'], 'channel_1', True)
 
-    # Set up user and create channel...
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channels.channels_create(token_dict['token'], 'Hola_Seniora', True)
-
-    for dictionary in channels.channels_listall(token_dict['token'])['channels']:
+    for dictionary in channels_listall(user1['token'])['channels']:
         assert isinstance(dictionary['channel_id'], int)
         assert isinstance(dictionary['name'], str)
 
 # ----- Success Listall
-def test_channels_listall_public_only():
-    # Clear existing data...
-    clear()
+def test_simple(setup_test_interface_lists):
+    users, channels1, channels2, channels3 = setup_test_interface_lists
+    created_channel_ids = channels1 + channels2 + channels3
 
-    # Set up user and create a channel...
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token_dict = auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channel_1 = channels.channels_create(token_dict['token'], 'Hola_Seniora', True)
-    channel_2 = channels.channels_create(token_dict['token'], 'ILoveIcecream', True)
+    # For each user, test if they can see all channels created.
+    for user in users:
+        channel_list = channels_listall(user['token'])
+        returned_channel_ids = [ item['channel_id'] for item in channel_list['channels'] ]
 
-    # (Only public)
-    assert channels.channels_listall(token_dict['token']) == {
-        'channels': [
-            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'}
-        ]
-    }
-
-
-def test_channels_listall_public_private():
-    # Clear existing data...
-    clear()
-
-    # Set up 2 users and create multiple channels...
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 'Tara', 'Andresson')
-    token_1 = auth.auth_login('validemail@gmail.com', '123abc!@#')
-
-    auth.auth_register('validemail2@gmail.com', '1234abc!@#', 'Jess', 'Apples')
-    token_2 = auth.auth_login('validemail2@gmail.com', '1234abc!@#')
-
-    channel_1 = channels.channels_create(token_1['token'], 'Hola_Seniora', True)
-    channel_2 = channels.channels_create(token_2['token'], 'ILoveIcecream', True)
-    channel_3 = channels.channels_create(token_1['token'], 'ImAnEngineer', False)
-    channel_4 = channels.channels_create(token_2['token'], 'HugsOnly', False)
-
-    # (Public & private)
-    assert channels.channels_listall(token_1['token']) == {
-        'channels': [
-            {'channel_id': channel_1['channel_id'], 'name': 'Hola_Seniora'},
-            {'channel_id': channel_2['channel_id'], 'name': 'ILoveIcecream'},
-            {'channel_id': channel_3['channel_id'], 'name': 'ImAnEngineer'},
-            {'channel_id': channel_4['channel_id'], 'name': 'HugsOnly'}
-        ]
-    }
+        assert sorted(returned_channel_ids) == sorted(created_channel_ids)
 
 # ----- Fail Listall
-def test_invalid_token():
-    
-    clear()
-    
-    # Register and login a user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
-    
+def test_invalid_token(setup_test_interface_create):
+    user1, _ = setup_test_interface_create
     # Create a channel with first user.
-    channels.channels_create(result['token'], 'channel_1', True)
+    channels_create(user1['token'], 'channel_1', True)
     
     # Check that Access Error is raised when invalid token is used.
     with pytest.raises(AccessError):
-        channels.channels_listall('fake_token')
+        channels_listall('fake_token')
+
