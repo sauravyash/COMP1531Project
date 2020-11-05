@@ -24,7 +24,7 @@ def test_details_simple(setup_test_interface):
 
     # Create a channel with this user.
     channel_name = "test_channel"
-    channel_id = channels.channels_create(tok1, channel_name, True)
+    channel_id = channels.channels_create(tok1, channel_name, True)['channel_id']
 
     # Check this user can access the channel's details.
     details = channel_details(tok1, channel_id)
@@ -36,11 +36,11 @@ def test_details_big(setup_test_interface):
     tok1 = user1['token']
     tok2 = user2['token']
     uid2 = user2['u_id']
-    tok2 = user3['token']
+    tok3 = user3['token']
 
     # Create a channel with the first user.
     channel_name = "channel_x"
-    channel_id = channels.channels_create(tok1, channel_name, True)
+    channel_id = channels.channels_create(tok1, channel_name, True)['channel_id']
 
     # Invite the second user to the channel.
     channel_invite(tok1, channel_id, uid2)
@@ -68,7 +68,7 @@ def test_not_member(setup_test_interface):
     with pytest.raises(AccessError):
         channel_details(tok2, channel_id)
 
-def test_invalid_token():
+def test_invalid_token(setup_test_interface):
     user1, user2, user3, channel_dict = setup_test_interface
     
     tok1 = user1['token']
@@ -81,7 +81,7 @@ def test_invalid_token():
     with pytest.raises(AccessError):
         channel_details('fake_token', channel_id)
 
-def test_invalid_channel():
+def test_invalid_channel(setup_test_interface):
     user1, user2, user3, channel_dict = setup_test_interface
     
     tok1 = user1['token']
