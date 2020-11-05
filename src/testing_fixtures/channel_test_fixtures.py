@@ -21,4 +21,4 @@ def setup_test_interface():
     # Create a channel with the first user.
     channel_id = channels.channels_create(user1['token'], 'channel_1', True)
     
-    return user1['token'], user2['u_id'], channel_id['channel_id'], user3['token'], user3['u_id']
+    return user1, user2, user3, channel_id
