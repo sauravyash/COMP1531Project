@@ -16,102 +16,82 @@ import auth
 import channels
 import other
 
+from testing_fixtures.channel_test_fixtures import setup_test_interface
+
 # ----- Success Leave
-def test_leave_member():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+def test_leave_member(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
+    
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Add second user to channel
-    channel_join(result2['token'], channel_id['channel_id'])
+    channel_join(tok2, channel_id)
 
     # Check that second user leaves channel.
-    assert len(channel_details(result1['token'], channel_id['channel_id'])['all_members']) == 2
-    assert channel_leave(result2['token'], channel_id['channel_id']) == {}
-    assert len(channel_details(result1['token'], channel_id['channel_id'])['all_members']) == 1
+    assert len(channel_details(tok1, channel_id)['all_members']) == 2
+    assert channel_leave(tok2, channel_id) == {}
+    assert len(channel_details(tok1, channel_id)['all_members']) == 1
 
-def test_leave_owner():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+def test_leave_owner(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
+    
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Add second user to channel
-    channel_join(result2['token'], channel_id['channel_id'])
+    channel_join(tok2, channel_id)
 
     # Check that second user leaves channel.
-    assert len(channel_details(result1['token'], channel_id['channel_id'])["all_members"]) == 2
-    assert channel_leave(result1['token'], channel_id['channel_id']) == {}
-    assert len(channel_details(result2['token'], channel_id['channel_id'])["all_members"]) == 1
+    assert len(channel_details(tok1, channel_id)["all_members"]) == 2
+    assert channel_leave(tok1, channel_id) == {}
+    assert len(channel_details(tok2, channel_id)["all_members"]) == 1
 
 # ----- Fail Leave
-def test_not_member():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+def test_not_member(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
+    
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Test that second user is not a member of channel- cannot become owner.
     with pytest.raises(AccessError):
-        channel_leave(result2['token'], channel_id['channel_id'])
+        channel_leave(tok2, channel_id)
 
-def test_invalid_token():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+def test_invalid_token(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
+    
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Check that Access Error is raised when invalid token is used.
     with pytest.raises(AccessError):
-        channel_leave('fake_token', channel_id['channel_id'])
+        channel_leave('fake_token', channel_id)
 
-def test_invalid_channel():
-
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+def test_invalid_channel(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
+    
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Invite the second user to the channel.
-    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
+    channel_invite(tok1, channel_id, uid2)
 
     # Check that Input Error is raised when invalid channel is used.
     with pytest.raises(InputError):
-        channel_leave(result2['token'], -1)
+        channel_leave(tok2, -1)

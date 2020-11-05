@@ -16,78 +16,75 @@ import message
 import other
 import data
 
+from testing_fixtures.channel_test_fixtures import setup_test_interface
 
 # ----- Success Messages
-def test_messages_empty():
+def test_messages_empty(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login one user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result['token'], 'channel_1', True)
-
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
+   
     # Check that user can access empty messages.
-    result_messages = channel_messages(result['token'], channel_id['channel_id'], 0)
+    result_messages = channel_messages(tok1, channel_id, 0)
     assert result_messages == {
         'messages': [],
         'start': 0,
         'end': -1,
     }
 
-def test_messages_simple():
-    other.clear()
+def test_messages_simple(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login one user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result['token'], 'channel_1', True)
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Send some messages.
-    message.message_send(result['token'], channel_id['channel_id'], 'Hi')
-    message.message_send(result['token'], channel_id['channel_id'], 'Hi Guys')
-    message.message_send(result['token'], channel_id['channel_id'], 'Hi')
-    message.message_send(result['token'], channel_id['channel_id'], 'Hello?')
-    message.message_send(result['token'], channel_id['channel_id'], 'Hi All')
-    message.message_send(result['token'], channel_id['channel_id'], 'Is anyone active?')
-    message.message_send(result['token'], channel_id['channel_id'], '...')
-    message.message_send(result['token'], channel_id['channel_id'], 'Ummm...')
-    message.message_send(result['token'], channel_id['channel_id'], 'Ok')
-    message.message_send(result['token'], channel_id['channel_id'], 'Well')
-    message.message_send(result['token'], channel_id['channel_id'], 'Seeya')
-    message.message_send(result['token'], channel_id['channel_id'], '*waves*')
+    message.message_send(tok1, channel_id, 'Hi')
+    message.message_send(tok1, channel_id, 'Hi Guys')
+    message.message_send(tok1, channel_id, 'Hi')
+    message.message_send(tok1, channel_id, 'Hello?')
+    message.message_send(tok1, channel_id, 'Hi All')
+    message.message_send(tok1, channel_id, 'Is anyone active?')
+    message.message_send(tok1, channel_id, '...')
+    message.message_send(tok1, channel_id, 'Ummm...')
+    message.message_send(tok1, channel_id, 'Ok')
+    message.message_send(tok1, channel_id, 'Well')
+    message.message_send(tok1, channel_id, 'Seeya')
+    message.message_send(tok1, channel_id, '*waves*')
     data.print_data()
 
     # Check that user can access these messages.
-    result_messages = channel_messages(result['token'], channel_id['channel_id'], 0)
+    result_messages = channel_messages(tok1, channel_id, 0)
     print(result_messages)
     assert len(result_messages['messages']) == 12
     assert result_messages['messages'][11]['message'] == 'Hi'
     assert result_messages['messages'][10]['message'] == 'Hi Guys'
     assert result_messages['messages'][0]['message'] == '*waves*'
 
-def test_channel_messages_pagination():
-    other.clear()
+def test_channel_messages_pagination(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login one user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result['token'], 'channel_1', True)
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     test_msgs = [str(a) for a in range(200)]
 
     for x in test_msgs:
         # Send some messages.
-        message.message_send(result['token'], channel_id['channel_id'], x)
+        message.message_send(tok1, channel_id, x)
 
     for i in range(0, len(test_msgs), 50):
-        result_messages = channel_messages(result['token'], channel_id['channel_id'], i)
+        result_messages = channel_messages(tok1, channel_id, i)
 
         assert result_messages['start'] == i
 
@@ -95,68 +92,57 @@ def test_channel_messages_pagination():
             assert result_messages['messages'][j]['message'] == list(reversed(test_msgs))[i + j]
 
 # ----- Fail Messages
-def test_not_member():
+def test_not_member(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Test that second user is not a member of channel- cannot become owner.
     with pytest.raises(AccessError):
-        channel_messages(result2['token'], channel_id['channel_id'], 0)
+        channel_messages(tok2, channel_id, 0)
 
-def test_invalid_channel():
+def test_invalid_channel(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login a user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
-
-    # Create a channel with this user.
-    channels.channels_create(result['token'], 'channel_1', True)
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Input error is raised when fake channel is used.
     with pytest.raises(InputError):
-        channel_messages(result['token'], -1, 0)
+        channel_messages(tok1, -1, 0)
 
-def test_invalid_start():
+def test_invalid_start(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login a user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
-
-    # Create a channel with this user.
-    channel_id = channels.channels_create(result['token'], 'channel_1', True)
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Input error is raised when start < 0.
     with pytest.raises(InputError):
-        channel_messages(result['token'], channel_id['channel_id'], -1)
+        channel_messages(tok1, channel_id, -1)
     # Input error is raised when start > number of messages.
     with pytest.raises(InputError):
-        channel_messages(result['token'], channel_id['channel_id'], 30)
+        channel_messages(tok1, channel_id, 30)
 
-def test_invalid_token():
+def test_invalid_token(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login a user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result['token'], 'channel_1', True)
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    tok3 = user3['token']
+    channel_id = channel_dict['channel_id']
 
     # Access error is raised when a fake token is used.
     with pytest.raises(AccessError):
-        channel_messages('fake_token', channel_id['channel_id'], 0)
+        channel_messages('fake_token', channel_id, 0)
