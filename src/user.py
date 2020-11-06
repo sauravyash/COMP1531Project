@@ -1,8 +1,11 @@
 ''' user functions
 '''
 import data
+import requests
 from error import InputError
 from error import AccessError
+from PIL import Image
+from io import BytesIO
 
 def user_profile(token, u_id):
     ''' Display user's profile data
@@ -106,5 +109,40 @@ def user_profile_sethandle(token, handle_str):
     }
 
 def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
-    ''' user can uploadphoto'''
-    pass
+    ''' user can upload photo
+
+    Arguments: token, url- must be strings, x_start, y_start, x_end, y_end- must be integers
+    Returns: empty dictionary
+    '''
+
+    try:
+        data.resolve_token_index(token)
+    except:
+        raise AccessError
+
+    payload = requests.get(url)
+    img = Image.open(BytesIO(payload.content))
+
+    width, height = img.size
+
+    # Check that image is jpg and that the dimensions to crop are within range
+    error = False
+    if url[-3:] != "jpg" and url[-4:] != "jpeg":
+        error = True
+    elif x_start < 0 or y_start < 0 or x_end < 0 or y_end < 0:
+        error = True
+    elif x_start > width or x_end > width:
+        error = True
+    elif y_start > height or y_end > height:
+        error = True
+
+    if error:
+        raise InputError
+    else:
+        img_crop = img.crop((x_start, y_start, x_end, y_end))
+
+        #sets user's profile picture to cropped image
+        # TODO: Figure out how to store cropped image
+        #data.data["users"][data.resolve_token_index(token)]["profile_picture"] = img_crop
+
+    return {}
