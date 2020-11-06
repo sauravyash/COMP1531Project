@@ -75,7 +75,7 @@ def test_users_all():
         assert user["name_last"] == users[i]['lname']
         assert user['name_first'] == users[i]['fname']
         assert user['handle_str'] == users[i]['handle']
-        assert user['user_id'] == users[i]['id']
+        assert user['u_id'] == users[i]['id']
 
 #    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
 #    result = auth.auth_login("validemail@gmail.com", "password123")

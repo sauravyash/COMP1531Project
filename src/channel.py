@@ -76,15 +76,34 @@ def channel_details(token, channel_id):
     # Check that the user is a member of the channel.
     channel = data.data['channels'][channel_index]
     members = channel['members']
-    channel_members = members['permission_id_1'] + members['permission_id_2']
+
     if data.resolve_permissions(channel['id'], user_id) is None:
         raise AccessError(description='Authorised User Not Member of Channel')
+
+    # Add admin and members to respective lists
+    owners = []
+    member_list = []
+    selected_list = []
+    user_list = data.data["users"]
+    
+    for mem_id in members['permission_id_1'] + members['permission_id_2']:
+        if mem_id in members['permission_id_1']:
+            selected_list = owners
+        else:
+            selected_list = member_list  
+
+        index = data.resolve_user_id_index(mem_id)
+        selected_list.append({
+            'u_id': mem_id,
+            'name_first': user_list[index]['name_first'],
+            'name_last': user_list[index]['name_last']
+        })
 
     # Return channel details as a dictionary.
     return {
         'name': channel['name'],
-        'owner_members': members['permission_id_1'],
-        'all_members': channel_members,
+        'owner_members': owners,
+        'all_members': member_list + owners
     }
 
 def channel_messages(token, channel_id, start):
@@ -244,7 +263,7 @@ def channel_addowner(token, channel_id, user_id):
     channel = data.data['channels'][channel_index]
     # If authorised user (already_member) does not have owner permissions, raise
     # an Access Error.
-    if data.resolve_permissions(channel['id'], already_member) is not 1:
+    if data.resolve_permissions(channel['id'], already_member) != 1:
         raise AccessError(description='User Not Authorised With Channel Owner Permissions')
 
     # Check if invited user is a member of channel.
@@ -296,7 +315,7 @@ def channel_removeowner(token, channel_id, user_id):
     channel = data.data['channels'][channel_index]
     # If authorised user (already_member) does not have owner permissions, raise
     # an Access Error.
-    if data.resolve_permissions(channel['id'], already_member) is not 1:
+    if data.resolve_permissions(channel['id'], already_member) != 1:
         raise AccessError(description='User Not Authorised With Channel Owner Permissions')
 
     # Check if invited user is a member of channel.
