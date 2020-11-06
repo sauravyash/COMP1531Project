@@ -7,28 +7,31 @@ import other
 from user import user_profile
 from error import InputError
 from error import AccessError
+from testing_fixtures.user_test_fixtures import setup_test_interface
 
+def test_invalid_user_profile(setup_test_interface):
+    '''
+    Unsuccessful user profile
+    Invalid user id
+    '''
+    user = setup_test_interface
 
-def test_invalid_user_profile():
-    '''
-    When the token is valid but the user id is invalid
-    '''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    tok = user["token"]
 
     with pytest.raises(InputError):
-        user_profile(result["token"], 0)
+        user_profile(tok, 0)
 
 
-def test_invalid_user_profile_token():
+def test_invalid_user_profile_token(setup_test_interface):
     '''
-    When the user ID is valid but token is invalid
+    Unsuccessful name change
+    Invalid first name (empty)
+    Valid last name
     '''
+    user = setup_test_interface
 
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    tok = user["token"]
+    u_id = user["u_id"]
 
     with pytest.raises(AccessError):
-        user_profile("INVALID TOKEN", result['u_id'])
+        user_profile("INVALID TOKEN", u_id)
