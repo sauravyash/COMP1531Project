@@ -1,8 +1,7 @@
 ############################# Channel Details Tests ###########################
-"""
+'''
 Functions to test channel_details functionality
-"""
-import pytest
+'''
 
 from error import AccessError
 from error import InputError
