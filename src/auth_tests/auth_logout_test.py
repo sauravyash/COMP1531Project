@@ -40,10 +40,6 @@ def test_invalid_token(setup_test_interface):
     Unsuccesful logout
     Invalid token (token not found)
     '''
-    user = setup_test_interface
-
-    tok = user["token"]
-
     # Check that an access error is raised if token is invalid.
     with pytest.raises(AccessError):
         auth.auth_logout("Invalid token")

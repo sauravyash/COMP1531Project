@@ -30,7 +30,6 @@ def test_invalid_user_profile_token(setup_test_interface):
     '''
     user = setup_test_interface
 
-    tok = user["token"]
     u_id = user["u_id"]
 
     with pytest.raises(AccessError):
