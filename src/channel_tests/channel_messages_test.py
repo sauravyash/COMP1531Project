@@ -20,12 +20,9 @@ from testing_fixtures.channel_test_fixtures import setup_test_interface
 
 # ----- Success Messages
 def test_messages_empty(setup_test_interface):
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
    
     # Check that user can access empty messages.
@@ -40,9 +37,6 @@ def test_messages_simple(setup_test_interface):
     user1, user2, user3, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     # Send some messages.
@@ -69,12 +63,9 @@ def test_messages_simple(setup_test_interface):
     assert result_messages['messages'][0]['message'] == '*waves*'
 
 def test_channel_messages_pagination(setup_test_interface):
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     test_msgs = [str(a) for a in range(200)]
@@ -93,12 +84,9 @@ def test_channel_messages_pagination(setup_test_interface):
 
 # ----- Fail Messages
 def test_not_member(setup_test_interface):
-    user1, user2, user3, channel_dict = setup_test_interface
+    _, user2, _, channel_dict = setup_test_interface
 
-    tok1 = user1['token']
     tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     # Test that second user is not a member of channel- cannot become owner.
@@ -106,25 +94,18 @@ def test_not_member(setup_test_interface):
         channel_messages(tok2, channel_id, 0)
 
 def test_invalid_channel(setup_test_interface):
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, _ = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
-    channel_id = channel_dict['channel_id']
 
     # Input error is raised when fake channel is used.
     with pytest.raises(InputError):
         channel_messages(tok1, -1, 0)
 
 def test_invalid_start(setup_test_interface):
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     # Input error is raised when start < 0.
@@ -135,12 +116,8 @@ def test_invalid_start(setup_test_interface):
         channel_messages(tok1, channel_id, 30)
 
 def test_invalid_token(setup_test_interface):
-    user1, user2, user3, channel_dict = setup_test_interface
+    _, _, _, channel_dict = setup_test_interface
 
-    tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     # Access error is raised when a fake token is used.
