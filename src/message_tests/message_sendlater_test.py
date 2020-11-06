@@ -12,12 +12,9 @@ from testing_fixtures.message_test_fixtures import setup_test_interface
 
 def test_message_sendlater_success(setup_test_interface):
     ''' Success message sendlater case'''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     send_time = dt.datetime(2020, 11, 11, 8, 0)
@@ -28,13 +25,10 @@ def test_message_sendlater_success(setup_test_interface):
 
 def test_invalid_channel_id(setup_test_interface):
     '''When the message sent to an invalid channel ID'''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, _ = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
-    channel_id = channel_dict['channel_id']
+
 
     send_time = dt.datetime(2020, 11, 11, 9, 30)
 
@@ -44,12 +38,9 @@ def test_invalid_channel_id(setup_test_interface):
 
 def test_exceed_word_limit(setup_test_interface):
     '''When the message exceeds 1000 words'''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     send_time = dt.datetime(2020, 11, 11, 9, 30)
@@ -63,12 +54,9 @@ def test_exceed_word_limit(setup_test_interface):
 
 def test_invalid_time(setup_test_interface):
     '''When the time is already passed'''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     send_time = dt.datetime(2000, 9, 11, 8, 0)
@@ -76,15 +64,11 @@ def test_invalid_time(setup_test_interface):
     with pytest.raises(InputError):
         message_sendlater(tok1, channel_id, "Stay safe next year!", send_time)
 
-
 def test_not_authorized(setup_test_interface):
     '''When the sender is not in the channel'''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     send_time = dt.datetime(2020, 11, 11, 9, 30)

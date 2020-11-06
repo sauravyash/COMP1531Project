@@ -21,12 +21,9 @@ def test_valid_message_send(setup_test_interface):
     channel id must be valid
     message letters must be within 1000 characters
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     message_send(tok1, channel_id, "Funky Monkey")
@@ -39,12 +36,8 @@ def test_invalid_message_token(setup_test_interface):
     '''
     When the sender token is not valid
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    _, _, _, channel_dict = setup_test_interface
 
-    tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     with pytest.raises(AccessError):
@@ -55,13 +48,10 @@ def test_invalid_message_channel_id(setup_test_interface):
     '''
     When the message sent to an invalid channel ID
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, _ = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
-    channel_id = channel_dict['channel_id']
+
 
     with pytest.raises(InputError):
         message_send(tok1, 125, "Funky Monkey")
@@ -70,12 +60,9 @@ def test_invalid_message_string_size_1000(setup_test_interface):
     '''
     When the message exceeds 1000 character limit
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     letters = string.ascii_letters
@@ -88,12 +75,10 @@ def test_invalid_message_not_in_channel(setup_test_interface):
     '''
     When the sender is not a member of the channel
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, user2, _, _ = setup_test_interface
 
     tok1 = user1['token']
     tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channels.channels_create(tok1, "channel_1", False)['channel_id']
 
     with pytest.raises(AccessError):

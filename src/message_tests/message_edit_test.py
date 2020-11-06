@@ -21,12 +21,9 @@ def test_valid_message_edit(setup_test_interface):
     Edited message within 1000 charactre limit
     Edit authorized by owner or sender
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
  
     m_id = message_send(tok1, channel_id, "Funky Monkey")
@@ -43,13 +40,12 @@ def test_authorized_edit_owner(setup_test_interface):
     Edited message within 1000 charactre limit
     Edit authorized by owner or sender
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, user2, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
     uid1 = user1['u_id']
     tok2 = user2['token']
     uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     channel.channel_invite(tok1, channel_id, uid2)
@@ -61,12 +57,9 @@ def test_authorized_edit_flockr_owner(setup_test_interface):
     '''
     Authorized from the owner of the flockr
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     m_id = message_send(tok1, channel_id, "Funky Monkey")
@@ -78,12 +71,9 @@ def test_invalid_token(setup_test_interface):
     '''
     Invalid sender/owner token
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']
 
     message_send(tok1, channel_id, "Hello")
@@ -95,12 +85,9 @@ def test_invalid_message_id(setup_test_interface):
     '''
     Invalid message ID
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']  
 
     message_send(tok1, channel_id, "Hello")
@@ -112,12 +99,9 @@ def test_invalid_message_edit_exceeds_size_limit(setup_test_interface):
     '''
     Message edit size exceeds 1000'
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, _, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
-    tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']  
 
     letters = string.ascii_letters
@@ -130,12 +114,11 @@ def test_invalid_message_edit_not_sender(setup_test_interface):
     '''
     Edit not from the sender
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, user2, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
     tok2 = user2['token']
     uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']  
 
     channel.channel_invite(tok1, channel_id, uid2)
@@ -149,12 +132,10 @@ def test_invalid_message_edit_not_authorized(setup_test_interface):
     '''
     Member trying to edit owner message
     '''
-    user1, user2, user3, channel_dict = setup_test_interface
+    user1, user2, _, channel_dict = setup_test_interface
 
     tok1 = user1['token']
     tok2 = user2['token']
-    uid2 = user2['u_id']
-    tok3 = user3['token']
     channel_id = channel_dict['channel_id']  
 
     m_id = message_send(tok1, channel_id, "Funky Monkey")
