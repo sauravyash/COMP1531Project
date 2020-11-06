@@ -104,10 +104,50 @@ def message_edit(token, message_id, message):
 
     return {}
 
-def message_sendlater(token, channel_id, messages, time_send):
+def message_sendlater(token, channel_id, message, time_send):
     ''' stub '''
-    return 0
+    if time_send < datetime.datetime.now().timestamp():
+        raise InputError("Time sent is a time in the past")
 
+    # check permissions
+    if not is_message_valid(message):
+        raise InputError("Invalid Message: contents too long")
+
+    user_id = -1
+
+    try:
+        user_id = data.token_to_user_id(token)
+    except:
+        raise AccessError("Invalid token")
+
+    try:
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError('Invalid Channel ID')
+
+    if not data.resolve_permissions(channel_id, user_id):
+        raise AccessError("User Not Permitted!")
+
+    # create msg
+    new_id = data.generate_message_id()
+
+    msg = {
+        'message_id': new_id,
+        'u_id': user_id,
+        'message': message,
+        'time_created': time_send,
+        'reacts': [],
+        'is_pinned': False
+
+    }
+
+    # add msg to data
+    msgs = data.data.get('channels')[channel_index]['messages']
+    msgs.append(msg)
+
+    return {
+        'message_id': msg['message_id'],
+    }
 
 def message_react(token, message_id, react_id):
     '''stub'''
@@ -133,8 +173,7 @@ def message_react(token, message_id, react_id):
             if user_id not in react['u_ids']: 
                 react['u_ids'].append(user_id)
             else:
-                raise InputError("User Already Reacted to Message!")
-            break
+                raise InputError("User Already Reacted to Message!") 
     
     return {}
 
@@ -167,10 +206,6 @@ def message_unreact(token, message_id, react_id):
             break
     
     return {}
-
-
-
-
 
 def message_pin(token, message_id):
     '''stub'''

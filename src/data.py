@@ -13,7 +13,8 @@ import string
 global data
 data = {
     'users': [],
-    'channels': []
+    'channels': [],
+    'delayed_messages': []
 }
 
 JWT_KEY = 'b0ggers'
