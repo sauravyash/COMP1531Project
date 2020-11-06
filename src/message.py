@@ -9,7 +9,6 @@ def is_message_valid(message):
     return isinstance(message, str) and len(message) <= 1000
 
 def message_send(token, channel_id, message):
-
     # check permissions
     if not is_message_valid(message):
         raise InputError("Invalid Message")
@@ -37,7 +36,9 @@ def message_send(token, channel_id, message):
         'u_id': user_id,
         'message': message,
         'time_created': datetime.datetime.now().timestamp(),
-        'pin': False
+        'reacts': [],
+        'is_pinned': False
+
     }
 
     # add msg to data
@@ -110,72 +111,117 @@ def message_sendlater(token, channel_id, messages, time_send):
 
 def message_react(token, message_id, react_id):
     '''stub'''
-
-    pass
+    channel_id, channel_index, msg_index = (-1, -1, -1)
+    if react_id != 1:
+        raise InputError("Invalid React ID!")
+    
+    try:
+        user_id = data.token_to_user_id(token)
+    except:
+        raise AccessError("invalid token")
+    
+    try:    
+        channel_id, msg_index = data.resolve_message_id_index(message_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except:
+        raise InputError("invalid message or channel id")
+    
+    msg = data.data['channels'][channel_index]['messages'][msg_index]
+    
+    for react in msg['reacts']:
+        if react['react_id'] == react_id:
+            if user_id not in react['u_ids']: 
+                react['u_ids'].append(user_id)
+            else:
+                raise InputError("User Already Reacted to Message!")
+            break
+    
+    return {}
 
 
 def message_unreact(token, message_id, react_id):
     '''stub'''
+    channel_id, channel_index, msg_index = (-1, -1, -1)
+    if react_id != 1:
+        raise InputError("Invalid React ID!")
+    
+    try:
+        user_id = data.token_to_user_id(token)
+    except:
+        raise AccessError("invalid token")
+    
+    try:    
+        channel_id, msg_index = data.resolve_message_id_index(message_id)
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except:
+        raise InputError("invalid message or channel id")
+    
+    msg = data.data['channels'][channel_index]['messages'][msg_index]
+    
+    for react in msg['reacts']:
+        if react['react_id'] == react_id:
+            if user_id in react['u_ids']: 
+                react['u_ids'].remove(user_id)
+            else:
+                raise InputError("User Already Reacted to Message!")
+            break
+    
+    return {}
 
-    pass
 
 
 
 
 def message_pin(token, message_id):
-
-    #Captures the userID
-    user_id = data.token_to_user_id(token)
-
-    #If messageID is not valid
+    '''stub'''
+    channel_id, channel_index, msg_index = (-1, -1, -1)
+    
     try:
-        channel_id,msg_index = data.resolve_message_id_index(message_id)
+        user_id = data.token_to_user_id(token)
+    except:
+        raise AccessError("invalid token")
+
+    try:    
+        channel_id, msg_index = data.resolve_message_id_index(message_id)
         channel_index = data.resolve_channel_id_index(channel_id)
     except:
-        raise InputError("Invalid messageID")
-
-
-
-    msgs = data.data.get('channels')[channel_index]['messages']
-
-    #If user is not owner of the channel or the owner of the flockr
-    is_admin = data.resolve_permissions(channel_id, user_id) == 1
-    if not is_admin:
-        raise AccessError("User not authorised")
-
-    if msgs[msg_index]['pin'] == True:
-        raise InputError("Message is already pinned!")
-
-    msgs[msg_index]['pin'] = True
+        raise InputError("invalid message or channel id")
+    
+    if data.resolve_permissions(channel_id, user_id) != 1:
+        raise AccessError("User is not owner")
+    
+    msg = data.data['channels'][channel_index]['messages'][msg_index]
+    
+    if not msg['is_pinned']:
+        msg['is_pinned'] = True
+    else:
+        raise InputError("Message is Already Pinned!")
 
     return {}
 
-
-
 def message_unpin(token, message_id):
-
-    #Captures the userID
-    user_id = data.token_to_user_id(token)
-
-    #If messageID is not valid
+    '''stub'''
+    channel_id, channel_index, msg_index = (-1, -1, -1)
+    
     try:
-        channel_id,msg_index = data.resolve_message_id_index(message_id)
+        user_id = data.token_to_user_id(token)
+    except:
+        raise AccessError("invalid token")
+
+    try:    
+        channel_id, msg_index = data.resolve_message_id_index(message_id)
         channel_index = data.resolve_channel_id_index(channel_id)
     except:
-        raise InputError("Invalid messageID")
-
-
-
-    msgs = data.data.get('channels')[channel_index]['messages']
-
-    #If user is not owner of the channel or the owner of the flockr
-    is_admin = data.resolve_permissions(channel_id, user_id) == 1
-    if not is_admin:
-        raise AccessError("User not authorised")
-
-    if msgs[msg_index]['pin'] == False:
-        raise InputError("Message is not pinned!")
-
-    msgs[msg_index]['pin'] = False
+        raise InputError("invalid message or channel id")
+    
+    if data.resolve_permissions(channel_id, user_id) != 1:
+        raise AccessError("User is not owner")
+    
+    msg = data.data['channels'][channel_index]['messages'][msg_index]
+    
+    if msg['is_pinned']:
+        msg['is_pinned'] = False
+    else:
+        raise InputError("Message is Already Unpinned!")
 
     return {}
