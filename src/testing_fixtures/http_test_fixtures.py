@@ -30,19 +30,32 @@ def url():
         raise Exception("Couldn't get URL from local server")
 
 # Helpful Globals
-EMAIL_1 = 'validemail1@gmail.com'
+EMAIL_1 = 'validemail@gmail.com'
 PASSWORD_1 = 'validpassword1234'
 NAME_F_1 = 'Tom'
 NAME_L_1 = 'Riddles'
 
+# ----- Clear the server, and provide details of first user.
 @pytest.fixture()
-def register_user(url):
-    input_value = {
+def setup_auth(url):
+    data = requests.delete(str(url) + "clear")
+    assert data.status_code == 200
+    
+    payload = data.json()
+    assert payload == {}
+
+    input_data = {
         'email': EMAIL_1,
         'password': PASSWORD_1,
         'name_first': NAME_F_1,
         'name_last': NAME_L_1
     }
+
+    return input_data
+
+@pytest.fixture()
+def register_user(url, setup_auth):
+    input_value = setup_auth
 
     data = requests.post(str(url) + "auth/register", json=input_value)
     payload = data.json()

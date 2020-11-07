@@ -12,6 +12,7 @@ from channel import channel_invite
 import auth
 import channels
 import other
+import pytest
 
 from testing_fixtures.channel_test_fixtures import setup_test_interface
 
