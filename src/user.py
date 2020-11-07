@@ -1,11 +1,11 @@
 ''' user functions
 '''
 import data
-import requests
+import urllib.request
+import shutil
 from error import InputError
 from error import AccessError
 from PIL import Image
-from io import BytesIO
 
 def user_profile(token, u_id):
     ''' Display user's profile data
@@ -116,20 +116,24 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     '''
 
     try:
-        data.resolve_token_index(token)
+        u_id_index = data.resolve_token_index(token)
     except:
         raise AccessError
 
-    payload = requests.get(url)
-    img = Image.open(BytesIO(payload.content))
+    iff url[-3:] != "jpg":
+        raise InputError
+
+    imageFile = str(u_id_index + 1) + "_profile.jpg"
+
+    urllib.request.urlretrieve(url, imageFile)
+    imagePath = "static/" + imageFile
+    shutil.move(imageFile, imagePath)
+    img = Image.open(imagePath)
 
     width, height = img.size
 
-    # Check that image is jpg and that the dimensions to crop are within range
     error = False
-    if url[-3:] != "jpg" and url[-4:] != "jpeg":
-        error = True
-    elif x_start < 0 or y_start < 0 or x_end < 0 or y_end < 0:
+    if x_start < 0 or y_start < 0 or x_end < 0 or y_end < 0:
         error = True
     elif x_start > width or x_end > width:
         error = True
@@ -140,10 +144,9 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
         raise InputError
     else:
         img_crop = img.crop((x_start, y_start, x_end, y_end))
-
-        #sets user's profile picture to cropped image
-        # TODO: Figure out how to store cropped image
-        #data.data["users"][data.resolve_token_index(token)]["profile_picture"] = img_crop
+        img_crop.save(imagePath)
+        # store file name to data.py
+        data.data["users"][u_id_index]["profile_image"] = imageFile
 
     return {}
 
