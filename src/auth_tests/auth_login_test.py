@@ -1,7 +1,8 @@
-''' Auth login tests
-This file contains all test cases for auth login function.
-
+############################### Auth Login Tests #############################
 '''
+Functions to test auth_login functionality
+'''
+
 import auth
 import other
 import pytest

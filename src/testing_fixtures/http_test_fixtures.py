@@ -44,18 +44,23 @@ def setup_auth(url):
     payload = data.json()
     assert payload == {}
 
-    input_data = {
+    input_reg = {
         'email': EMAIL_1,
         'password': PASSWORD_1,
         'name_first': NAME_F_1,
         'name_last': NAME_L_1
     }
+    
+    input_log = {
+        'email': EMAIL_1,
+        'password': PASSWORD_1,
+    }
 
-    return input_data
+    return input_reg, input_log
 
 @pytest.fixture()
 def register_user(url, setup_auth):
-    input_value = setup_auth
+    input_value, _ = setup_auth
 
     data = requests.post(str(url) + "auth/register", json=input_value)
     payload = data.json()
@@ -63,15 +68,11 @@ def register_user(url, setup_auth):
     return payload['token'], payload['u_id']
 
 @pytest.fixture()
-def login_user(url, register_user):
+def login_user(url, setup_auth, register_user):
+    _, input_data = setup_auth
     register_user
 
-    input_value = {
-        'email': EMAIL_1,
-        'password': PASSWORD_1
-    }
-
-    data = requests.post(f"{url}/auth/login", json=input_value)
+    data = requests.post(f"{url}/auth/login", json=input_data)
     payload = data.json()
 
     return payload['token'], payload['u_id']
