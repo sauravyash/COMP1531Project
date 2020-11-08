@@ -28,6 +28,7 @@ def test_url(url):
 # ----- Success Register
 def test_reg_simple(url, setup_auth):
     input_data, _ = setup_auth
+    input_data = input_data[0]
 
     data = requests.post(str(url) + "auth/register", json=input_data)
     # Checking good connection
@@ -41,6 +42,7 @@ def test_reg_simple(url, setup_auth):
 # ----- Fail Register
 def test_reg_invalid_email(url, setup_auth):
     input_data, _ = setup_auth
+    input_data = input_data[0]
     
     input_data['email'] = 'invalidemail'
     data = requests.post(str(url) + "auth/register", json=input_data)
@@ -49,6 +51,7 @@ def test_reg_invalid_email(url, setup_auth):
 
 def test_reg_invalid_password(url, setup_auth):
     input_data, _ = setup_auth
+    input_data = input_data[0]
     
     input_data['password'] = '123'
     data = requests.post(str(url) + "auth/register", json=input_data)
@@ -57,6 +60,7 @@ def test_reg_invalid_password(url, setup_auth):
 
 def test_reg_empty_password(url, setup_auth):
     input_data, _ = setup_auth
+    input_data = input_data[0]
     
     input_data['password'] = ''
     data = requests.post(str(url) + "auth/register", json=input_data)
@@ -65,6 +69,7 @@ def test_reg_empty_password(url, setup_auth):
 
 def test_reg_invalid_fname(url, setup_auth):
     input_data, _ = setup_auth
+    input_data = input_data[0]
     
     input_data['name_first'] = 'invalidfirstnamewhichisgoingtobemorethan50characterslong'
     data = requests.post(str(url) + "auth/register", json=input_data)
@@ -73,6 +78,7 @@ def test_reg_invalid_fname(url, setup_auth):
 
 def test_reg_invalid_lname(url, setup_auth):
     input_data, _ = setup_auth
+    input_data = input_data[0]
     
     input_data['name_last'] = 'invalidlastnamewhichisgoingtobemorethan50characterslong'
     data = requests.post(str(url) + "auth/register", json=input_data)
@@ -81,6 +87,7 @@ def test_reg_invalid_lname(url, setup_auth):
 
 def test_reg_empty_first_name(url, setup_auth):
     input_data, _ = setup_auth
+    input_data = input_data[0]
     
     input_data['name_first'] = ''
     data = requests.post(str(url) + "auth/register", json=input_data)
@@ -89,6 +96,7 @@ def test_reg_empty_first_name(url, setup_auth):
 
 def test_reg_empty_last_name(url, setup_auth):
     input_data, _ = setup_auth
+    input_data = input_data[0]
     
     input_data['name_last'] = ''
     data = requests.post(str(url) + "auth/register", json=input_data)
@@ -97,6 +105,7 @@ def test_reg_empty_last_name(url, setup_auth):
 
 def test_already_registered(url, setup_auth, register_user):
     input_data, _ = setup_auth
+    input_data = input_data[0]
     # Register user once.
     register_user
 
@@ -132,7 +141,8 @@ def test_reg_bad_request(url):
 # ----- Success Login
 def test_login_simple(url, setup_auth, register_user):
     _, input_data = setup_auth
-    tok1, uid1 = register_user
+    input_data = input_data[0]
+    user1, _, _ = register_user
 
     data = requests.post(f"{url}/auth/login", json=input_data)
 
@@ -142,12 +152,13 @@ def test_login_simple(url, setup_auth, register_user):
     # Check return values
     payload = data.json()
     assert len(payload) == 2
-    assert payload['token'] == tok1
-    assert payload['u_id'] == uid1
+    assert payload['token'] == user1['token']
+    assert payload['u_id'] == user1['u_id']
 
 # ----- Fail Login
 def test_login_unregistered_email(url, setup_auth):
     _, input_data = setup_auth
+    input_data = input_data[0]
     
     data = requests.post(f"{url}/auth/login", json=input_data)
     # Email has not been registered, raise INPUT ERROR. (401)
@@ -155,6 +166,7 @@ def test_login_unregistered_email(url, setup_auth):
 
 def test_login_incorrect_password(url, setup_auth, register_user):
     _, input_data = setup_auth
+    input_data = input_data[0]
     register_user
 
     input_data['password'] = 'incorrect_password'
@@ -164,6 +176,7 @@ def test_login_incorrect_password(url, setup_auth, register_user):
 
 def test_login_invalid_email(url, setup_auth, register_user):
     _, input_data = setup_auth
+    input_data = input_data[0]
     register_user
 
     input_data['email'] = 'invalidemail'
@@ -173,6 +186,7 @@ def test_login_invalid_email(url, setup_auth, register_user):
 
 def test_login_empty_email(url, setup_auth, register_user):
     _, input_data = setup_auth
+    input_data = input_data[0]
     register_user
 
     input_data['email'] = ''
@@ -182,6 +196,7 @@ def test_login_empty_email(url, setup_auth, register_user):
 
 def test_login_empty_password(url, setup_auth, register_user):
     _, input_data = setup_auth
+    input_data = input_data[0]
     register_user
 
     input_data['password'] = ''
@@ -213,10 +228,10 @@ def test_login_bad_request(url, setup_auth):
 
 # ----- Success Logout
 def test_logout_simple(url, login_user):
-    tok1, _ = login_user
+    user1, _, _ = login_user
 
     input_data = {
-        'token': tok1
+        'token': user1['token']
     }
 
     data = requests.post(f"{url}/auth/logout", json=input_data)
@@ -230,11 +245,12 @@ def test_logout_simple(url, login_user):
 
 # ----- Fail Logout
 def test_already_logged_out(url, login_user, logout_user):
-    tok1, _ = login_user
-    assert logout_user == True
+    user1, _, _ = login_user
+    logout_result, _, _ = logout_user
+    assert logout_result == True
 
     input_data = {
-        'token': tok1
+        'token': user1['token']
     }
 
     data = requests.post(f"{url}/auth/logout", json=input_data)

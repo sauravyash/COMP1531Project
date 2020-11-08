@@ -9,10 +9,21 @@ import logging
 import pytest
 
 # Helpful Globals
-EMAIL_1 = 'validemail@gmail.com'
+# ----- USER1
+EMAIL_1 = 'validemail1@gmail.com'
 PASSWORD_1 = 'validpassword1234'
 NAME_F_1 = 'Tom'
 NAME_L_1 = 'Riddles'
+# ----- USER2
+EMAIL_2 = 'validemail2@gmail.com'
+PASSWORD_2 = 'validpassword2234'
+NAME_F_2 = 'Timothy'
+NAME_L_2 = 'Banks'
+# ----- USER3
+EMAIL_3 = 'validemail3@gmail.com'
+PASSWORD_3 = 'validpassword3234'
+NAME_F_3 = 'Alison'
+NAME_L_3 = 'Cardigan'
 
 @pytest.fixture()
 def url():
@@ -44,17 +55,41 @@ def setup_auth(url):
     payload = data.json()
     assert payload == {}
 
-    input_reg = {
-        'email': EMAIL_1,
-        'password': PASSWORD_1,
-        'name_first': NAME_F_1,
-        'name_last': NAME_L_1
-    }
+    input_reg = [
+        {
+            'email': EMAIL_1,
+            'password': PASSWORD_1,
+            'name_first': NAME_F_1,
+            'name_last': NAME_L_1
+        },
+        {
+            'email': EMAIL_2,
+            'password': PASSWORD_2,
+            'name_first': NAME_F_2,
+            'name_last': NAME_L_2
+        },
+        {
+            'email': EMAIL_3,
+            'password': PASSWORD_3,
+            'name_first': NAME_F_3,
+            'name_last': NAME_L_3
+        }
+    ]
     
-    input_log = {
-        'email': EMAIL_1,
-        'password': PASSWORD_1,
-    }
+    input_log = [
+        {
+            'email': EMAIL_1,
+            'password': PASSWORD_1,
+        },
+        {
+            'email': EMAIL_2,
+            'password': PASSWORD_2,
+        },
+        {
+            'email': EMAIL_3,
+            'password': PASSWORD_3,
+        }
+    ]
 
     return input_reg, input_log
 
@@ -65,30 +100,75 @@ def setup_auth(url):
 def register_user(url, setup_auth):
     input_value, _ = setup_auth
 
-    data = requests.post(str(url) + "auth/register", json=input_value)
-    payload = data.json()
+    data = requests.post(str(url) + "auth/register", json=input_value[0])
+    user1 = data.json()
+    
+    data = requests.post(str(url) + "auth/register", json=input_value[1])
+    user2 = data.json()
+    
+    data = requests.post(str(url) + "auth/register", json=input_value[2])
+    user3 = data.json()
 
-    return payload['token'], payload['u_id']
+    return user1, user2, user3
 
 @pytest.fixture()
 def login_user(url, setup_auth, register_user):
     _, input_data = setup_auth
     register_user
 
-    data = requests.post(f"{url}/auth/login", json=input_data)
-    payload = data.json()
+    data = requests.post(f"{url}/auth/login", json=input_data[0])
+    user1 = data.json()
+    
+    data = requests.post(f"{url}/auth/login", json=input_data[1])
+    user2 = data.json()
+    
+    data = requests.post(f"{url}/auth/login", json=input_data[2])
+    user3 = data.json()
 
-    return payload['token'], payload['u_id']
+    return user1, user2, user3
 
 @pytest.fixture()
 def logout_user(url, login_user):
-    tok1, _ = login_user
+    user1, user2, user3 = login_user
+    input_data = [
+        {
+            'token': user1['token']
+        },
+        {
+            'token': user2['token']
+        },
+        {
+            'token': user3['token']
+        }
+    ]
+
+    data = requests.post(f"{url}/auth/logout", json=input_data[0])
+    user1 = data.json()
+    
+    data = requests.post(f"{url}/auth/logout", json=input_data[1])
+    user2 = data.json()
+    
+    data = requests.post(f"{url}/auth/logout", json=input_data[2])
+    user3 = data.json()
+
+    return user1['is_success'], user2['is_success'], user3['is_success']
+
+# ---------------------------------------------------------------------------- #
+''' CHANNEL FIXTURES '''
+
+@pytest.fixture()
+def setup_channel_tests(url, setup_auth, login_user):
+    user1, user2, user3 = login_user
+    
+    # Create a channel with the first user.
     input_data = {
-        'token': tok1
+        'token': user1['token'],
+        'name': 'Channel_1',
+        'is_public': True
     }
 
-    data = requests.post(f"{url}/auth/logout", json=input_data)
+    data = requests.post(f"{url}/channels/create", json=input_data)
     payload = data.json()
-
-    return payload['is_success']
+    
+    return user1, user2, user3, payload['channel_id']
 
