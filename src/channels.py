@@ -122,6 +122,11 @@ def channels_create(token, name, is_public):
         },
         'messages': [],
         'is_public': is_public
+        'standup': {
+            'creator': None
+            'time_finish': None
+            'messages': []
+        }
     })
 
     return {
