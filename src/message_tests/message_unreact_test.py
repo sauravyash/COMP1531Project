@@ -19,8 +19,13 @@ def test_success_unreact(setup_test_interface):
     m_id = message_send(tok1, channel_id, "Funky Monkey")
 
     message_react(tok1, m_id["message_id"], 1)
-
-    assert (message_unreact(tok1, m_id["message_id"], 1)) == {}
+    channel_msgs = channel.channel_messages(tok1, channel_id, 0)    
+    assert len(channel_msgs['messages'][0]['reacts']) == 1
+    
+    assert message_unreact(tok1, m_id["message_id"], 1) == {}
+    
+    channel_msgs = channel.channel_messages(tok1, channel_id, 0)    
+    assert len(channel_msgs['messages'][0]['reacts'][0]['u_ids']) == 0
 
 
 def test_invalid_message_id(setup_test_interface):
@@ -58,7 +63,7 @@ def test_no_react(setup_test_interface):
     tok1 = user1['token']
     channel_id = channel_dict['channel_id']
 
-    m_id = message_send(tok1, channel_id, "Funky Monkey")
-
+    m_id = message_send(tok1, channel_id, "Funky Monkey") 
+    
     with pytest.raises(InputError):
         message_unreact(tok1, m_id["message_id"], 1)

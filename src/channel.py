@@ -2,7 +2,7 @@
 File that contains all functions related to channel.
 
 '''
-
+import datetime
 import data
 
 from error import AccessError
@@ -135,7 +135,12 @@ def channel_messages(token, channel_id, start):
         raise AccessError(description='Authorised User Not Member of Channel')
 
     # Reverse messages list, so that most recent is index 0.
-    messages = list(reversed(channel['messages']))
+    messages = list(sorted(channel['messages'], key=lambda x: x['time_created'], reverse=True))
+    
+    for msg in messages:
+        if msg['time_created'] > datetime.datetime.now().timestamp():
+            messages.remove(msg)
+
     # Check if start param is valid.
     if start > len(messages) or start < 0:
         raise InputError('Start is Out of Bounds')

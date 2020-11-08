@@ -13,7 +13,8 @@ import string
 global data
 data = {
     'users': [],
-    'channels': []
+    'channels': [],
+    'delayed_messages': []
 }
 
 JWT_KEY = 'b0ggers'
@@ -170,7 +171,7 @@ def resolve_permissions(channel_id, user_id):
             return 2
         else:
             return None
-    except LookupError: # pragma: no cover
+    except LookupError: # pragma: no cover 
         return None
 
 # FOR TROUBLESHOOTING- PRINT THE CURRENT STATE OF THE DICTIONARY.
