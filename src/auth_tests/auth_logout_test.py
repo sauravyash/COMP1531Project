@@ -20,7 +20,7 @@ def test_logout(setup_test_interface):
 
     assert(auth.auth_logout(tok)["is_success"] == True)
 
-# ----- Unsuccesful logouts
+# ----- Unsuccessful logouts
 def test_already_logged_out(setup_test_interface):
     '''
     Unsuccesful logout
