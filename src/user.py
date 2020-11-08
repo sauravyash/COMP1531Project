@@ -120,12 +120,16 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     except:
         raise AccessError
 
-    iff url[-3:] != "jpg":
+    if url[-3:] != "jpg":
         raise InputError
 
     imageFile = str(u_id_index + 1) + "_profile.jpg"
 
-    urllib.request.urlretrieve(url, imageFile)
+    try:
+        urllib.request.urlretrieve(url, imageFile)
+    except:
+        raise InputError
+
     imagePath = "static/" + imageFile
     shutil.move(imageFile, imagePath)
     img = Image.open(imagePath)
@@ -149,48 +153,6 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
         data.data["users"][u_id_index]["profile_image"] = imageFile
 
     return {}
-
-# TODO implement this into user_profile_uploadphoto
-'''
-import urllib.request
-from PIL import Image
-import shutil
-
-url = str(input("Enter image link: "))
-x_start = int(input("Enter x_start: "))
-y_start = int(input("Enter y_start: "))
-x_end = int(input("Enter x_end: "))
-y_end = int(input("Enter y_end: "))
-
-
-if url[-3:] != "jpg": #and url[-4:] != "jpeg":
-    print("InputError")
-
-imageFile = "image.jpg" #str(u_id_index + 1) + "_profile.jpg"
-
-urllib.request.urlretrieve(url, imageFile)
-imagePath = "static/" + imageFile
-shutil.move(imageFile, imagePath)
-img = Image.open(imagePath)
-
-width, height = img.size
-
-error = False
-if x_start < 0 or y_start < 0 or x_end < 0 or y_end < 0:
-    error = True
-elif x_start > width or x_end > width:
-    error = True
-elif y_start > height or y_end > height:
-    error = True
-
-if error:
-    print("InputError")
-else:
-    img_crop = img.crop((x_start, y_start, x_end, y_end))
-    img_crop.save(imagePath)
-    #data.data["users"][u_id_index]["profile_image"] = imageFile
-'''
-
 
 # NOTE: Code for flask server to serve the image
 # url = localhost:port/static/imageFile
