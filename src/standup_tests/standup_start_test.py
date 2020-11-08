@@ -1,50 +1,55 @@
-''' Import Functions '''
-''' Won't work yet as standup doesn't exist.
-import random
-import string
+############################## Standup Start Tests ############################
+'''
+Functions to test standup_start functionality
+'''
+
+''' NOT YET IMPLEMENTED
 import pytest
 import other
-import auth
-import channels
-import channel
+
 from error import InputError, AccessError
 from standup import standup_start
 
-def test_standup_start_success():
-    # Success standup start case
-    other.clear()
+from testing_fixtures.standup_test_fixtures import setup_test_interface
 
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
+# ----- Success Start
+# Not a lot of methods for testing whether standup works on its own.
+def test_simple(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
+    
+    # Test standup start returns correct types.
+    standup_dict = standup_start(user1["token"], channel_id, 100)
+    assert len(standup_dict) == 1
+    assert isinstance(standup_dict, dict)
+    assert isinstance(standup_dict['time_finish'], float)
+    
+    # Test standup information and activity is carried across other functions.
+    standup_info = standup_active(user1['token'], channel_id)
+    assert standup_info['is_active'] == True
+    assert standup_info['time_finish'] == standup_dict['time_finish']
 
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
+# ----- Fail Start
+def test_invalid_token(setup_test_interface):
+    _, _, channel_id = setup_test_interface
 
-    assert (isinstance(standup_start(result["token"], channel_id["channel_id"], 100), float))
+    with pytest.raises(AccessError):
+        standup_start(-999, channel_id, 100)
+    with pytest.raises(AccessError):
+        standup_start('fake_token', channel_id, 100)
 
-
-def test_invalid_channel_id():
-    # When the standup is started to an invalid channel ID
-    other.clear()
-
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
-
-    channels.channels_create(result["token"], "channel_1", True)
-
-    with pytest.raises(InputError):
-        standup_start(result["token"], -999, 100)
-
-def test_standup_exists():
-    # When the standup already exists
-    other.clear()
-
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-
-    standup_start(result["token"],channel_id["channel_id"],100)
+def test_invalid_channel_id(setup_test_interface):
+    user1, _, _ = setup_test_interface
 
     with pytest.raises(InputError):
-        standup_start(result["token"],channel_id["channel_id"],1)
+        standup_start(user1["token"], -999, 100)
+    with pytest.raises(InputError):
+        standup_start(user1["token"], 'fake_channel', 100)
+
+def test_standup_already_exists(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
+
+    standup_start(user1["token"],channel_id, 100)
+
+    with pytest.raises(InputError):
+        standup_start(user1["token"],channel_id, 1)
 '''

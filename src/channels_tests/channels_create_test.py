@@ -1,65 +1,77 @@
+############################ Channels Create Tests #############################
+'''
+Functions to test channels_create functionality
+'''
+
 import pytest
 import other
 import auth
+
 from error import InputError
 from error import AccessError
+
 from channels import channels_create
+import channel
 
-### BLACKBOX TESTING ###
+from testing_fixtures.channels_test_fixtures import setup_test_interface_create
 
-# Test for Valid Token
-# - Token must be a string
-# - Token cannot be empty
-# - Token must be unique
-def test_channels_create_valid_token():
-    other.clear()
-    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'lname')
-    with pytest.raises(AccessError):
-        channels_create(0, "namee", True)
-    with pytest.raises(AccessError):
-        channels_create("", "namee", True)
-    with pytest.raises(AccessError):
-        channels_create(None, "namee", True)
+# ----- Success Create
+def test_simple(setup_test_interface_create):
+    user1, _ = setup_test_interface_create
+    tok1 = user1['token']
 
-# Test for Valid Name
-# - Name must be a string
-# - Name cannot be an empty String
-# - Name cannot be longer than 20 chars
-def test_channels_create_valid_name():
-    other.clear()
-    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
-    result = auth.auth_login('validemail@gmail.com', 'validpassword')
+    channel_1 = channels_create(tok1, "channel_1", True)['channel_id']
+    assert len(channel.channel_details(tok1, channel_1)['owner_members']) == 1
+    assert len(channel.channel_details(tok1, channel_1)['all_members']) == 1
+
+    channel_2 = channels_create(tok1, "channel_2", False)['channel_id']
+    assert len(channel.channel_details(tok1, channel_2)['owner_members']) == 1
+    assert len(channel.channel_details(tok1, channel_2)['all_members']) == 1
+
+def test_multiple_users(setup_test_interface_create):
+    user1, user2 = setup_test_interface_create
+    tok1 = user1['token']
+    tok2 = user2['token']
+
+    channel_1 = channels_create(tok1, "channel_1", True)['channel_id']
+    assert len(channel.channel_details(tok1, channel_1)['owner_members']) == 1
+    assert len(channel.channel_details(tok1, channel_1)['all_members']) == 1
+
+    channel_2 = channels_create(tok2, "channel_2", False)['channel_id']
+    assert len(channel.channel_details(tok2, channel_2)['owner_members']) == 1
+    assert len(channel.channel_details(tok2, channel_2)['all_members']) == 1
+
+# ----- Fail Create
+def test_invalid_token(setup_test_interface_create):
+    setup_test_interface_create
+
+    with pytest.raises(AccessError):
+        channels_create(0, "channel_id", True)
+    with pytest.raises(AccessError):
+        channels_create("", "channel_id", True)
+    with pytest.raises(AccessError):
+        channels_create(None, "channel_id", True)
+
+def test_invalid_channel_name(setup_test_interface_create):
+    user1, _ = setup_test_interface_create
+    tok1 = user1['token']
+    
     with pytest.raises(InputError):
-        assert channels_create(result["token"], None, True)
+        assert channels_create(tok1, None, True)
     with pytest.raises(InputError):
-        assert channels_create(result["token"], "", True)
+        assert channels_create(tok1, "", True)
     with pytest.raises(InputError):
         # 21 char length name
-        assert channels_create(result["token"], "qwertyuiopasdfghjklzx", True)
+        assert channels_create(tok1, "qwertyuiopasdfghjklzx", True)
 
-# Test channel privacy
-# - is_public is a boolean
-def test_channels_create_is_public():
-    other.clear()
-    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
-    result = auth.auth_login('validemail@gmail.com', 'validpassword')
-    with pytest.raises(InputError):
-        assert channels_create(result["token"], "nbamee", None)
-    with pytest.raises(InputError):
-        assert channels_create(result["token"], "dfdfdfs", 0)
-    with pytest.raises(InputError):
-        # 21 char length name
-        assert channels_create(result["token"], "qweklzx", "hi")
+def test_invalid_is_public(setup_test_interface_create):
+    user1, _ = setup_test_interface_create
+    tok1 = user1['token']
 
-# Test if passing with valid parameters
-def test_channels_create_valid_all():
-    other.clear()
-    auth.auth_register('validemail@gmail.com', 'validpassword', 'fname', 'fname')
-    result = auth.auth_login('validemail@gmail.com', 'validpassword')
-    assert channels_create(result["token"], "channel_1", True)
-    assert channels_create(result["token"], "channel_2", False)
+    with pytest.raises(InputError):
+        assert channels_create(tok1, "channel_id", None)
+    with pytest.raises(InputError):
+        assert channels_create(tok1, "channel_id", 0)
+    with pytest.raises(InputError):
+        assert channels_create(tok1, "channel_id", "hi")
 
-# Test function output types
-# - message_id is an int
-#def test_channels_create_check_return_types():
-#    assert isinstance(channels_create("tokebbb", "example_name", True), dict)
