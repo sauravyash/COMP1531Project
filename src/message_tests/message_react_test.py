@@ -20,6 +20,9 @@ def test_success_react(setup_test_interface):
 
     assert (message_react(tok1, m_id["message_id"], 1)) == {}
 
+    channel_msgs = channel.channel_messages(tok1, channel_id, 0)
+
+    assert len(channel_msgs['messages'][0]['reacts']) == 1
 
 def test_invalid_message_id(setup_test_interface):
     '''Invalid message ID'''

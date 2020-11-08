@@ -58,7 +58,7 @@ def test_no_react(setup_test_interface):
     tok1 = user1['token']
     channel_id = channel_dict['channel_id']
 
-    m_id = message_send(tok1, channel_id, "Funky Monkey")
-
+    m_id = message_send(tok1, channel_id, "Funky Monkey") 
+    
     with pytest.raises(InputError):
         message_unreact(tok1, m_id["message_id"], 1)

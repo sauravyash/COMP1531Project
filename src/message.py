@@ -168,12 +168,19 @@ def message_react(token, message_id, react_id):
     
     msg = data.data['channels'][channel_index]['messages'][msg_index]
     data.print_data()
-    for react in msg['reacts']:
-        if react['react_id'] == react_id:
-            if user_id not in react['u_ids']: 
-                react['u_ids'].append(user_id)
-            else:
-                raise InputError("User Already Reacted to Message!") 
+
+    if react_id not in [r['react_id'] for r in msg['reacts']]:
+        msg['reacts'].append({
+            'react_id': react_id,
+            'u_ids': [user_id]
+        })
+    else:
+        for i, react in enumerate(msg['reacts']):
+            if react['react_id'] == react_id:
+                if user_id not in react['u_ids']: 
+                    msg['reacts'][i]['u_ids'].append(user_id)
+                else:
+                    raise InputError("User Already Reacted to Message!") 
     
     return {}
 
@@ -197,14 +204,18 @@ def message_unreact(token, message_id, react_id):
     
     msg = data.data['channels'][channel_index]['messages'][msg_index]
     
-    for react in msg['reacts']:
+    found_react = False
+    for i, react in enumerate(msg['reacts']):
         if react['react_id'] == react_id:
-            if user_id in react['u_ids']: 
-                react['u_ids'].remove(user_id)
+            found_react = True
+            if user_id in react['u_ids']:
+                 msg['reacts'][i]['u_ids'].remove(user_id)
             else:
-                raise InputError("User Already Reacted to Message!")
+                raise InputError("User Already Unreacted to Message!")
             break
     
+    if not found_react:
+        raise InputError("User Already Unreacted to Message!")
     return {}
 
 def message_pin(token, message_id):

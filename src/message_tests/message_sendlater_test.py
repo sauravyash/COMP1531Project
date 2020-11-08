@@ -19,9 +19,8 @@ def test_message_sendlater_success(setup_test_interface):
 
     send_time = dt.datetime(2020, 11, 11, 8, 0).timestamp()
 
-
     return_value = message_sendlater(tok1, channel_id, "Hello There!", send_time)
-    assert isinstance(return_value, int)
+    assert isinstance(return_value['message_id'], int)
 
 
 
@@ -30,7 +29,6 @@ def test_invalid_channel_id(setup_test_interface):
     user1, _, _, _ = setup_test_interface
 
     tok1 = user1['token']
-
 
     send_time = dt.datetime(2020, 11, 11, 9, 30).timestamp()
 
@@ -68,13 +66,13 @@ def test_invalid_time(setup_test_interface):
 
 def test_not_authorized(setup_test_interface):
     '''When the sender is not in the channel'''
-    user1, _, _, channel_dict = setup_test_interface
+    user1, user2, _, channel_dict = setup_test_interface
 
-    tok1 = user1['token']
+    tok2 = user2['token']
     channel_id = channel_dict['channel_id']
 
     send_time = dt.datetime(2020, 11, 11, 9, 30).timestamp()
 
     with pytest.raises(AccessError):
-        message_sendlater(tok1, channel_id, "Not in channel", send_time)
+        message_sendlater(tok2, channel_id, "Not in channel", send_time)
 

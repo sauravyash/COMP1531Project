@@ -20,7 +20,10 @@ def test_success_pin(setup_test_interface):
     m_id = message_send(tok1, channel_id, "Funky Monkey")
 
     assert (message_pin(tok1, m_id["message_id"])) == {}
+    
+    channel_msgs = channel.channel_messages(tok1, channel_id, 0)
 
+    assert channel_msgs['messages'][0]['is_pinned'] == True
 
 def test_invalid_message_id(setup_test_interface):
     '''Invalid message ID'''
@@ -42,13 +45,9 @@ def test_pin_already(setup_test_interface):
     tok1 = user1['token']
     channel_id = channel_dict['channel_id']
 
-
-    message_pin(result["token"], m_id["message_id"])
-
     m_id = message_send(tok1, channel_id, "Funky Monkey")
 
     message_pin(tok1, m_id["message_id"])
-
 
     with pytest.raises(InputError):
         message_pin(tok1, m_id["message_id"])
