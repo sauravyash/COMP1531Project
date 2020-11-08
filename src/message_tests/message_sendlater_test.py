@@ -66,7 +66,7 @@ def test_invalid_time(setup_test_interface):
 
 def test_not_authorized(setup_test_interface):
     '''When the sender is not in the channel'''
-    user1, user2, _, channel_dict = setup_test_interface
+    _, user2, _, channel_dict = setup_test_interface
 
     tok2 = user2['token']
     channel_id = channel_dict['channel_id']
