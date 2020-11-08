@@ -28,8 +28,9 @@ def standup_start(token, channel_id, length):
     if standup_active(token, channel_id)['is_active'] is True:
         raise InputError(description='Standup Already Active')
 
-    current_time = datetime.datetime.now().timestamp()
+    current_time = datetime.datetime.now()
     finish_time = current_time + datetime.timedelta(seconds=length)
+    finish_time = finish_time.timestamp()
 
 	# Edit data structure to store standup details.
     standup = data.data['channels'][channel_index]['standup']
@@ -46,15 +47,16 @@ def close_standup(channel_index, channel_id):
 
 	standup_str = ''
 
-	for message in standup['messages']:
-		user_index = data.resolve_user_id_index(message['u_id'])
+	for message_info in standup['messages']:
+		user_index = data.resolve_user_id_index(message_info['u_id'])
 		name = data.data['users'][user_index]['name_first']
 		# Add a message in format 'hayden: I ate a catfish'.
-		standup_str += name + ': '+ message['message'] + '/n'
+		standup_str += name + ': '+ message_info['message'] + '/n'
 
-	# Send out collated messages.
+	# Send out collated messages (unless no messages were sent during standup).
 	send_time = standup['time_finish']
-	message.message_sendlater(standup['creator'], channel_id, standup_str, send_time)
+	if standup_str is not '':
+	    message.message_sendlater(standup['creator'], channel_id, standup_str, send_time)
 
 	# Clear data
 	standup['time_finish'] = None
@@ -82,7 +84,7 @@ def standup_active(token, channel_id):
     standup = data.data['channels'][channel_index]['standup']
     # Check if any data for a standup has been stored
     if standup['time_finish'] is not None:
-	    if standup['time_finish'] >= current_time:
+	    if standup['time_finish'] < current_time:
 		    # Close the standup:
 		    # ie. send out final message and erase all data.
 		    close_standup(channel_index, channel_id)
