@@ -328,6 +328,18 @@ def generate_reset_key(length):
 
     return key
 
+def generate_img_name(length):
+    """ GENERATE RANDOM IMAGE NAME
+
+    Arguments: length, must be integer
+    Returns: img_name
+    """
+
+    alphabet = string.ascii_lowercase + string.digits
+    key = ''.join(random.choice(alphabet) for i in range(length))
+
+    return key
+
 '''
 EXAMPLE
 EXAMPLE
