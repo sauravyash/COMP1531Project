@@ -3,7 +3,6 @@
 Functions to test standup_active functionality
 '''
 
-''' NOT YET IMPLEMENTED
 import pytest
 import other
 
@@ -16,8 +15,8 @@ from testing_fixtures.standup_test_fixtures import setup_test_interface
 def test_no_standup(setup_test_interface):
     user1, _, channel_id = setup_test_interface
 
-    result_standup_active = standup_active(user1["token"],channel_id)
-    assert len(result_standup_active) == 2
+    standup_not_active = standup_active(user1["token"],channel_id)
+    assert len(standup_not_active) == 2
     assert standup_not_active['is_active'] == False
     assert standup_not_active['time_finish'] == None
 
@@ -27,8 +26,10 @@ def test_simple(setup_test_interface):
     # Initially standup is not active
     standup_not_active = standup_active(user1["token"],channel_id)
     assert standup_not_active['is_active'] == False
+    
     # Start a standup and store value for finishing time.
-    standup_started = standup_active(user1['token'], channel_id)
+    standup_started = standup_start(user1['token'], channel_id, 5)
+    
     # Now standup is active and finish times should match.
     standup_is_active = standup_active(user1["token"],channel_id)
     assert standup_is_active['is_active'] == True
@@ -50,4 +51,4 @@ def test_invalid_channel_id(setup_test_interface):
         standup_active(user1["token"], -999)
     with pytest.raises(InputError):
         standup_active(user1["token"], 'fake_channel')
-''' 
+
