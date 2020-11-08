@@ -167,7 +167,7 @@ def message_react(token, message_id, react_id):
         raise InputError("invalid message or channel id")
     
     msg = data.data['channels'][channel_index]['messages'][msg_index]
-    
+    data.print_data()
     for react in msg['reacts']:
         if react['react_id'] == react_id:
             if user_id not in react['u_ids']: 

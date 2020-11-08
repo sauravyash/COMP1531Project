@@ -171,8 +171,7 @@ def resolve_permissions(channel_id, user_id):
             return 2
         else:
             return None
-    except LookupError as e: # pragma: no cover
-        raise e
+    except LookupError: # pragma: no cover 
         return None
 
 # FOR TROUBLESHOOTING- PRINT THE CURRENT STATE OF THE DICTIONARY.
