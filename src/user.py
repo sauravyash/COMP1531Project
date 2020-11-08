@@ -115,7 +115,6 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     Arguments: token, url- must be strings, x_start, y_start, x_end, y_end- must be integers
     Returns: empty dictionary
     '''
-
     try:
         u_id_index = data.resolve_token_index(token)
     except:
@@ -124,14 +123,16 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     if url[-3:] != "jpg":
         raise InputError
 
-    imageFile = "profile_images/" + str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
+    imageFile = str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
+
+    #imageFile = str(u_id_index + 1) + "_profile.jpg"
 
     try:
         urllib.request.urlretrieve(url, imageFile)
     except:
         raise InputError
 
-    imagePath = "static/" + imageFile
+    imagePath = "static/profile_images" + imageFile
     shutil.move(imageFile, imagePath)
     img = Image.open(imagePath)
 
