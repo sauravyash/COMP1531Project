@@ -1,9 +1,13 @@
+''' Standup.py
+File that contains all functions related to standup.
+
+'''
+
 import datetime
 import data
 import message
 
 from error import InputError, AccessError
-
 
 def standup_start(token, channel_id, length):
 
