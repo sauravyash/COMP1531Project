@@ -4,41 +4,55 @@ from error import InputError
 import auth
 import other
 from user import user_profile_sethandle
+from testing_fixtures.user_test_fixtures import setup_test_interface
 
-def test_valid_handle():
-    '''test for valid handle'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+def test_valid_handle(setup_test_interface):
+    '''
+    Success handle change
+    Valid token
+    Valid handle
+    '''
+    user = setup_test_interface
 
-    user_profile_sethandle(result["token"], "newhandle")
+    tok = user["token"]
 
-def test_invalid_handle_short():
-    '''test for invalid short handle'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    user_profile_sethandle(tok, "newhandle")
+
+def test_invalid_handle_short(setup_test_interface):
+    '''
+    Unsuccessful handle change
+    Invalid handle (too short)
+    '''
+    user = setup_test_interface
+
+    tok = user["token"]
 
     with pytest.raises(InputError):
-        user_profile_sethandle(result["token"], "ah")
+        user_profile_sethandle(tok, "ah")
 
-def test_invalid_handle_long():
-    '''test for invalid long handle'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+def test_invalid_handle_long(setup_test_interface):
+    '''
+    Unsuccessful handle change
+    Invalid handle (too long)
+    '''
+    user = setup_test_interface
+
+    tok = user["token"]
 
     with pytest.raises(InputError):
-        user_profile_sethandle(result["token"], "handlehasmorethantwentycharacters")
+        user_profile_sethandle(tok, "handlehasmorethantwentycharacters")
 
-def test_handle_already_used():
-    '''tests for handle which is already used'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+def test_handle_already_used(setup_test_interface):
+    '''
+    Unsuccessful handle change
+    Invalid handle (already in use)
+    '''
+    user = setup_test_interface
 
-    auth.auth_register("validemail2@gmail.com", "password", "Andy", "Huang")
+    tok = user["token"]
+
+    auth.auth_register("validemail2@gmail.com", "password", "Some", "One")
     auth.auth_login("validemail2@gmail.com", "password")
 
     with pytest.raises(InputError):
-        user_profile_sethandle(result["token"], "andyhuang")
+        user_profile_sethandle(tok, "someone")

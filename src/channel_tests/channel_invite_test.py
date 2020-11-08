@@ -1,7 +1,7 @@
 ###############################Channel Invite Tests#############################
-'''
+"""
 Functions to test channel_invite functionality
-'''
+"""
 import pytest
 
 from error import InputError
@@ -12,109 +12,94 @@ import auth
 import channels
 import other
 
+from testing_fixtures.channel_test_fixtures import setup_test_interface
+
 # ----- Success Invite
-def test_valid_invite_p1():
+def test_valid_invite_p1(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    channel_id = channel_dict["channel_id"]
 
     # Check that second user can be added by first user.
-    assert channel_invite(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
+    assert channel_invite(tok1, channel_id, uid2) == {}
 
-def test_valid_invite_p2():
 
-    other.clear()
+def test_valid_invite_p2(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login three users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
-    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    tok2 = user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    uid3 = user3["u_id"]
+    channel_id = channel_dict["channel_id"]
 
     # Check that second user can be added by first user (the owner).
-    assert channel_invite(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
+    assert channel_invite(tok1, channel_id, uid2) == {}
     # Now check that the thrid user can be added by the second user (a member).
-    assert channel_invite(result2['token'], channel_id['channel_id'], result3['u_id']) == {}
+    assert channel_invite(tok2, channel_id, uid3) == {}
+
 
 # ----- Fail Invite
-def test_invite_oneself():
+def test_invite_oneself(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    user1["token"]
+    tok2 = user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    user3["u_id"]
+    channel_id = channel_dict["channel_id"]
 
     # Second user attempts to invite themself and should raise Access Error.
     with pytest.raises(AccessError):
-        channel_invite(result2['token'], channel_id['channel_id'], result2['u_id'])
+        channel_invite(tok2, channel_id, uid2)
 
-def test_invalid_token():
 
-    other.clear()
+def test_invalid_token(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login a user.
-    auth.auth_register('validemail@gmail.com', 'password123', 'fname', 'lname')
-    result = auth.auth_login('validemail@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result['token'], 'channel_1', True)
+    user1["token"]
+    user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    user3["u_id"]
+    channel_id = channel_dict["channel_id"]
 
     # Access error is raised when a fake token is used.
     with pytest.raises(AccessError):
-        channel_invite('fake_token', channel_id['channel_id'], result['u_id'])
+        channel_invite("fake_token", channel_id, uid2)
 
-def test_invalid_channel():
 
-    other.clear()
+def test_invalid_channel(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    user3["u_id"]
+    channel_dict["channel_id"]
 
     # Input error is raised when fake channel is used.
     with pytest.raises(InputError):
-        channel_invite(result1['token'], -1, result2['u_id'])
+        channel_invite(tok1, -1, uid2)
 
-def test_invalid_user_id():
 
-    other.clear()
+def test_invalid_user_id(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login one user.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    user2["token"]
+    user2["u_id"]
+    user3["token"]
+    user3["u_id"]
+    channel_id = channel_dict["channel_id"]
 
     # Input error is raised when fake user ID is used.
     with pytest.raises(InputError):
-        channel_invite(result1['token'], channel_id['channel_id'], -1)
+        channel_invite(tok1, channel_id, -1)

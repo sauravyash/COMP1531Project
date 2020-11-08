@@ -25,21 +25,8 @@ def channels_list(token):
     # Check that the token is valid.
     try:
         user_id = data.token_to_user_id(token)
-        user_index = data.resolve_user_id_index(user_id)
     except:
         raise AccessError(description='Invalid Token')
-
-    '''
-    # Flockr owner can see all channels...
-    for user in data.data['users']:
-        if user['permission_id'] == 1 and user['id'] == user_id:
-            return channels_listall(token)
-    '''
-    
-    # Flockr owner can see all channels.
-    if data.data['users'][user_index]['permission_id'] == 1:
-        return channels_listall(token)
-
 
     # Otherwise, only the channels they are a member of.
     for channel in data.data['channels']:

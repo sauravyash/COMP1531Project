@@ -1,7 +1,7 @@
 ############################ Channel Removeowner Tests ########################
-'''
+"""
 Functions to test channel_removeowner functionality
-'''
+"""
 import pytest
 
 from error import AccessError
@@ -16,190 +16,154 @@ import auth
 import channels
 import other
 
+from testing_fixtures.channel_test_fixtures import setup_test_interface
+
 # ----- Success Removeowner
-def test_addowner_simple():
+def test_remove_owner_simple(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    channel_id = channel_dict["channel_id"]
 
     # Invite the second user to the channel.
-    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
+    channel_invite(tok1, channel_id, uid2)
 
     # Add the second user as an owner.
-    assert channel_addowner(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
+    assert channel_addowner(tok1, channel_id, uid2) == {}
 
     # Check that second user's owner status is removed.
-    assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 2
-    assert channel_removeowner(result1['token'], channel_id['channel_id'], result2['u_id']) == {}
-    assert len(channel_details(result1['token'], channel_id['channel_id'])['owner_members']) == 1
+    assert len(channel_details(tok1, channel_id)["owner_members"]) == 2
+    assert channel_removeowner(tok1, channel_id, uid2) == {}
+    assert len(channel_details(tok1, channel_id)["owner_members"]) == 1
 
-def test_flockr_owner():
 
-    other.clear()
+def test_flockr_owner(setup_test_interface):
+    user1, user2, user3, _ = setup_test_interface
 
-   # Register and login three users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
-    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result2['token'], 'channel_1', True)
+    user1["token"]
+    uid1 = user1["u_id"]
+    tok2 = user2["token"]
+    uid2 = user2["u_id"]
+    tok3 = user3["token"]
+    uid3 = user3["u_id"]
+    channel_id = channels.channels_create(tok2, "cl_9", False)["channel_id"]
 
     # Invite the second user to the channel.
-    channel_invite(result2['token'], channel_id['channel_id'], result1['u_id'])
-    channel_invite(result2['token'], channel_id['channel_id'], result3['u_id'])
+    channel_invite(tok2, channel_id, uid1)
+    channel_invite(tok2, channel_id, uid3)
 
     # Second user (owner of channel) adds third user as a channel owner.
-    assert channel_addowner(result2['token'], channel_id['channel_id'], result3['u_id']) == {}
+    assert channel_addowner(tok2, channel_id, uid3) == {}
 
     # Check that flockr owner can also remove a channel owner.
-    assert len(channel_details(result2['token'], channel_id['channel_id'])["owner_members"]) == 2
-    assert channel_removeowner(result3['token'], channel_id['channel_id'], result2['u_id']) == {}
-    assert len(channel_details(result3['token'], channel_id['channel_id'])["owner_members"]) == 1
+    assert len(channel_details(tok2, channel_id)["owner_members"]) == 2
+    assert channel_removeowner(tok3, channel_id, uid2) == {}
+    assert len(channel_details(tok3, channel_id)["owner_members"]) == 1
 
 
 # ----- Fail Removeowner
-def test_not_member():
+def test_not_member(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    other.clear()
-
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with the first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    channel_id = channel_dict["channel_id"]
 
     # Test that second user is not a member of channel- cannot become owner.
     with pytest.raises(InputError):
-        channel_removeowner(result1['token'], channel_id['channel_id'], result2['u_id'])
+        channel_removeowner(tok1, channel_id, uid2)
 
-def test_invalid_token():
 
-    other.clear()
+def test_invalid_token(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    channel_id = channel_dict["channel_id"]
 
     # Invite the second user to the channel.
-    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
+    channel_invite(tok1, channel_id, uid2)
 
     # Check that Access Error is raised when invalid token is used.
     with pytest.raises(AccessError):
-        channel_removeowner('fake_token', channel_id['channel_id'], result2['u_id'])
+        channel_removeowner("fake_token", channel_id, uid2)
 
-def test_invalid_user_id():
 
-    other.clear()
+def test_invalid_user_id(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    channel_id = channel_dict["channel_id"]
 
     # Invite the second user to the channel.
-    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
+    channel_invite(tok1, channel_id, uid2)
 
     # Check that Access Error is raised when invalid token is used.
     with pytest.raises(InputError):
-        channel_removeowner('fake_token', channel_id['channel_id'], -1)
+        channel_removeowner("fake_token", channel_id, -1)
 
-def test_invalid_channel():
 
-    other.clear()
+def test_invalid_channel(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login two users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    channel_id = channel_dict["channel_id"]
 
     # Invite the second user to the channel.
-    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
+    channel_invite(tok1, channel_id, uid2)
 
     # Check that Input Error is raised when invalid channel is used.
     with pytest.raises(InputError):
-        channel_removeowner(result1['token'], -1, result2['u_id'])
+        channel_removeowner(tok1, -1, uid2)
 
-def test_not_authorized():
 
-    other.clear()
+def test_not_authorized(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login three users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
-    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    tok2 = user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    uid3 = user3["u_id"]
+    uid1 = user1["u_id"]
+    channel_id = channel_dict["channel_id"]
 
     # Invite the second & third users to the channel.
-    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
-    channel_invite(result2['token'], channel_id['channel_id'], result3['u_id'])
+    channel_invite(tok1, channel_id, uid2)
+    channel_invite(tok2, channel_id, uid3)
 
     # Second member (not owner) tries to remove first member (owner)- raise Access Error.
     with pytest.raises(AccessError):
-        channel_removeowner(result2['token'], channel_id['channel_id'], result1['u_id'])
+        channel_removeowner(tok2, channel_id, uid1)
 
-def test_not_owner():
 
-    other.clear()
+def test_not_owner(setup_test_interface):
+    user1, user2, user3, channel_dict = setup_test_interface
 
-    # Register and login three users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    result1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    result2 = auth.auth_login('validemail2@gmail.com', 'password123')
-
-    auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
-    result3 = auth.auth_login('validemail3@gmail.com', 'password123')
-
-    # Create a channel with first user.
-    channel_id = channels.channels_create(result1['token'], 'channel_1', True)
+    tok1 = user1["token"]
+    tok2 = user2["token"]
+    uid2 = user2["u_id"]
+    user3["token"]
+    uid3 = user3["u_id"]
+    channel_id = channel_dict["channel_id"]
 
     # Invite the second & third users to the channel.
-    channel_invite(result1['token'], channel_id['channel_id'], result2['u_id'])
-    channel_invite(result2['token'], channel_id['channel_id'], result3['u_id'])
+    channel_invite(tok1, channel_id, uid2)
+    channel_invite(tok2, channel_id, uid3)
 
     # First member (owner) tries to remove second member (not owner)- raise Input Error.
     with pytest.raises(InputError):
-        channel_removeowner(result1['token'], channel_id['channel_id'], result2['u_id'])
+        channel_removeowner(tok1, channel_id, uid2)
