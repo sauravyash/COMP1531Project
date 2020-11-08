@@ -8,6 +8,12 @@ import requests
 import logging
 import pytest
 
+# Helpful Globals
+EMAIL_1 = 'validemail@gmail.com'
+PASSWORD_1 = 'validpassword1234'
+NAME_F_1 = 'Tom'
+NAME_L_1 = 'Riddles'
+
 @pytest.fixture()
 def url():
     '''this starts the server & generates and url'''
@@ -28,12 +34,6 @@ def url():
     else:
         server.kill()
         raise Exception("Couldn't get URL from local server")
-
-# Helpful Globals
-EMAIL_1 = 'validemail@gmail.com'
-PASSWORD_1 = 'validpassword1234'
-NAME_F_1 = 'Tom'
-NAME_L_1 = 'Riddles'
 
 # ----- Clear the server, and provide details of first user.
 @pytest.fixture()
@@ -58,6 +58,9 @@ def setup_auth(url):
 
     return input_reg, input_log
 
+# ---------------------------------------------------------------------------- #
+''' AUTH FIXTURES '''
+
 @pytest.fixture()
 def register_user(url, setup_auth):
     input_value, _ = setup_auth
@@ -76,4 +79,16 @@ def login_user(url, setup_auth, register_user):
     payload = data.json()
 
     return payload['token'], payload['u_id']
+
+@pytest.fixture()
+def logout_user(url, login_user):
+    tok1, _ = login_user
+    input_data = {
+        'token': tok1
+    }
+
+    data = requests.post(f"{url}/auth/logout", json=input_data)
+    payload = data.json()
+
+    return payload['is_success']
 

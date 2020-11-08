@@ -1,6 +1,6 @@
-############################ Http Server Tests ##########################
+############################ Http Auth Server Tests ##########################
 '''
-Functions to test http server functionality
+Functions to test http server auth functionality
 '''
 
 from subprocess import Popen, PIPE
@@ -15,22 +15,18 @@ import pytest
 
 from data import print_data
 
-import testing_fixtures.http_test_fixtures
-from testing_fixtures.http_test_fixtures import url
-from testing_fixtures.http_test_fixtures import setup_auth
-from testing_fixtures.http_test_fixtures import register_user
-from testing_fixtures.http_test_fixtures import login_user
+from testing_fixtures.http_test_fixtures import url, setup_auth
+from testing_fixtures.http_test_fixtures import register_user, login_user, logout_user
 
 def test_url(url):
     '''Check server set up properly'''
     assert url.startswith("http")
 
-''' ----- AUTH TESTS ----- '''
 # ---------------------------------------------------------------------------- #
-
 ''' ----- AUTH REGISTER ----- '''
+
 # ----- Success Register
-def test_register_simple(url, setup_auth):
+def test_reg_simple(url, setup_auth):
     input_data, _ = setup_auth
 
     data = requests.post(str(url) + "auth/register", json=input_data)
@@ -130,7 +126,9 @@ def test_reg_bad_request(url):
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
 
+# ---------------------------------------------------------------------------- #
 ''' ----- AUTH LOGIN ----- '''
+
 # ----- Success Login
 def test_login_simple(url, setup_auth, register_user):
     _, input_data = setup_auth
@@ -148,7 +146,7 @@ def test_login_simple(url, setup_auth, register_user):
     assert payload['u_id'] == uid1
 
 # ----- Fail Login
-def test_unregistered_email(url, setup_auth):
+def test_login_unregistered_email(url, setup_auth):
     _, input_data = setup_auth
     
     data = requests.post(f"{url}/auth/login", json=input_data)
@@ -210,15 +208,18 @@ def test_login_bad_request(url, setup_auth):
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
 
-''' ----- LOGOUT USER1 ----- '''
+# ---------------------------------------------------------------------------- #
+''' ----- AUTH LOGOUT ----- '''
+
+# ----- Success Logout
 def test_logout_simple(url, login_user):
     tok1, _ = login_user
 
-    input_value = {
+    input_data = {
         'token': tok1
     }
 
-    data = requests.post(f"{url}/auth/logout", json=input_value)
+    data = requests.post(f"{url}/auth/logout", json=input_data)
     
     # Checking good connection
     assert data.status_code == 200
@@ -226,4 +227,29 @@ def test_logout_simple(url, login_user):
     # Check return values
     payload = data.json()
     assert payload['is_success'] is True
+
+# ----- Fail Logout
+def test_already_logged_out(url, login_user, logout_user):
+    tok1, _ = login_user
+    assert logout_user == True
+
+    input_data = {
+        'token': tok1
+    }
+
+    data = requests.post(f"{url}/auth/logout", json=input_data)
+    payload = data.json()
+    # Already logged out, logout FAILS.
+    assert payload['is_success'] is False
+
+def test_logout_invalid_token(url, login_user):
+    login_user
+
+    input_data = {
+        'token': -99
+    }
+
+    data = requests.post(f"{url}/auth/logout", json=input_data)
+    # Invalid token, raise ACCESS ERROR. (401)
+    assert data.status_code == 401
 

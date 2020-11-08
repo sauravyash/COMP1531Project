@@ -42,7 +42,7 @@ def auth_logout(token):
     try:
         data.resolve_token_index(token)
     except:
-        raise AccessError
+        raise AccessError(description='Invalid Token')
 
     if not data.data["users"][data.resolve_token_index(token)]["authenticated"]:
         return {
