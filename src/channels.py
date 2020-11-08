@@ -108,10 +108,10 @@ def channels_create(token, name, is_public):
             'permission_id_2': [],
         },
         'messages': [],
-        'is_public': is_public
+        'is_public': is_public,
         'standup': {
-            'creator': None
-            'time_finish': None
+            'creator': None,
+            'time_finish': None,
             'messages': []
         }
     })

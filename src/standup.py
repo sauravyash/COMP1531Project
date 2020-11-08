@@ -8,7 +8,7 @@ from error import InputError, AccessError
 def standup_start(token, channel_id, length):
 
 	# Check token is valid.
-	try:
+    try:
         data.token_to_user_id(token)
     except:
         raise AccessError('Invalid token')
@@ -21,19 +21,19 @@ def standup_start(token, channel_id, length):
 
 	
 	# Check that there is not already an active standup in this channel.
-	if standup_active(token, channel_id)['is_active'] is True:
-		raise InputError(description='Standup Already Active')
+    if standup_active(token, channel_id)['is_active'] is True:
+        raise InputError(description='Standup Already Active')
 
-	current_time = datetime.datetime.now().timestamp()
-	finish_time = current_time + datetime.timedelta(seconds=length)
+    current_time = datetime.datetime.now().timestamp()
+    finish_time = current_time + datetime.timedelta(seconds=length)
 
 	# Edit data structure to store standup details.
-	standup = data.data['channels'][channel_index]['standup']
-	standup['time_finish'] = finish_time
-	standup['messages'] = []
-	standup['creator'] = token
+    standup = data.data['channels'][channel_index]['standup']
+    standup['time_finish'] = finish_time
+    standup['messages'] = []
+    standup['creator'] = token
 
-	return  {'time_finish': finish_time}
+    return  {'time_finish': finish_time}
 
 # Close a standup and clear standup data.
 def close_standup(channel_index, channel_id):
@@ -60,8 +60,8 @@ def close_standup(channel_index, channel_id):
 def standup_active(token, channel_id):
 	
 	# Check token is valid.
-	try:
-        u_id = data.token_to_user_id(token)
+    try:
+        data.token_to_user_id(token)
     except:
         raise AccessError("Invalid token")
 
@@ -78,22 +78,22 @@ def standup_active(token, channel_id):
     standup = data.data['channels'][channel_index]['standup']
     # Check if any data for a standup has been stored
     if standup['time_finish'] is not None:
-    	if standup['time_finish'] >= current_time:
-    		# Close the standup:
-    		# ie. send out final message and erase all data.
-    		close_standup(channel_index, channel_id)
-		else:
-			active = True
+	    if standup['time_finish'] >= current_time:
+		    # Close the standup:
+		    # ie. send out final message and erase all data.
+		    close_standup(channel_index, channel_id)
+	    else:
+		    active = True
 
-	return { 
-		'is_active': active
-		'time_finish':  standup['time_finish']
-		}
+    return { 
+	    'is_active': active,
+        'time_finish':  standup['time_finish']
+        }
 
 def standup_send(token, channel_id, message):
 
-	# Check token is valid.
-	try:
+    # Check token is valid.
+    try:
         u_id = data.token_to_user_id(token)
     except:
         raise AccessError("Invalid token")
@@ -106,22 +106,22 @@ def standup_send(token, channel_id, message):
 
     # Check that message is valid.
     if len(message) > 1000:
-    	raise InputError(description='Message Too Long')
+	    raise InputError(description='Message Too Long')
 
-	# Check that standup is active in this channel.
-	if standup_active(token, channel_id)['is_active'] is False:
-		raise InputError(description='Standup Not Active')
+    # Check that standup is active in this channel.
+    if standup_active(token, channel_id)['is_active'] is False:
+	    raise InputError(description='Standup Not Active')
 
-	# Check that user is authorised to send a message in channel.
-	permissions = [1, 2]
-	if data.resolve_permissions(channel_id, u_id) not in permissions:
-		raise AccessError(description='User Not Authorised')
+    # Check that user is authorised to send a message in channel.
+    permissions = [1, 2]
+    if data.resolve_permissions(channel_id, u_id) not in permissions:
+	    raise AccessError(description='User Not Authorised')
 
-	# Store the message in standup buffer.
-	standup = data.data['channels'][channel_index]['standup']
-	standup['messages'].append({
-		'u_id': u_id
-		'message': message
-		})
+    # Store the message in standup buffer.
+    standup = data.data['channels'][channel_index]['standup']
+    standup['messages'].append({
+	    'u_id': u_id,
+	    'message': message
+	    })
 
-	return {}
+    return {}
