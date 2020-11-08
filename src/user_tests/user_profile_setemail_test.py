@@ -4,32 +4,43 @@ from error import InputError
 import auth
 import other
 from user import user_profile_setemail
+from testing_fixtures.user_test_fixtures import setup_test_interface
 
-def test_valid_email():
-    '''tests valid email'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+def test_valid_email(setup_test_interface):
+    '''
+    Success email change
+    Valid token
+    Valid email
+    '''
+    user = setup_test_interface
 
-    user_profile_setemail(result["token"], "newvalidemail@gmail.com")
+    tok = user["token"]
 
-def test_invalid_email():
-    '''tests invalid email'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    user_profile_setemail(tok, "newvalidemail@gmail.com")
+
+def test_invalid_email(setup_test_interface):
+    ''''
+    Unsuccessful email change
+    Invalid email
+    '''
+    user = setup_test_interface
+
+    tok = user["token"]
 
     with pytest.raises(InputError):
-        user_profile_setemail(result["token"], "invalidemail.com")
+        user_profile_setemail(tok, "invalidemail.com")
 
-def test_email_used():
-    '''tests email used'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+def test_email_used(setup_test_interface):
+    '''
+    Unsuccessful email change
+    Invalid email (email already in use)
+    '''
+    user = setup_test_interface
+
+    tok = user["token"]
 
     auth.auth_register("alsovalidemail@gmail.com", "password123", "fname1", "lname1")
     auth.auth_login("alsovalidemail@gmail.com", "password123")
 
     with pytest.raises(InputError):
-        user_profile_setemail(result["token"], "alsovalidemail@gmail.com")
+        user_profile_setemail(tok, "alsovalidemail@gmail.com")

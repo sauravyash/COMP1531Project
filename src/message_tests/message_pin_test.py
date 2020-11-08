@@ -8,85 +8,77 @@ from error import InputError
 from error import AccessError
 from message import message_send, message_pin
 
+from testing_fixtures.message_test_fixtures import setup_test_interface
 
-def create_test_channel():
-    '''creates the channel for testing'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
-
-    auth.auth_register("goodemail@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("goodemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    channel.channel_invite(result["token"], channel_id["channel_id"], result1["u_id"])
-
-    return (result, result1, channel_id)
-
-
-def test_success_pin():
+def test_success_pin(setup_test_interface):
     ''' Success message react case'''
+    user1, _, _, channel_dict = setup_test_interface
 
-    result, result1, channel_id = create_test_channel()
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
+   
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
 
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-
-    assert (message_pin(result["token"], m_id["message_id"])) == {}
+    assert (message_pin(tok1, m_id["message_id"])) == {}
 
 
-def test_invalid_message_id():
+def test_invalid_message_id(setup_test_interface):
     '''Invalid message ID'''
-    _, result1, channel_id = create_test_channel()
+    user1, _, _, channel_dict = setup_test_interface
 
-    message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
+
+    message_send(tok1, channel_id, "Funky Monkey")
 
     with pytest.raises(InputError):
-        message_pin(result1["token"], -999)
+        message_pin(tok1, -999)
 
 
-def test_pin_already():
+def test_pin_already(setup_test_interface):
     '''Invalid message react ID'''
-    result,result1, channel_id = create_test_channel()
+    user1, _, _, channel_dict = setup_test_interface
+    
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
 
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
 
     message_pin(result["token"], m_id["message_id"])
 
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
+
+    message_pin(tok1, m_id["message_id"])
+
+
     with pytest.raises(InputError):
-        message_pin(result["token"], m_id["message_id"])
+        message_pin(tok1, m_id["message_id"])
 
-
-def test_not_in_channel():
+def test_not_in_channel(setup_test_interface):
     '''User not a member'''
-    other.clear()
+    user1, user2, _, channel_dict = setup_test_interface
 
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    tok1 = user1['token']
+    tok2 = user2['token']
+    channel_id = channel_dict['channel_id']
 
-    auth.auth_register("good_email@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("good_email@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-
-    m_id = message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
 
     with pytest.raises(AccessError):
-        message_pin(result1["token"], m_id["message_id"])
+        message_pin(tok2, m_id["message_id"])
 
-def test_not_owner():
+def test_not_owner(setup_test_interface):
     '''User not owner'''
-    other.clear()
+    user1, user2, _, channel_dict = setup_test_interface
 
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    channel_id = channel_dict['channel_id']
 
-    auth.auth_register("good_email@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("good_email@gmail.com", "password123")
+    channel.channel_invite(tok1, channel_id, uid2)
 
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    channel.channel_invite(result["token"], channel_id["channel_id"], result1["u_id"])
-
-    m_id = message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
 
     with pytest.raises(AccessError):
-        message_pin(result1["token"], m_id["message_id"])
+        message_pin(tok2, m_id["message_id"])
+
