@@ -2,6 +2,7 @@
 '''
 import data
 import urllib.request
+import os
 from error import InputError
 from error import AccessError
 from PIL import Image
@@ -116,7 +117,7 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     '''
     try:
         u_id_index = data.resolve_token_index(token)
-    except:
+    except: # pragma: no cover
         raise AccessError
 
     if url[-3:] != "jpg":
@@ -126,7 +127,7 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
 
     try:
         urllib.request.urlretrieve(url, imagePath)
-    except:
+    except: # pragma: no cover
         raise InputError
 
     img = Image.open(imagePath)
@@ -142,6 +143,8 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
         error = True
 
     if error:
+        if os.path.exists(imagePath): # pragma: no cover
+            os.remove(imagePath)
         raise InputError
     else:
         img_crop = img.crop((x_start, y_start, x_end, y_end))
