@@ -2,7 +2,7 @@
 '''
 import data
 import urllib.request
-#import os
+import os
 from error import InputError
 from error import AccessError
 from PIL import Image
@@ -142,8 +142,8 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
         error = True
 
     if error:
-        #if os.path.exists(imagePath): # pragma: no cover
-        #    os.remove(imagePath)
+        if os.path.exists(imagePath): # pragma: no cover
+            os.remove(imagePath)
         raise InputError
     else:
         img_crop = img.crop((x_start, y_start, x_end, y_end))
