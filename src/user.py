@@ -106,8 +106,7 @@ def user_profile_sethandle(token, handle_str):
     # storing user's new handle
     data.data["users"][user_index]["handle"] = handle_str
 
-    return {
-    }
+    return {}
 
 def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     ''' user can upload photo
