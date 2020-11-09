@@ -1,81 +1,74 @@
-''' Import Functions '''
-''' Won't work yet as standup doesn't exist.
-import random
-import string
+############################## Standup Send Tests ############################
+'''
+Functions to test standup_send functionality
+'''
+
 import pytest
 import other
-import auth
-import channels
-import channel
+import string
+import random
+import time
+
 from error import InputError, AccessError
 from standup import standup_send, standup_active, standup_start
 
-def test_standup_active_success():
-    # Success standup send case
-    other.clear()
+from testing_fixtures.standup_test_fixtures import setup_test_interface
 
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
+# ----- Success Send
+# Extremely limited ways to test this without accessing the data structure.
+def test_standup_active_success(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
+    standup_start(user1["token"], channel_id, 100)
 
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    standup_start(result["token"], channel_id["channel_id"], 100)
+    assert (standup_send(user1["token"], channel_id, "General Kenobi")) == {}
 
-    assert (standup_send(result["token"], channel_id["channel_id"], "General Kenobi")) == {}
-
-
-def test_invalid_channel_id():
-    # When the standup message is sent to an invalid channel ID
-    other.clear()
-
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    standup_start(result["token"],channel_id["channel_id"],1)
-
-    with pytest.raises(InputError):
-        standup_send(result["token"], -999, "General Kenobi")
-
-def test_invalid_message_string_size():
-    # When the standup message exceeds 1000 characters
-    other.clear()
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    standup_start(result["token"],channel_id["channel_id"],100)
-
-    letters = string.ascii_letters
-    result_str = ''.join(random.choice(letters) for i in range(1005))
-
-    with pytest.raises(InputError):
-        standup_send(result["token"], channel_id["channel_id"], result_str)
-
-def test_inactive_standup():
-    # When the standup is inactive and a message is sent
-    other.clear()
-
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-
-    with pytest.raises(InputError):
-        standup_send(result["token"], channel_id["channel_id"], "General Kenobi")
-
-def test_non_member_channel():
-    # Non-member of the channel
-    other.clear()
-
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
-
-    auth.auth_register("goodemail@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("goodemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    standup_start(result["token"], channel_id["channel_id"], 1)
+# ----- Fail Send
+def test_invalid_token(setup_test_interface):
+    _, _, channel_id = setup_test_interface
 
     with pytest.raises(AccessError):
-        standup_send(result1["token"], channel_id["channel_id"], "General Kenobi")
-'''
+        standup_send(-999, channel_id, 'General Kenobi')
+    with pytest.raises(AccessError):
+        standup_send('fake_token', channel_id, 'General Kenobi')
+
+def test_invalid_channel_id(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
+    standup_start(user1["token"], channel_id, 100)
+
+    with pytest.raises(InputError):
+        standup_send(user1["token"], -999, "General Kenobi")
+    with pytest.raises(InputError):
+        standup_send(user1["token"], 'fake_channel', "General Kenobi")
+
+def test_invalid_message_string_size(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
+    standup_start(user1["token"], channel_id, 100)
+
+    letters = string.ascii_letters
+    message_str = ''.join(random.choice(letters) for i in range(1005))
+
+    with pytest.raises(InputError):
+        standup_send(user1["token"], channel_id, message_str)
+
+def test_no_standup(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
+
+    with pytest.raises(InputError):
+        standup_send(user1["token"], channel_id, "General Kenobi")
+
+def test_standup_ended(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
+
+    standup_start(user1["token"], channel_id, 1)
+    time.sleep(3)
+    
+    with pytest.raises(InputError):
+        standup_send(user1["token"], channel_id, "General Kenobi")
+
+def test_unauthorised_user(setup_test_interface):
+    user1, user2, channel_id = setup_test_interface
+    standup_start(user1["token"], channel_id, 100)
+
+    with pytest.raises(AccessError):
+        standup_send(user2["token"], channel_id, "General Kenobi")
+

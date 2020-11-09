@@ -11,129 +11,131 @@ from error import AccessError
 
 from message import message_send
 from message import message_remove
+from testing_fixtures.message_test_fixtures import setup_test_interface
 
-def create_test_channel():
-    '''
-    assume message id is an int
-    create test channel for messages
-    '''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
-
-    auth.auth_register("newvalidemail@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("newvalidemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    channel_invite(result["token"], channel_id["channel_id"], result1["u_id"])
-
-    return (result, result1, channel_id)
-
-def test_valid_message_remove():
+def test_valid_message_remove(setup_test_interface):
     '''
     Success Messages Remove
     Remove must be from owner of the channel or sender of the message
     Owner/Sender token must be valid
     Channel id must be valid
     '''
-    other.clear()
-    result, result1, channel_id = create_test_channel()
-    message_send(result["token"], channel_id["channel_id"], "Hello")
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    assert message_remove(result1["token"], m_id["message_id"]) == {}
+    user1, _, _, channel_dict = setup_test_interface
 
-def test_valid_message_remove_channel_owner():
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
+
+    message_send(tok1, channel_id, "Hello")
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
+    assert message_remove(tok1, m_id["message_id"]) == {}
+
+def test_valid_message_remove_channel_owner(setup_test_interface):
     '''
     message remove from the channel owner
     '''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    auth.auth_login("validemail@gmail.com", "password123")
+    user1, user2, _, channel_dict = setup_test_interface
 
-    auth.auth_register("newvalidemail@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("newvalidemail@gmail.com", "password123")
+    tok1 = user1['token']
+    tok2 = user2['token']
+    uid2 = user2['u_id']
+    channel_id = channel_dict['channel_id']
 
-    auth.auth_register("goodemail@gmail.com", "password123", "fname2", "lname2")
-    result2 = auth.auth_login("goodemail@gmail.com", "password123")
+    channel_invite(tok1, channel_id, uid2)
 
-    channel_id = channels.channels_create(result1["token"], "channel_1", True)
-    channel_invite(result1["token"], channel_id["channel_id"], result2["u_id"])
+    m_id = message_send(tok2, channel_id, "Funky Monkey")
+    assert message_remove(tok1, m_id["message_id"]) == {}
 
-    m_id = message_send(result2["token"], channel_id["channel_id"], "Funky Monkey")
-    assert message_remove(result1["token"], m_id["message_id"]) == {}
-
-def test_valid_message_remove_flockr_owner():
+def test_valid_message_remove_flockr_owner(setup_test_interface):
     '''
     the message is removed
     '''
+    user1, _, _, channel_dict = setup_test_interface
 
-    result, result1, channel_id = create_test_channel()
-    message_send(result["token"], channel_id["channel_id"], "Hello")
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    assert message_remove(result["token"], m_id["message_id"]) == {}
+    tok1 = user1['token']
+   
+    channel_id = channel_dict['channel_id']
+
+    message_send(tok1, channel_id, "Hello")
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
+    assert message_remove(tok1, m_id["message_id"]) == {}
 
 
-def test_invalid_message_token():
+def test_invalid_message_token(setup_test_interface):
     '''
     Fail
     When the token is Invalid
     '''
+    user1, _, _, channel_dict = setup_test_interface
 
-    result, result1, channel_id = create_test_channel()
-    message_send(result["token"], channel_id["channel_id"], "Hello")
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
+
+    message_send(tok1, channel_id, "Hello")
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
     with pytest.raises(AccessError):
         message_remove("Invalid token", m_id["message_id"])
 
 
-def test_invalid_message_id():
+def test_invalid_message_id(setup_test_interface):
     '''
     When the message id is invalid
     '''
+    user1, _, _, channel_dict = setup_test_interface
 
-    result, result1, channel_id = create_test_channel()
-    message_send(result["token"], channel_id["channel_id"], "Hello")
-    message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
+
+    message_send(tok1, channel_id, "Hello")
+    message_send(tok1, channel_id, "Funky Monkey")
     with pytest.raises(InputError):
-        message_remove(result1["token"], 123)
+        message_remove(tok1, 123)
 
-def test_invalid_message_removed():
+def test_invalid_message_removed(setup_test_interface):
     '''
     When the message is already removed
     '''
+    user1, _, _, channel_dict = setup_test_interface
 
-    result, result1, channel_id = create_test_channel()
-    message_send(result["token"], channel_id["channel_id"], "Hello")
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
-    message_remove(result1["token"], m_id["message_id"])
+    tok1 = user1['token']
+    
+    channel_id = channel_dict['channel_id']
+
+    message_send(tok1, channel_id, "Hello")
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
+    message_remove(tok1, m_id["message_id"])
 
     with pytest.raises(InputError):
-        message_remove(result1["token"], m_id["message_id"])
+        message_remove(tok1, m_id["message_id"])
 
 
-def test_invalid_message_remove_not_sender():
+def test_invalid_message_remove_not_sender(setup_test_interface):
     '''
     When the remove is not from the sender
     '''
-    result, result1, channel_id = create_test_channel()
+    user1, user2, _, channel_dict = setup_test_interface
 
-    auth.auth_register("awsome_email2@gmail.com", "password123", "fname2", "lname2")
-    result2 = auth.auth_login("awsome_email2@gmail.com", "password123")
-    channel_invite(result1["token"], channel_id["channel_id"], result2["u_id"])
+    tok1 = user1['token']
+    tok2 = user2['token']
+    
+    channel_id = channel_dict['channel_id']
 
-    message_send(result["token"], channel_id["channel_id"], "Edit next message")
-    m_id = message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
+    message_send(tok1, channel_id, "Edit next message")
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
 
     with pytest.raises(AccessError):
-        message_remove(result2["token"], m_id["message_id"])
+        message_remove(tok2, m_id["message_id"])
 
 
-def test_invalid_message_remove_not_authorized():
+def test_invalid_message_remove_not_authorized(setup_test_interface):
     '''
     When the remove is not from owner of the channel
     '''
+    user1, user2, _, channel_dict = setup_test_interface
 
-    result, result1, channel_id = create_test_channel()
-    m_id = message_send(result["token"], channel_id["channel_id"], "Funky Monkey")
+    tok1 = user1['token']
+    tok2 = user2['token']
+    channel_id = channel_dict['channel_id']
+
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
     with pytest.raises(AccessError):
-        message_remove(result1["token"], m_id["message_id"])
+        message_remove(tok2, m_id["message_id"])

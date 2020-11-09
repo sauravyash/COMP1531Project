@@ -7,64 +7,63 @@ import other
 from error import InputError
 from error import AccessError
 from message import message_send, message_react, message_unreact
+from testing_fixtures.message_test_fixtures import setup_test_interface
 
-def create_test_channel():
-    '''creates the channel for testing'''
-    other.clear()
-    auth.auth_register("validemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("validemail@gmail.com", "password123")
-
-    auth.auth_register("goodemail@gmail.com", "password123", "fname1", "lname1")
-    result1 = auth.auth_login("goodemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    channel.channel_invite(result["token"], channel_id["channel_id"], result1["u_id"])
-
-    return (result, result1, channel_id)
-
-
-def test_success_unreact():
+def test_success_unreact(setup_test_interface):
     ''' Success message unreact case'''
+    user1, _, _, channel_dict = setup_test_interface
 
-    _, result1, channel_id = create_test_channel()
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
 
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
 
-    message_react(result1["token"], m_id["message_id"], 1)
+    message_react(tok1, m_id["message_id"], 1)
+    channel_msgs = channel.channel_messages(tok1, channel_id, 0)    
+    assert len(channel_msgs['messages'][0]['reacts']) == 1
+    
+    assert message_unreact(tok1, m_id["message_id"], 1) == {}
+    
+    channel_msgs = channel.channel_messages(tok1, channel_id, 0)    
+    assert len(channel_msgs['messages'][0]['reacts'][0]['u_ids']) == 0
 
-    assert (message_unreact(result1["token"], m_id["message_id"], 1)) == {}
 
-
-def test_invalid_message_id():
+def test_invalid_message_id(setup_test_interface):
     '''Invalid message ID'''
-    _, result1, channel_id = create_test_channel()
+    user1, _, _, channel_dict = setup_test_interface
 
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
 
-    message_react(result1["token"], m_id["message_id"], 1)
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
+    message_react(tok1, m_id["message_id"], 1)
 
     with pytest.raises(InputError):
-        message_unreact(result1["token"], -999, 1)
+        message_unreact(tok1, -999, 1)
 
-
-
-def test_invalid_unreact_id():
+def test_invalid_unreact_id(setup_test_interface):
     '''Invalid message react ID'''
-    _, result1, channel_id = create_test_channel()
+    user1, _, _, channel_dict = setup_test_interface
 
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
 
-    message_react(result1["token"], m_id["message_id"], 1)
+    m_id = message_send(tok1, channel_id, "Funky Monkey")
+
+    message_react(tok1, m_id["message_id"], 1)
 
     with pytest.raises(InputError):
-        message_unreact(result1["token"], m_id["message_id"], -999)
+        message_unreact(tok1, m_id["message_id"], -999)
         
 
-def test_no_react():
+def test_no_react(setup_test_interface):
     '''No react'''
-    _, result1, channel_id = create_test_channel()
+    user1, _, _, channel_dict = setup_test_interface
 
-    m_id = message_send(result1["token"], channel_id["channel_id"], "Funky Monkey")
+    tok1 = user1['token']
+    channel_id = channel_dict['channel_id']
 
+    m_id = message_send(tok1, channel_id, "Funky Monkey") 
+    
     with pytest.raises(InputError):
-        message_unreact(result1["token"], m_id["message_id"], 1)
+        message_unreact(tok1, m_id["message_id"], 1)
