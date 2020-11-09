@@ -1,8 +1,11 @@
 ''' user functions
 '''
 import data
+import urllib.request
+import os
 from error import InputError
 from error import AccessError
+from PIL import Image
 
 def user_profile(token, u_id):
     ''' Display user's profile data
@@ -29,6 +32,7 @@ def user_profile(token, u_id):
     	'name_first': user_details["name_first"],
     	'name_last': user_details["name_last"],
     	'handle_str': user_details["handle"],
+        'profile_img_url': user_details.get("profile_img")
         },
     }
 
@@ -102,5 +106,49 @@ def user_profile_sethandle(token, handle_str):
     # storing user's new handle
     data.data["users"][user_index]["handle"] = handle_str
 
-    return {
-    }
+    return {}
+
+def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
+    ''' user can upload photo
+
+    Arguments: token, url- must be strings, x_start, y_start, x_end, y_end- must be integers
+    Returns: empty dictionary
+    '''
+    try:
+        u_id_index = data.resolve_token_index(token)
+    except: # pragma: no cover
+        raise AccessError
+
+    if url[-3:] != "jpg":
+        raise InputError
+
+    imagePath = "./src/static/profile_images/" + str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
+
+    try:
+        urllib.request.urlretrieve(url, imagePath)
+    except: # pragma: no cover
+        raise InputError
+
+    img = Image.open(imagePath)
+
+    width, height = img.size
+
+    error = False
+    if x_start < 0 or y_start < 0 or x_end < 0 or y_end < 0:
+        error = True
+    elif x_start > width or x_end > width:
+        error = True
+    elif y_start > height or y_end > height:
+        error = True
+
+    if error:
+        if os.path.exists(imagePath): # pragma: no cover
+            os.remove(imagePath)
+        raise InputError
+    else:
+        img_crop = img.crop((x_start, y_start, x_end, y_end))
+        img_crop.save(imagePath)
+        # store file name to data.py
+        data.data["users"][u_id_index]["profile_img"] = imagePath
+
+    return {}

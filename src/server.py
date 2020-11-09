@@ -1,7 +1,7 @@
 import sys
 import json
 from json import dumps
-from flask import Flask, request, abort
+from flask import Flask, request, abort, send_from_directory
 from flask_cors import CORS
 from error import InputError, AccessError
 
@@ -25,7 +25,7 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-APP = Flask(__name__)
+APP = Flask(__name__, static_url_path='/static/')
 CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
@@ -83,7 +83,7 @@ def svr_auth_logout():
         req = request.get_json()
         token = req['token']
         return json.dumps(auth.auth_logout(token))
-    except KeyError: 
+    except KeyError:
         # 400
         abort(400)
     except AccessError:
@@ -101,7 +101,7 @@ def svr_channel_invite():
         channel_id = int(req['channel_id'])
         user_id = int(req['u_id'])
         return json.dumps(channel.channel_invite(token, channel_id, user_id))
-    except KeyError: 
+    except KeyError:
         # 400
         abort(400)
     except InputError:
@@ -124,7 +124,7 @@ def svr_channel_details():
         token = req['token']
         channel_id = int(req['channel_id'])
         return json.dumps(channel.channel_details(token, channel_id))
-    except KeyError as response: 
+    except KeyError as response:
         abort(400)
     except InputError:
         # 401
@@ -147,7 +147,7 @@ def svr_channel_messages():
         channel_id = int(req['channel_id'])
         start = int(req['start'])
         return json.dumps(channel.channel_messages(token, channel_id, start))
-    except KeyError: 
+    except KeyError:
         # 400
         abort(400)
     except InputError:
@@ -194,7 +194,7 @@ def svr_channel_join():
         token = req['token']
         channel_id = int(req['channel_id'])
         return json.dumps(channel.channel_join(token, channel_id))
-    except KeyError: 
+    except KeyError:
         # 400
         abort(400)
     except InputError:
@@ -219,7 +219,7 @@ def svr_channel_addowner():
         channel_id = int(req['channel_id'])
         user_id = int(req['u_id'])
         return json.dumps(channel.channel_addowner(token, channel_id, user_id))
-    except KeyError: 
+    except KeyError:
         # 400
         abort(400)
     except InputError:
@@ -245,7 +245,7 @@ def svr_channel_removeowner():
         channel_id = int(req['channel_id'])
         user_id = int(req['u_id'])
         return json.dumps(channel.channel_removeowner(token, channel_id, user_id))
-    except KeyError: 
+    except KeyError:
         # 400
         abort(400)
     except InputError:
@@ -269,7 +269,7 @@ def svr_channels_list():
         token = req['token']
         res = channels.channels_list(token)
         return json.dumps(res)
-    except KeyError: 
+    except KeyError:
         # 400
         abort(400)
     except InputError:
@@ -503,6 +503,37 @@ def svr_user_profile_sethandle():
         # 500
         abort(500)
 
+@APP.route("/user/profile/uploadphoto", methods=["POST"])
+def svr_user_profile_uploadphoto():
+    try:
+        req = request.get_json()
+        token = req['token']
+        url = str(req['url'])
+        x_start = int(req['x_start'])
+        y_start = int(req['y_start'])
+        x_end = int(req['x_end'])
+        y_end = int(req['y_end'])
+        return json.dumps(user.user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end))
+    except KeyError:
+        # 400
+        abort(400)
+    except InputError:
+        # 401
+        abort(401)
+    except AccessError as response:
+        # 401 or 403
+        if str(response) == '400 Bad Request: Invalid Token':
+            abort(401)
+        else:
+            abort(403)
+    except:
+        # 500
+        abort(500)
+
+#@APP.route("/static/<path:path>")
+#def send_js(path):
+#    return send_from_directory(path)
+
 @APP.route("/users/all", methods=["GET"])
 def svr_users_all():
     try:
@@ -588,4 +619,4 @@ def svr_clear():
 
 if __name__ == "__main__":
     APP.run(port=0) # Do not edit this port
-    #APP.run(port=8080, debug=True) # Debugger
+    #APP.run(port=5000, debug=True) # Debugger
