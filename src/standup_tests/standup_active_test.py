@@ -1,45 +1,54 @@
-''' Import Functions '''
-''' Won't work yet as standup doesn't exist.
-import datetime as dt
-import random
-import string
+############################# Standup Active Tests ###########################
+'''
+Functions to test standup_active functionality
+'''
+
 import pytest
 import other
-import auth
-import channels
-import channel
+
 from error import InputError, AccessError
 from standup import standup_active, standup_start
 
-def test_standup_active_success():
-    # Success standup active case
-    other.clear()
+from testing_fixtures.standup_test_fixtures import setup_test_interface
 
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
+# ----- Success Active
+def test_no_standup(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
 
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
+    standup_not_active = standup_active(user1["token"],channel_id)
+    assert len(standup_not_active) == 2
+    assert standup_not_active['is_active'] == False
+    assert standup_not_active['time_finish'] == None
 
+def test_simple(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
 
-    #In this sucess case, there is no active standup.
-    result_standup_active = standup_active(result["token"],channel_id["channel_id"])
+    # Initially standup is not active
+    standup_not_active = standup_active(user1["token"],channel_id)
+    assert standup_not_active['is_active'] == False
+    
+    # Start a standup and store value for finishing time.
+    standup_started = standup_start(user1['token'], channel_id, 5)
+    
+    # Now standup is active and finish times should match.
+    standup_is_active = standup_active(user1["token"],channel_id)
+    assert standup_is_active['is_active'] == True
+    assert standup_is_active['time_finish'] == standup_started['time_finish']
 
-    assert result_standup_active == {
-        'is_active': False,
-        'time_finish': None
-    }
+# ----- Fail Active
+def test_invalid_token(setup_test_interface):
+    _, _, channel_id = setup_test_interface
 
+    with pytest.raises(AccessError):
+        standup_active(-999, channel_id)
+    with pytest.raises(AccessError):
+        standup_active('fake_token', channel_id)
 
-def test_invalid_channel_id():
-    # When the standup is started to an invalid channel ID
-    other.clear()
-
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    result = auth.auth_login("coolemail@gmail.com", "password123")
-
-    channel_id = channels.channels_create(result["token"], "channel_1", True)
-    standup_start(result["token"],channel_id["channel_id"],100)
+def test_invalid_channel_id(setup_test_interface):
+    user1, _, _ = setup_test_interface
 
     with pytest.raises(InputError):
-        standup_active(result["token"], -999)
-'''
+        standup_active(user1["token"], -999)
+    with pytest.raises(InputError):
+        standup_active(user1["token"], 'fake_channel')
+

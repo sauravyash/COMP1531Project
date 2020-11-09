@@ -86,15 +86,9 @@ def svr_auth_logout():
     except KeyError:
         # 400
         abort(400)
-    except InputError:
-        # 401
+    except AccessError:
+        # 401 - ONLY ERROR POSSIBLY RAISED IS INVALID TOKEN.
         abort(401)
-    except AccessError as response:
-        # 401 or 403
-        if str(response) == '400 Bad Request: Invalid Token':
-            abort(401)
-        else:
-            abort(403)
     except:
         # 500
         abort(500)
