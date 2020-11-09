@@ -269,3 +269,20 @@ def test_logout_invalid_token(url, login_user):
     # Invalid token, raise ACCESS ERROR. (401)
     assert data.status_code == 401
 
+def test_logout_key_error(url, login_user):
+    user1, _, _ = login_user
+    input_data = {
+        'taken': user1['token']
+    }
+    
+    data = requests.post(str(url) + "auth/logout", json=input_data)
+    # Bad/ Invalid input, raise KEY ERROR. (400)
+    assert data.status_code == 400
+
+def test_logout_bad_request(url, login_user):
+    login_user
+    input_data = ['not', 'a', 'dictionary']
+    
+    data = requests.post(str(url) + "auth/logout", json=input_data)
+    # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
+    assert data.status_code == 500
