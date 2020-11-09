@@ -513,7 +513,7 @@ def svr_user_profile_uploadphoto():
         y_start = int(req['y_start'])
         x_end = int(req['x_end'])
         y_end = int(req['y_end'])
-        return user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end)
+        return json.dumps(user.user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end))
     except KeyError:
         # 400
         abort(400)
