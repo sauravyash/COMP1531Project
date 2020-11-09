@@ -122,7 +122,7 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     if url[-3:] != "jpg":
         raise InputError
 
-    imagePath = "./static/profile_images/" + str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
+    imagePath = "./src/static/profile_images/" + str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
 
     try:
         urllib.request.urlretrieve(url, imagePath)
