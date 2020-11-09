@@ -2,7 +2,6 @@
 '''
 import data
 import urllib.request
-import shutil
 from error import InputError
 from error import AccessError
 from PIL import Image
@@ -123,17 +122,13 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     if url[-3:] != "jpg":
         raise InputError
 
-    imageFile = str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
-
-    #imageFile = str(u_id_index + 1) + "_profile.jpg"
+    imagePath = "src/static/profile_images/" + str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
 
     try:
-        urllib.request.urlretrieve(url, imageFile)
+        urllib.request.urlretrieve(url, imagePath)
     except:
         raise InputError
 
-    imagePath = "static/profile_images" + imageFile
-    shutil.move(imageFile, imagePath)
     img = Image.open(imagePath)
 
     width, height = img.size
@@ -152,6 +147,6 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
         img_crop = img.crop((x_start, y_start, x_end, y_end))
         img_crop.save(imagePath)
         # store file name to data.py
-        data.data["users"][u_id_index]["profile_img"] = imageFile
+        data.data["users"][u_id_index]["profile_img"] = imagePath
 
     return {}
