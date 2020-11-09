@@ -13,7 +13,7 @@ def test_auth_passwordreset_request_success():
     ''' Success auth passwordreset request case'''
     other.clear()
 
-    auth.auth_register("coolemail@gmail.com", "password123", "fname", "lname")
-    auth_passwordreset_request("coolemail@gmail.com")
+    auth.auth_register("comp1531wed13grape3noreply@gmail.com", "password123", "fname", "lname")
+    auth_passwordreset_request("comp1531wed13grape3noreply@gmail.com")
 
-    assert auth_passwordreset_request("coolemail@gmail.com") == {}
+    assert auth_passwordreset_request("comp1531wed13grape3noreply@gmail.com") == {}
