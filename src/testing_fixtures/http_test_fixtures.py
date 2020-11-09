@@ -157,7 +157,7 @@ def logout_user(url, login_user):
 ''' CHANNEL FIXTURES '''
 
 @pytest.fixture()
-def setup_channel_tests(url, setup_auth, login_user):
+def setup_channel(url, setup_auth, login_user):
     user1, user2, user3 = login_user
     
     # Create a channel with the first user.
