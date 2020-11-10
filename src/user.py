@@ -125,7 +125,8 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     filename = "./src/static/profile_images/" + str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
 
     try:
-        imagePath, headers = urllib.request.urlretrieve(url, filename)
+        result = urllib.request.urlretrieve(url, filename)
+        imagePath = result[0]
     except: # pragma: no cover
         raise InputError(description="Invalid url")
 
