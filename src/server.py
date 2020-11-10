@@ -222,9 +222,9 @@ def svr_message_sendlater():
     req = request.get_json()
     token = req['token']
     channel_id = req['channel_id']
-    message_id = int(req['message']) 
+    msg = req['message'] 
     time_sent = int(req['time_sent'])
-    return message.message_sendlater(token, channel_id, message, time_sent)
+    return message.message_sendlater(token, channel_id, msg, time_sent)
     
 @APP.route("/message/react", methods=["POST"])
 @handle_request
@@ -258,8 +258,7 @@ def svr_message_unpin():
     req = request.get_json()
     token = req['token']
     message_id = int(req['message_id'])
-    react_id = req['react_id']
-    return message.message_unpin(token, message_id, react_id)
+    return message.message_unpin(token, message_id)
 
 @APP.route("/user/profile", methods=["GET"])
 @handle_request
