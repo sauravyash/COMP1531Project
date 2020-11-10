@@ -95,12 +95,13 @@ def svr_auth_logout():
 
 @APP.route("/channel/invite", methods=["POST"])
 def svr_channel_invite():
+    req = request.get_json()
     try:
-        req = request.get_json()
+        #req = request.get_json()
         token = req['token']
         channel_id = int(req['channel_id'])
-        user_id = int(req['u_id'])
-        return json.dumps(channel.channel_invite(token, channel_id, user_id))
+        u_id = int(req['u_id'])
+        return json.dumps(channel.channel_invite(token, channel_id, u_id))
     except KeyError: 
         # 400
         abort(400)
@@ -113,8 +114,14 @@ def svr_channel_invite():
             abort(401)
         else:
             abort(403)
-    except:
+    except Exception as result:
         # 500
+        f = open("error_message.txt", "w")
+        f.write(str(req))
+        f.close()
+        
+        traceback.print_exc(file=open("new_error_message.txt", "w"))
+
         abort(500)
 
 @APP.route("/channel/details", methods=["GET"])

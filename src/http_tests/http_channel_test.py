@@ -32,8 +32,7 @@ def test_invite_simple(url, setup_channel):
     tok1 = user1["token"]
     tok2 = user2['token']
     uid2 = user2["u_id"]
-    uid3 = user3["token"]
-    print_data()
+    uid3 = user3["u_id"]
 
     # Check that first user (owner) can add second user to channel.
     input_data = {
@@ -42,7 +41,6 @@ def test_invite_simple(url, setup_channel):
         'u_id': uid2
     }
 
-    print(input_data)
     data = requests.post(f"{url}/channel/invite", json=input_data)
     ''' Checking good connection '''
     assert data.status_code == 200
@@ -53,13 +51,13 @@ def test_invite_simple(url, setup_channel):
     print_data()
 
     # Check that second user (member) can add third user to channel.
-    input_data = {
+    input_value = {
         'token': tok2,
         'channel_id': channel_id,
         'u_id': uid3
     }
 
-    data = requests.post(f"{url}/channel/invite", json=input_data)
+    data = requests.post(f"{url}/channel/invite", json=input_value)
     ''' Checking good connection '''
     assert data.status_code == 200
 
@@ -153,6 +151,7 @@ def test_invite_bad_request(url, setup_channel):
     data = requests.post(f"{url}/channel/invite", json=input_data)
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
+'''
 
 ''' ----- CHANNELS DETAILS ----- '''
 

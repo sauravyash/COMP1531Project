@@ -49,7 +49,7 @@ def url():
 # ----- Clear the server, and provide details of first user.
 @pytest.fixture()
 def setup_auth(url):
-    data = requests.delete(str(url) + "clear")
+    data = requests.delete(str(url) + "/clear")
     assert data.status_code == 200
     
     payload = data.json()
@@ -101,12 +101,15 @@ def register_user(url, setup_auth):
     input_value, _ = setup_auth
 
     data = requests.post(str(url) + "auth/register", json=input_value[0])
+    assert data.status_code == 200
     user1 = data.json()
     
     data = requests.post(str(url) + "auth/register", json=input_value[1])
+    assert data.status_code == 200
     user2 = data.json()
     
     data = requests.post(str(url) + "auth/register", json=input_value[2])
+    assert data.status_code == 200
     user3 = data.json()
 
     return user1, user2, user3
@@ -114,16 +117,22 @@ def register_user(url, setup_auth):
 @pytest.fixture()
 def login_user(url, setup_auth, register_user):
     _, input_data = setup_auth
-    register_user
+    u1, u2, u3 = register_user
 
     data = requests.post(f"{url}/auth/login", json=input_data[0])
+    assert data.status_code == 200
     user1 = data.json()
+    assert user1 == u1
     
     data = requests.post(f"{url}/auth/login", json=input_data[1])
+    assert data.status_code == 200
     user2 = data.json()
+    assert user2 == u2
     
     data = requests.post(f"{url}/auth/login", json=input_data[2])
+    assert data.status_code == 200
     user3 = data.json()
+    assert user3 == u3
 
     return user1, user2, user3
 
@@ -143,12 +152,15 @@ def logout_user(url, login_user):
     ]
 
     data = requests.post(f"{url}/auth/logout", json=input_data[0])
+    assert data.status_code == 200
     user1 = data.json()
     
     data = requests.post(f"{url}/auth/logout", json=input_data[1])
+    assert data.status_code == 200
     user2 = data.json()
     
     data = requests.post(f"{url}/auth/logout", json=input_data[2])
+    assert data.status_code == 200
     user3 = data.json()
 
     return user1['is_success'], user2['is_success'], user3['is_success']

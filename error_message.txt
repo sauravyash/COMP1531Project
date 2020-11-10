@@ -1,0 +1,1 @@
+{'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoyfQ.UuQX2Hr31TUpfqwY90mTNH_lEhME6M2U5f7ZGNGbUZo', 'channel_id': 0, 'u_id': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjozfQ.K4cLGtXHfHHR8gEOpFYWgpuwfwiDRKkduKkGi37Ar7A'}
