@@ -18,11 +18,11 @@ def auth_login(email, password):
     """
     # Check that the email is valid and matches a password.
     if not data.check_email(email):
-        raise InputError
+        raise InputError(description='Invalid email')
     elif not data.resolve_email(email):
-        raise InputError
+        raise InputError(description='Email not registered')
     elif not data.password_match(email, password):
-        raise InputError
+        raise InputError(description='Invalid password')
 
     # Autheticate the user (as being logged in)
     data.data["users"][data.email_to_user_id(email) - 1]["authenticated"] = True
@@ -42,7 +42,7 @@ def auth_logout(token):
     try:
         data.resolve_token_index(token)
     except:
-        raise AccessError
+        raise AccessError(description='Token not found')
 
     if not data.data["users"][data.resolve_token_index(token)]["authenticated"]:
         return {
@@ -68,13 +68,13 @@ def auth_register(email, password, name_first, name_last):
 
     # Check that the email, password and names are valid input.
     if not data.check_email(email):
-        raise InputError
+        raise InputError(description='Invalid email')
     elif data.resolve_email(email) and user_one == 0:
-        raise InputError
+        raise InputError(description='Email already in use')
     elif not data.check_password(password):
-        raise InputError
+        raise InputError(description='Invalid password')
     elif not data.check_name(name_first, name_last):
-        raise InputError
+        raise InputError(description='Invalid first name or last name')
 
     # Create a handle.
     handle = name_first.lower() + name_last.lower()
@@ -125,7 +125,7 @@ def auth_passwordreset_request(email):
     try:
         u_id_index = data.email_to_user_id(email) - 1
     except: # pragma: no cover
-        raise InputError
+        raise InputError(description='Email not found')
 
     reset_key = data.generate_reset_key(8)
 
@@ -160,9 +160,9 @@ def auth_passwordreset_reset(reset_code, new_password):
     u_id = data.reset_key_match(reset_code)
 
     if u_id == 0: # pragma: no cover
-        raise InputError
+        raise InputError(description='User ID not found')
     elif not data.check_password(new_password): # pragma: no cover
-        raise InputError
+        raise InputError(description='Invalid password')
 
     data.data["users"][u_id - 1]["password"] = hashlib.sha256(new_password.encode()).hexdigest() # pragma: no cover
 

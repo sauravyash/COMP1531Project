@@ -15,15 +15,15 @@ def standup_start(token, channel_id, length):
     try:
         data.token_to_user_id(token)
     except:
-        raise AccessError('Invalid token')
+        raise AccessError(description='Invalid token')
 
     # Check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError('Invalid Channel ID')
+        raise InputError(description='Invalid Channel ID')
 
-	
+
 	# Check that there is not already an active standup in this channel.
     if standup_active(token, channel_id)['is_active'] is True:
         raise InputError(description='Standup Already Active')
@@ -64,18 +64,18 @@ def close_standup(channel_index, channel_id):
 	standup['creator'] = None
 
 def standup_active(token, channel_id):
-	
+
 	# Check token is valid.
     try:
         data.token_to_user_id(token)
     except:
-        raise AccessError("Invalid token")
+        raise AccessError(description="Invalid token")
 
     # Check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError('Invalid Channel ID')
+        raise InputError(description='Invalid Channel ID')
 
     current_time = datetime.datetime.now().timestamp()
 
@@ -91,7 +91,7 @@ def standup_active(token, channel_id):
 	    else:
 		    active = True
 
-    return { 
+    return {
 	    'is_active': active,
         'time_finish':  standup['time_finish']
         }
@@ -102,13 +102,13 @@ def standup_send(token, channel_id, message):
     try:
         u_id = data.token_to_user_id(token)
     except:
-        raise AccessError("Invalid token")
+        raise AccessError(description="Invalid token")
 
     # Check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
     except LookupError:
-        raise InputError('Invalid Channel ID')
+        raise InputError(description='Invalid Channel ID')
 
     # Check that message is valid.
     if len(message) > 1000:

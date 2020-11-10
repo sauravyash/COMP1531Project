@@ -13,12 +13,12 @@ def user_profile(token, u_id):
     try:
         data.token_to_user_id(token)
     except:
-        raise AccessError("Token not found")
+        raise AccessError(description="Token not found")
 
     try:
         u_id_index = data.resolve_user_id_index(u_id)
     except LookupError:
-        raise InputError("User id not found")
+        raise InputError(description="User id not found")
 
     user_details = data.data["users"][u_id_index] # pragma: no cover
 
@@ -41,12 +41,12 @@ def user_profile_setname(token, name_first, name_last):
     try:
         u_id = data.token_to_user_id(token)
     except: # pragma: no cover
-        raise AccessError("Token not found")
+        raise AccessError(description="Token not found")
 
     user_index = data.resolve_user_id_index(u_id)
 
     if not data.check_name(name_first, name_last):
-        raise InputError
+        raise InputError(description="Invalid first name or last name")
 
     # storing user's new first and last names
     data.data["users"][user_index]["name_first"] = name_first
@@ -64,14 +64,14 @@ def user_profile_setemail(token, email):
     try:
         u_id = data.token_to_user_id(token)
     except: # pragma: no cover
-        raise AccessError("Token not found")
+        raise AccessError(description="Token not found")
 
     user_index = data.resolve_user_id_index(u_id)
 
     if not data.check_email(email):
-        raise InputError
+        raise InputError(description="Invalid email")
     elif data.resolve_email(email):
-        raise InputError
+        raise InputError(description="Email not found")
 
     # storing user's new email address
     data.data["users"][user_index]["email"] = email
@@ -88,16 +88,16 @@ def user_profile_sethandle(token, handle_str):
     try:
         u_id = data.token_to_user_id(token)
     except: # pragma: no cover
-        raise AccessError("Token not found")
+        raise AccessError(description="Token not found")
 
     user_index = data.resolve_user_id_index(u_id)
 
     if data.resolve_handle(handle_str):
-        raise InputError
+        raise InputError(description="Handle already in user")
     elif len(handle_str) < 3:
-        raise InputError
+        raise InputError(description="Handle too short")
     elif len(handle_str) > 20:
-        raise InputError
+        raise InputError(description="Hanle too long")
 
     # storing user's new handle
     data.data["users"][user_index]["handle"] = handle_str
