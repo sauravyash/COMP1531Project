@@ -85,12 +85,12 @@ def channel_details(token, channel_id):
     member_list = []
     selected_list = []
     user_list = data.data["users"]
-    
+
     for mem_id in members['permission_id_1'] + members['permission_id_2']:
         if mem_id in members['permission_id_1']:
             selected_list = owners
         else:
-            selected_list = member_list  
+            selected_list = member_list
 
         index = data.resolve_user_id_index(mem_id)
         selected_list.append({
@@ -136,9 +136,9 @@ def channel_messages(token, channel_id, start):
 
     # Reverse messages list, so that most recent is index 0.
     messages = list(sorted(channel['messages'], key=lambda x: x['time_created'], reverse=True))
-    
+
     for msg in messages:
-        if msg['time_created'] > datetime.datetime.now().timestamp():
+        if msg['time_created'] > datetime.datetime.now().timestamp(): # pragma: no cover
             messages.remove(msg)
 
     # Check if start param is valid.

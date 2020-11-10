@@ -47,7 +47,7 @@ def close_standup(channel_index, channel_id):
 
 	standup_str = ''
 
-	for message_info in standup['messages']:
+	for message_info in standup['messages']: # pragma: no cover
 		user_index = data.resolve_user_id_index(message_info['u_id'])
 		name = data.data['users'][user_index]['name_first']
 		# Add a message in format 'hayden: I ate a catfish'.
@@ -55,7 +55,7 @@ def close_standup(channel_index, channel_id):
 
 	# Send out collated messages (unless no messages were sent during standup).
 	send_time = standup['time_finish']
-	if standup_str is not '':
+	if standup_str != '': # pragma: no cover
 	    message.message_sendlater(standup['creator'], channel_id, standup_str, send_time)
 
 	# Clear data
