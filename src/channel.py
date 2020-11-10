@@ -140,6 +140,10 @@ def channel_messages(token, channel_id, start):
     for msg in messages:
         if msg['time_created'] > datetime.datetime.now().timestamp(): # pragma: no cover
             messages.remove(msg)
+    for i, msg in enumerate(messages):
+        for j, react in enumerate(msg['reacts']):
+            selected_react = messages[i]['reacts'][j]
+            selected_react['is_this_user_reacted'] = user_id in react['u_ids']
 
     # Check if start param is valid.
     if start > len(messages) or start < 0:

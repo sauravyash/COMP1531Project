@@ -103,7 +103,7 @@ def test_system(url):
 
     # error 403
     data = requests.post(f"{url}/auth/logout", json={'token': "hi"})
-    assert data.status_code == 401
+    assert data.status_code == 403
 
 
 
