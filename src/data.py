@@ -39,7 +39,7 @@ def token_to_user_id(token):
         if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt and user['authenticated']:
             return user['id']
 
-    raise LookupError(description="Token not found") # pragma: no cover
+    raise LookupError("Token not found") # pragma: no cover
 
 def resolve_token_index(token):
     """ FIND INDEX FOR TOKEN WITHIN DICTIONARY
@@ -55,7 +55,7 @@ def resolve_token_index(token):
         if jwt.decode(user['token'], JWT_KEY, algorithms=['HS256']) == decoded_jwt: # pragma: no cover
             return user["id"] - 1
 
-    raise LookupError(description="Token not found") # pragma: no cover
+    raise LookupError("Token not found") # pragma: no cover
 
 # User ID
 def resolve_user_id_index(user_id):
@@ -70,7 +70,7 @@ def resolve_user_id_index(user_id):
         if user['id'] == user_id:
             return i
 
-    raise LookupError(description="user id not found")
+    raise LookupError("user id not found")
 
 # Channel ID
 def resolve_channel_id_index(channel_id):
@@ -86,7 +86,7 @@ def resolve_channel_id_index(channel_id):
         if channel['id'] == channel_id:
             return i
 
-    raise LookupError(description="channel id not found")
+    raise LookupError("channel id not found")
 
 # MESSAGE
 def resolve_message_id_index(message_id):
@@ -102,7 +102,7 @@ def resolve_message_id_index(message_id):
             if msg['message_id'] == message_id:
                 return (channel['id'], i)
 
-    raise LookupError(description="message id not found")
+    raise LookupError("message id not found")
 
 def resolve_message_id(msg_id):
     ''' CHECK IF MESSAGE ID EXISTS WITHIN DICTIONARY
@@ -143,7 +143,7 @@ def email_to_user_id(email):
         if user["email"] == email:
             return user["id"]
 
-    raise LookupError(description="Email not found") # pragma: no cover
+    raise LookupError("Email not found") # pragma: no cover
 
 # USER PERMISSIONS
 def resolve_permissions(channel_id, user_id):

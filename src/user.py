@@ -101,7 +101,7 @@ def user_profile_sethandle(token, handle_str):
     elif len(handle_str) < 3:
         raise InputError(description="Handle too short")
     elif len(handle_str) > 20:
-        raise InputError(description="Hanle too long")
+        raise InputError(description="Handle too long")
 
     # storing user's new handle
     data.data["users"][user_index]["handle"] = handle_str
@@ -117,17 +117,17 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     try:
         u_id_index = data.resolve_token_index(token)
     except: # pragma: no cover
-        raise AccessError
+        raise AccessError(description="Invalid token")
 
     if url[-3:] != "jpg":
-        raise InputError
+        raise InputError(description="Image is not jpg")
 
     imagePath = "./src/static/profile_images/" + str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
 
     try:
         urllib.request.urlretrieve(url, imagePath)
     except: # pragma: no cover
-        raise InputError
+        raise InputError(description="Invalid url")
 
     img = Image.open(imagePath)
 
@@ -144,7 +144,7 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     if error:
         if os.path.exists(imagePath): # pragma: no cover
             os.remove(imagePath)
-        raise InputError
+        raise InputError(description="Incorrect crop parameters")
     else:
         img_crop = img.crop((x_start, y_start, x_end, y_end))
         img_crop.save(imagePath)
