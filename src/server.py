@@ -114,14 +114,8 @@ def svr_channel_invite():
             abort(401)
         else:
             abort(403)
-    except Exception as result:
+    except:
         # 500
-        f = open("error_message.txt", "w")
-        f.write(str(req))
-        f.close()
-        
-        traceback.print_exc(file=open("new_error_message.txt", "w"))
-
         abort(500)
 
 @APP.route("/channel/details", methods=["GET"])

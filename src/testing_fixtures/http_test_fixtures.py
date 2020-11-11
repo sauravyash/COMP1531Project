@@ -173,14 +173,42 @@ def setup_channel(url, setup_auth, login_user):
     user1, user2, user3 = login_user
     
     # Create a channel with the first user.
+    channel_name = 'Channel_x'
     input_data = {
         'token': user1['token'],
-        'name': 'Channel_1',
+        'name': channel_name,
         'is_public': True
     }
 
     data = requests.post(f"{url}/channels/create", json=input_data)
     payload = data.json()
     
-    return user1, user2, user3, payload['channel_id']
+    return user1, user2, user3, payload['channel_id'], channel_name
+
+@pytest.fixture()
+def invite_all_members(url, setup_channel):
+    user1, user2, user3, channel_id, _ = setup_channel
+    
+    tok1 = user1["token"]
+    uid2 = user2["u_id"]
+    uid3 = user3["u_id"]
+
+    # Make all users a member of the channel by inviting them.
+    input_data = {
+        'token': tok1,
+        'channel_id': channel_id,
+        'u_id': uid2
+    }
+
+    data = requests.get(f"{url}/channel/invite", params=input_data)
+    assert data.status_code == 200
+    
+    input_data = {
+        'token': tok1,
+        'channel_id': channel_id,
+        'u_id': uid3
+    }
+
+    data = requests.get(f"{url}/channel/invite", params=input_data)
+    assert data.status_code == 200
 
