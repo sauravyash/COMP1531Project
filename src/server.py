@@ -596,5 +596,6 @@ def svr_clear():
 if __name__ == "__main__":
     port_num = int(os.getenv('PORT'))
     port_num = port_num if port_num == None else 0
+    print("port: ", port_num)
     APP.run(port=port_num) # Do not edit this port
     #APP.run(port=8080, debug=True) # Debugger
