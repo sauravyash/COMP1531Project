@@ -30,7 +30,7 @@ def test_invalid_channel_id(setup_test_interface):
 
     tok1 = user1['token']
 
-    send_time = dt.datetime(2020, 11, 11, 9, 30).timestamp()
+    send_time = (dt.datetime.now() + dt.timedelta(hours=10)).timestamp()
 
     with pytest.raises(InputError):
         message_sendlater(tok1, 999, "Funky Monkey", send_time)
@@ -43,7 +43,7 @@ def test_exceed_word_limit(setup_test_interface):
     tok1 = user1['token']
     channel_id = channel_dict['channel_id']
 
-    send_time = dt.datetime(2020, 11, 11, 9, 30).timestamp()
+    send_time = (dt.datetime.now() + dt.timedelta(hours=10)).timestamp()
 
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for i in range(1005))
