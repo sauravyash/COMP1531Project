@@ -28,12 +28,12 @@ def defaultHandler(err):
     return response
 
 APP = Flask(__name__)
-CORS(APP)
+#CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
-@cross_origin(origin="*")
+#@cross_origin(origin="*")
 def handle_request(func):
     def wrapper(*args, **kwargs):
         try:
