@@ -26,7 +26,7 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-APP = Flask(__name__, static_url_path='/static/')
+APP = Flask(__name__)
 CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
@@ -181,7 +181,7 @@ def svr_channels_list():
 def svr_channels_listall():
     req = request.args
     token = req['token']
-    return json.dumps(channels.channels_listall(token))
+    return channels.channels_listall(token)
 
 @APP.route("/channels/create", methods=["POST"])
 @handle_request
@@ -269,8 +269,7 @@ def svr_user_profile():
     token = req['token']
     u_id = int(req['u_id'])
     result = user.user_profile(token, u_id)
-    print(result['user']['profile_img_url'])
-    result['user']['profile_img_url'] = request.base_url + '/' + result['user']['profile_img_url']
+    result['user']['profile_img_url'] = request.base_url.replace("/user/profile", "/static/profile_images") + '/' + result['user']['profile_img_url']
     return result
 
 @APP.route("/user/profile/setname", methods=["PUT"])
@@ -315,7 +314,13 @@ def svr_user_profile_uploadphoto():
 def svr_users_all():
     req = request.args
     token = req['token']
-    return other.users_all(token)
+    result = other.users_all(token)
+    print("USERS: " + str(result))
+    print("NUMBER OF USERS: " + str(len(result)))
+    for i in range(len(result)):
+        result['users'][i]['profile_img_url'] = request.base_url.replace("/users/all", "/static/profile_images") + '/' + result['users'][i]['profile_img_url']
+        print("USER " + str(i) + " IMAGE: " + str(result['users'][i]['profile_img_url']))
+    return result
 
 @APP.route("/admin/userpermission/change", methods=["POST"])
 @handle_request
