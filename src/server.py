@@ -350,9 +350,9 @@ def svr_clear():
 @APP.route("/standup/start", methods=["POST"])
 @handle_request
 def svr_standup_start():
-    req = request.args
+    req = request.get_json()
     token = req['token']
-    channel_id = req['channel_id']
+    channel_id = int(req['channel_id'])
     length = int(req['length'])
     return standup.standup_start(token, channel_id, length)
 
@@ -361,7 +361,7 @@ def svr_standup_start():
 def svr_standup_active():
     req = request.args
     token = req['token']
-    channel_id = req['channel_id']
+    channel_id = int(req['channel_id'])
 
     return standup.standup_active(token, channel_id)
 
@@ -369,9 +369,9 @@ def svr_standup_active():
 @APP.route("/standup/send", methods=["POST"])
 @handle_request
 def svr_standup_send():
-    req = request.args
+    req = request.get_json()
     token = req['token']
-    channel_id = req['channel_id']
+    channel_id = int(req['channel_id'])
     message = req['message']
     return standup.standup_send(token, channel_id, message)
 
