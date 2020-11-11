@@ -3,10 +3,11 @@ This file contains all function to do with the authentication and setup of a
 flockr user.
 """
 
-import re
-import data
 import hashlib
+import smtplib
+import ssl
 import jwt
+import data
 from error import InputError, AccessError
 
 def auth_login(email, password):
@@ -17,11 +18,11 @@ def auth_login(email, password):
     """
     # Check that the email is valid and matches a password.
     if not data.check_email(email):
-        raise InputError
+        raise InputError(description='Invalid email')
     elif not data.resolve_email(email):
-        raise InputError
+        raise InputError(description='Email not registered')
     elif not data.password_match(email, password):
-        raise InputError
+        raise InputError(description='Invalid password')
 
     # Autheticate the user (as being logged in)
     data.data["users"][data.email_to_user_id(email) - 1]["authenticated"] = True
@@ -41,7 +42,7 @@ def auth_logout(token):
     try:
         data.resolve_token_index(token)
     except:
-        raise AccessError
+        raise AccessError(description='Token not found')
 
     if not data.data["users"][data.resolve_token_index(token)]["authenticated"]:
         return {
@@ -67,13 +68,13 @@ def auth_register(email, password, name_first, name_last):
 
     # Check that the email, password and names are valid input.
     if not data.check_email(email):
-        raise InputError
+        raise InputError(description='Invalid email')
     elif data.resolve_email(email) and user_one == 0:
-        raise InputError
+        raise InputError(description='Email already in use')
     elif not data.check_password(password):
-        raise InputError
+        raise InputError(description='Invalid password')
     elif not data.check_name(name_first, name_last):
-        raise InputError
+        raise InputError(description='Invalid first name or last name')
 
     # Create a handle.
     handle = name_first.lower() + name_last.lower()
@@ -89,30 +90,24 @@ def auth_register(email, password, name_first, name_last):
 
     if user_one: # generate first user. (flockr owner)
         new_id = 1
-        data.data.get("users").append({
-            'id': new_id,
-            'name_first': name_first,
-            'name_last': name_last,
-            'email': email,
-            'password': hashlib.sha256(password.encode()).hexdigest(),
-            'handle': handle,
-            'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
-            'authenticated': True,
-            'permission_id': 1,
-        })
+        permission = 1
     else: # generate any other user.
         new_id = max(data.all_users()) + 1
-        data.data.get("users").append({
-            'id': new_id,
-            'name_first': name_first,
-            'name_last': name_last,
-            'email': email,
-            'password': hashlib.sha256(password.encode()).hexdigest(),
-            'handle': handle,
-            'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
-            'authenticated': True,
-            'permission_id': 2,
-        })
+        permission = 2
+
+    data.data.get("users").append({
+        'id': new_id,
+        'name_first': name_first,
+        'name_last': name_last,
+        'email': email,
+        'password': hashlib.sha256(password.encode()).hexdigest(),
+        'handle': handle,
+        'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
+        'authenticated': True,
+        'permission_id': permission,
+        'profile_img': ""
+    })
+
 
     encoded_jwt = jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256')
     decoded_string = encoded_jwt.decode('UTF-8')
@@ -121,3 +116,55 @@ def auth_register(email, password, name_first, name_last):
         'u_id': new_id, #next user_id
         'token': decoded_string
     }
+
+def auth_passwordreset_request(email):
+    """ Sends reset_key to user's email
+
+    Arguments: email- must be string
+    Returns: empty dictionary
+    """
+    try:
+        u_id_index = data.email_to_user_id(email) - 1
+    except: # pragma: no cover
+        raise InputError(description='Email not found')
+
+    reset_key = data.generate_reset_key(8)
+
+    data.data["users"][u_id_index]["reset_code"] = hashlib.sha256(reset_key.encode()).hexdigest()
+
+    # Send user email containing reset_code
+    # from https://realpython.com/python-send-email/
+
+    port = 465
+    smtp_server = "smtp.gmail.com"
+    receiver_email = email
+    SUBJECT = "flockr password reset request"
+    TEXT = "Your reset code is: " + str(reset_key)
+
+    message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT)
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(data.EMAIL, data.EMAIL_PASSWORD)
+        server.sendmail(data.EMAIL, receiver_email, message)
+        server.quit()
+
+    return {}
+
+def auth_passwordreset_reset(reset_code, new_password):
+    """ Resets the user's password
+
+    Arguments: reset_code, new_password- must be strings
+    Returns: empty dictionary
+    """
+
+    u_id = data.reset_key_match(reset_code)
+
+    if u_id == 0: # pragma: no cover
+        raise InputError(description='User ID not found')
+    elif not data.check_password(new_password): # pragma: no cover
+        raise InputError(description='Invalid password')
+
+    data.data["users"][u_id - 1]["password"] = hashlib.sha256(new_password.encode()).hexdigest() # pragma: no cover
+
+    return {} # pragma: no cover
