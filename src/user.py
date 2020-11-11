@@ -122,7 +122,8 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     if url[-3:] != "jpg":
         raise InputError(description="Image is not jpg")
 
-    filename = "./src/static/profile_images/" + str(u_id_index + 1) + str(data.generate_img_name(6)) + ".jpg"
+    img = str(data.generate_img_name(6)) + ".jpg"
+    filename = "./src/static/profile_images/" + str(u_id_index + 1) + img
 
     try:
         result = urllib.request.urlretrieve(url, filename)
@@ -150,6 +151,6 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
         img_crop = img.crop((x_start, y_start, x_end, y_end))
         img_crop.save(imagePath)
         # store file name to data.py
-        data.data["users"][u_id_index]["profile_img"] = imagePath
+        data.data["users"][u_id_index]["profile_img"] = img
 
     return {}

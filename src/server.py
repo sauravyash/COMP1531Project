@@ -53,7 +53,7 @@ def handle_request(func):
             with open('log.txt', 'a') as f:
                 f.write(str(e))
             abort(500)
-    
+
     wrapper.__name__ = func.__name__
     return wrapper
 
@@ -73,7 +73,7 @@ def svr_auth_login():
     req = request.get_json()
     email = req['email']
     pwd = req['password']
-    return auth.auth_login(email, pwd) 
+    return auth.auth_login(email, pwd)
 
 @APP.route("/auth/register", methods=["POST"])
 @handle_request
@@ -83,7 +83,7 @@ def svr_auth_register():
     pwd = req['password']
     fname = req['name_first']
     lname = req['name_last']
-    return auth.auth_register(email, pwd, fname, lname) 
+    return auth.auth_register(email, pwd, fname, lname)
 
 @APP.route("/auth/logout", methods=["POST"])
 @handle_request
@@ -98,7 +98,7 @@ def svr_auth_pwd_request():
     req = request.get_json()
     email = req['email']
     return auth.auth_passwordreset_request(email)
- 
+
 @APP.route("/auth/passwordreset/reset", methods=["POST"])
 @handle_request
 def svr_auth_pwd_reset():
@@ -123,7 +123,7 @@ def svr_channel_details():
     token = req['token']
     channel_id = int(req['channel_id'])
     return channel.channel_details(token, channel_id)
- 
+
 @APP.route("/channel/messages", methods=["GET"])
 @handle_request
 def svr_channel_messages():
@@ -140,7 +140,7 @@ def svr_channel_leave():
     token = req['token']
     channel_id = int(req['channel_id'])
     return channel.channel_leave(token, channel_id)
-   
+
 @APP.route("/channel/join", methods=["POST"])
 @handle_request
 def svr_channel_join():
@@ -206,7 +206,7 @@ def svr_message_remove():
     token = req['token']
     message_id = int(req['message_id'])
     return message.message_remove(token, message_id)
- 
+
 @APP.route("/message/edit", methods=["PUT"])
 @handle_request
 def svr_message_edit():
@@ -222,13 +222,13 @@ def svr_message_sendlater():
     req = request.get_json()
     token = req['token']
     channel_id = req['channel_id']
-    msg = req['message'] 
+    msg = req['message']
     time_sent = int(req['time_sent'])
     return message.message_sendlater(token, channel_id, msg, time_sent)
-    
+
 @APP.route("/message/react", methods=["POST"])
 @handle_request
-def svr_message_react(): 
+def svr_message_react():
     req = request.get_json()
     token = req['token']
     message_id = int(req['message_id'])
@@ -242,7 +242,7 @@ def svr_message_unreact():
     token = req['token']
     message_id = int(req['message_id'])
     react_id = req['react_id']
-    return message.message_unreact(token, message_id, react_id)  
+    return message.message_unreact(token, message_id, react_id)
 
 @APP.route("/message/pin", methods=["POST"])
 @handle_request
@@ -250,7 +250,7 @@ def svr_message_pin():
     req = request.get_json()
     token = req['token']
     message_id = int(req['message_id'])
-    return message.message_pin(token, message_id)  
+    return message.message_pin(token, message_id)
 
 @APP.route("/message/unpin", methods=["POST"])
 @handle_request
@@ -266,7 +266,9 @@ def svr_user_profile():
     req = request.args
     token = req['token']
     u_id = int(req['u_id'])
-    return user.user_profile(token, u_id)
+    result = user.user_profile(token, u_id)
+    result['profile_img_url'] = str(request.base_url) + result['profile_img_url']
+    return result
 
 @APP.route("/user/profile/setname", methods=["PUT"])
 @handle_request
@@ -287,7 +289,7 @@ def svr_user_profile_setemail():
 
 @APP.route("/user/profile/sethandle", methods=["PUT"])
 @handle_request
-def svr_user_profile_sethandle(): 
+def svr_user_profile_sethandle():
     req = request.get_json()
     token = req['token']
     handle = req['handle_str']
@@ -304,10 +306,6 @@ def svr_user_profile_uploadphoto():
     x_end = int(req['x_end'])
     y_end = int(req['y_end'])
     return user.user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end)
-
-#@APP.route("/static/<path:path>")
-#def send_js(path):
-#    return send_from_directory(path)v
 
 @APP.route("/users/all", methods=["GET"])
 @handle_request
