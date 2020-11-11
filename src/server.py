@@ -28,7 +28,7 @@ def defaultHandler(err):
     return response
 
 APP = Flask(__name__)
-CORS(APP)
+CORS(app=APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
