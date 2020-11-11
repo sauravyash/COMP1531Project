@@ -261,14 +261,14 @@ def svr_message_unpin():
     return message.message_unpin(token, message_id)
 
 @APP.route("/user/profile", methods=["GET"])
-@handle_request
+#@handle_request
 def svr_user_profile():
     req = request.args
     token = req['token']
     u_id = int(req['u_id'])
     result = user.user_profile(token, u_id)
     result['profile_img_url'] = str(request.base_url) + result['profile_img_url']
-    return result
+    return json.dumps(result)
 
 @APP.route("/user/profile/setname", methods=["PUT"])
 @handle_request
