@@ -3,7 +3,7 @@ import os
 import json
 from json import dumps
 from flask import Flask, request, abort, send_from_directory
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from error import InputError, AccessError
 
 import auth
@@ -28,11 +28,12 @@ def defaultHandler(err):
     return response
 
 APP = Flask(__name__)
-CORS(APP, resources={r"/*": {"origins": "*"}})
+CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
+@cross_origin(origin="*")
 def handle_request(func):
     def wrapper(*args, **kwargs):
         try:
