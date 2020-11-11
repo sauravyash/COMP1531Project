@@ -43,3 +43,20 @@
 - Raise an INPUT ERROR:
     - Message is more than 1000 characters.
     - u_id does not exist.
+
+## 4. Extra_permissions
+- Allows the owner of Flockr to change user roles with more permission options.
+- New Roles:
+    - (3) Channel master: Can view & join any channel regardless of public/ private settings.
+    - (4) Policing member: Can remove and ban any member, even if they are not an owner of a channel.
+- Arguments: 
+    - token (of user requesting change)
+    - permission_id of change (ie. 3 or 4)
+    - user_id (of user being changed)
+- Raise an INPUT ERROR:
+    - Channel ID is not a valid channel.
+    - When user with user_id does not exist or is not a member of the channel.
+    - When permission ID is not 1-4. (append this to other permission_change function)
+- Raise an ACCESS ERROR:
+    - When the token is invalid or does not exist.
+    - When the authorised user is not an owner of the flockr.
