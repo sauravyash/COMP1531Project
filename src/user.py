@@ -32,7 +32,7 @@ def user_profile(token, u_id):
     	'name_first': user_details["name_first"],
     	'name_last': user_details["name_last"],
     	'handle_str': user_details["handle"],
-        'profile_img_url': user_details.get("profile_img")
+        'profile_img_url': user_details["profile_img"]
         },
     }
 
@@ -122,8 +122,8 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     if url[-3:] != "jpg":
         raise InputError(description="Image is not jpg")
 
-    img = str(data.generate_img_name(6)) + ".jpg"
-    filename = "./src/static/profile_images/" + str(u_id_index + 1) + img
+    img_profile = str(data.generate_img_name(6)) + ".jpg"
+    filename = "./src/static/profile_images/" + str(u_id_index + 1) + img_profile
 
     try:
         result = urllib.request.urlretrieve(url, filename)
@@ -150,7 +150,8 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
     else:
         img_crop = img.crop((x_start, y_start, x_end, y_end))
         img_crop.save(imagePath)
+        
         # store file name to data.py
-        data.data["users"][u_id_index]["profile_img"] = img
+        data.data["users"][u_id_index]["profile_img"] = img_profile
 
     return {}

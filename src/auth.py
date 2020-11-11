@@ -105,6 +105,7 @@ def auth_register(email, password, name_first, name_last):
         'token': jwt.encode({"u_id": new_id}, data.JWT_KEY, algorithm='HS256'),
         'authenticated': True,
         'permission_id': permission,
+        'profile_img': ""
     })
 
 

@@ -38,6 +38,8 @@ def handle_request(func):
             return json.dumps(func(*args, **kwargs))
         except KeyError:
             # 400
+            with open('log.txt', 'a') as f:
+                f.write(traceback.format_exc())
             abort(400)
         except AccessError as response:
             # 401 or 403
@@ -48,10 +50,10 @@ def handle_request(func):
         except InputError:
             # 401
             abort(401)
-        except Exception as e:
+        except Exception:
             # 500
             with open('log.txt', 'a') as f:
-                f.write(str(e))
+                f.write(traceback.format_exc())
             abort(500)
 
     wrapper.__name__ = func.__name__
@@ -261,14 +263,15 @@ def svr_message_unpin():
     return message.message_unpin(token, message_id)
 
 @APP.route("/user/profile", methods=["GET"])
-#@handle_request
+@handle_request
 def svr_user_profile():
     req = request.args
     token = req['token']
     u_id = int(req['u_id'])
     result = user.user_profile(token, u_id)
-    result['profile_img_url'] = str(request.base_url) + result['profile_img_url']
-    return json.dumps(result)
+    print(result['user']['profile_img_url'])
+    result['user']['profile_img_url'] = request.base_url + '/' + result['user']['profile_img_url']
+    return result
 
 @APP.route("/user/profile/setname", methods=["PUT"])
 @handle_request
@@ -300,7 +303,7 @@ def svr_user_profile_sethandle():
 def svr_user_profile_uploadphoto():
     req = request.get_json()
     token = req['token']
-    url = str(req['url'])
+    url = str(req['img_url'])
     x_start = int(req['x_start'])
     y_start = int(req['y_start'])
     x_end = int(req['x_end'])
@@ -369,4 +372,4 @@ def svr_standup_send():
 
 if __name__ == "__main__":
     APP.run(port=0) # Do not edit this port
-    #APP.run(port=5000, debug=True) # Debugger
+    #APP.run(port=8080, debug=True) # Debugger

@@ -1,1 +1,42 @@
-string indices must be integerslist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not strlist indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/Users/Yash/Google Drive/School/uni/COMP1531/Project/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/Users/Yash/Google Drive/School/uni/COMP1531/Project/project/src/server.py", line 305, in svr_user_profile_uploadphoto
+    x_start = int(req['x_start'])
+KeyError: 'x_start'
+Traceback (most recent call last):
+  File "/Users/Yash/Google Drive/School/uni/COMP1531/Project/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/Users/Yash/Google Drive/School/uni/COMP1531/Project/project/src/server.py", line 272, in svr_user_profile
+    result['user']['profile_img_url'] = request.base_url + result['user']['profile_img_url']
+TypeError: can only concatenate str (not "JpegImageFile") to str
+Traceback (most recent call last):
+  File "/Users/Yash/Google Drive/School/uni/COMP1531/Project/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/Users/Yash/Google Drive/School/uni/COMP1531/Project/project/src/server.py", line 273, in svr_user_profile
+    result['user']['profile_img_url'] = request.base_url + result['user']['profile_img_url']
+TypeError: can only concatenate str (not "JpegImageFile") to str
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 84, in svr_auth_register
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 84, in svr_auth_register
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 76, in svr_auth_login
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 76, in svr_auth_login
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
