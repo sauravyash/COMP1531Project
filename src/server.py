@@ -1,4 +1,5 @@
 import sys
+import os
 import json
 from json import dumps
 from flask import Flask, request, abort
@@ -593,5 +594,7 @@ def svr_clear():
         abort(500)
 
 if __name__ == "__main__":
-    APP.run(port=0) # Do not edit this port
+    port_num = int(os.getenv('PORT'))
+    port_num = 0 if port_num == None else port_num
+    APP.run(port=port_num) # Do not edit this port
     #APP.run(port=8080, debug=True) # Debugger
