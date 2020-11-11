@@ -49,6 +49,8 @@ def handle_request(func):
                 abort(403)
         except InputError:
             # 401
+            with open('log.txt', 'a') as f:
+                f.write(traceback.format_exc())
             abort(401)
         except Exception:
             # 500
@@ -124,7 +126,14 @@ def svr_channel_details():
     req = request.args
     token = req['token']
     channel_id = int(req['channel_id'])
-    return channel.channel_details(token, channel_id)
+    url = request.base_url.replace("/channel/details", "/")
+    result = channel.channel_details(token, channel_id)  
+    for i, usr in enumerate(result['all_members']):
+        if result['all_members'][i]['profile_img_url'] != "":
+            result['all_members'][i]['profile_img_url'] = url + \
+            result['all_members'][i]['profile_img_url'] 
+    
+    return result
 
 @APP.route("/channel/messages", methods=["GET"])
 @handle_request
@@ -269,7 +278,10 @@ def svr_user_profile():
     token = req['token']
     u_id = int(req['u_id'])
     result = user.user_profile(token, u_id)
-    result['user']['profile_img_url'] = request.base_url.replace("/user/profile", "/static/profile_images") + '/' + result['user']['profile_img_url']
+    if result['user']['profile_img_url'] != "":
+        result['user']['profile_img_url'] = \
+        request.base_url.replace("/user/profile", "/static/profile_images") \
+        + '/' + result['user']['profile_img_url']
     return result
 
 @APP.route("/user/profile/setname", methods=["PUT"])
@@ -318,8 +330,11 @@ def svr_users_all():
     print("USERS: " + str(result))
     print("NUMBER OF USERS: " + str(len(result)))
     for i in range(len(result)):
-        result['users'][i]['profile_img_url'] = request.base_url.replace("/users/all", "/static/profile_images") + '/' + result['users'][i]['profile_img_url']
-        print("USER " + str(i) + " IMAGE: " + str(result['users'][i]['profile_img_url']))
+        if result['users'][i]['profile_img_url'] != "":
+            result['users'][i]['profile_img_url'] = \
+            request.base_url.replace("/users/all", "/static/profile_images") \
+            + '/' + result['users'][i]['profile_img_url']
+    
     return result
 
 @APP.route("/admin/userpermission/change", methods=["POST"])
@@ -376,5 +391,5 @@ def svr_standup_send():
     return standup.standup_send(token, channel_id, message)
 
 if __name__ == "__main__":
-    APP.run(port=0) # Do not edit this port
-    #APP.run(port=8080, debug=True) # Debugger
+    #APP.run(port=0) # Do not edit this port
+    APP.run(port=8080, debug=True) # Debugger
