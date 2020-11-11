@@ -1,0 +1,48 @@
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 84, in svr_auth_register
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 84, in svr_auth_register
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 76, in svr_auth_login
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 76, in svr_auth_login
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 84, in svr_auth_register
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 84, in svr_auth_register
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 76, in svr_auth_login
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 76, in svr_auth_login
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
