@@ -128,7 +128,7 @@ def svr_channel_details():
     channel_id = int(req['channel_id'])
     url = request.base_url.replace("/channel/details", "/")
     result = channel.channel_details(token, channel_id)  
-    for i, usr in enumerate(result['all_members']):
+    for i, _ in enumerate(result['all_members']):
         if result['all_members'][i]['profile_img_url'] != "":
             result['all_members'][i]['profile_img_url'] = url + \
             result['all_members'][i]['profile_img_url'] 
