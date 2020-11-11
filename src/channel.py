@@ -2,7 +2,7 @@
 File that contains all functions related to channel.
 
 '''
-
+import datetime
 import data
 
 from error import AccessError
@@ -85,12 +85,12 @@ def channel_details(token, channel_id):
     member_list = []
     selected_list = []
     user_list = data.data["users"]
-    
+
     for mem_id in members['permission_id_1'] + members['permission_id_2']:
         if mem_id in members['permission_id_1']:
             selected_list = owners
         else:
-            selected_list = member_list  
+            selected_list = member_list
 
         index = data.resolve_user_id_index(mem_id)
         selected_list.append({
@@ -135,7 +135,16 @@ def channel_messages(token, channel_id, start):
         raise AccessError(description='Authorised User Not Member of Channel')
 
     # Reverse messages list, so that most recent is index 0.
-    messages = list(reversed(channel['messages']))
+    messages = list(sorted(channel['messages'], key=lambda x: x['time_created'], reverse=True))
+
+    for msg in messages:
+        if msg['time_created'] > datetime.datetime.now().timestamp(): # pragma: no cover
+            messages.remove(msg)
+    for i, msg in enumerate(messages):
+        for j, react in enumerate(msg['reacts']):
+            selected_react = messages[i]['reacts'][j]
+            selected_react['is_this_user_reacted'] = user_id in react['u_ids']
+
     # Check if start param is valid.
     if start > len(messages) or start < 0:
         raise InputError('Start is Out of Bounds')
