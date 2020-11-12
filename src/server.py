@@ -127,12 +127,11 @@ def svr_channel_details():
     token = req['token']
     channel_id = int(req['channel_id'])
     url = request.base_url.replace("/channel/details", "/")
-    result = channel.channel_details(token, channel_id)  
+    result = channel.channel_details(token, channel_id)
     for i, _ in enumerate(result['all_members']):
         if result['all_members'][i]['profile_img_url'] != "":
             result['all_members'][i]['profile_img_url'] = url + \
-            result['all_members'][i]['profile_img_url'] 
-    
+            result['all_members'][i]['profile_img_url']
     return result
 
 @APP.route("/channel/messages", methods=["GET"])
@@ -327,14 +326,12 @@ def svr_users_all():
     req = request.args
     token = req['token']
     result = other.users_all(token)
-    print("USERS: " + str(result))
-    print("NUMBER OF USERS: " + str(len(result)))
     for i in range(len(result)):
         if result['users'][i]['profile_img_url'] != "":
             result['users'][i]['profile_img_url'] = \
             request.base_url.replace("/users/all", "/static/profile_images") \
             + '/' + result['users'][i]['profile_img_url']
-    
+
     return result
 
 @APP.route("/admin/userpermission/change", methods=["POST"])
@@ -391,5 +388,5 @@ def svr_standup_send():
     return standup.standup_send(token, channel_id, message)
 
 if __name__ == "__main__":
-    APP.run(port=0) # Do not edit this port
-    #APP.run(port=8080, debug=True) # Debugger
+    #APP.run(port=0) # Do not edit this port
+    APP.run(port=8080, debug=True) # Debugger

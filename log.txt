@@ -1809,3 +1809,11 @@ Traceback (most recent call last):
   File "/Users/Yash/Google Drive/School/uni/COMP1531/Project/project/src/server.py", line 78, in svr_auth_login
     email = req['email']
 TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 211, in svr_message_send
+    return message.message_send(token, channel_id, msg)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 14, in message_send
+    raise InputError(description="Invalid Message")
+error.InputError: 400 Bad Request: Invalid Message
