@@ -57,7 +57,7 @@ def close_standup(channel_index, channel_id):
 	# Send out collated messages (unless no messages were sent during standup).
 	send_time = standup['time_finish']
 	if standup_str != '': # pragma: no cover
-	    message.message_sendlater(standup['creator'], channel_id, standup_str, send_time)
+	    message.message_send(standup['creator'], channel_id, standup_str)
 
 	# Clear data
 	standup['time_finish'] = None
