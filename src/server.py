@@ -279,11 +279,11 @@ def svr_user_profile():
     req = request.args
     token = req['token']
     u_id = int(req['u_id'])
+    url = request.base_url.replace("/user/profile", "/static/profile_images/")
     result = user.user_profile(token, u_id)
     if result['user']['profile_img_url'] != "":
-        result['user']['profile_img_url'] = \
-        request.base_url.replace("/user/profile", "/static/profile_images") \
-        + '/' + result['user']['profile_img_url']
+        result['user']['profile_img_url'] = url + \
+        result['user']['profile_img_url']
     return result
 
 @APP.route("/user/profile/setname", methods=["PUT"])
@@ -328,13 +328,12 @@ def svr_user_profile_uploadphoto():
 def svr_users_all():
     req = request.args
     token = req['token']
+    url = request.base_url.replace("/users/all", "/static/profile_images/")
     result = other.users_all(token)
     for i in range(len(result)):
         if result['users'][i]['profile_img_url'] != "":
-            result['users'][i]['profile_img_url'] = \
-            request.base_url.replace("/users/all", "/static/profile_images") \
-            + '/' + result['users'][i]['profile_img_url']
-
+            result['users'][i]['profile_img_url'] = url + \
+            result['users'][i]['profile_img_url']
     return result
 
 @APP.route("/admin/userpermission/change", methods=["POST"])
