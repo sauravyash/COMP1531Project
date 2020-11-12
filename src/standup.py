@@ -66,13 +66,11 @@ def close_standup(channel_index, channel_id):
 
 def standup_active(token, channel_id):
 
-	'''
 	# Check token is valid.
     try:
         data.token_to_user_id(token)
     except:
         raise AccessError(description="Invalid token")
-    '''
 
     # Check channel ID is valid.
     try:
