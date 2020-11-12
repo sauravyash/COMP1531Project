@@ -234,7 +234,7 @@ def svr_message_edit():
 def svr_message_sendlater():
     req = request.get_json()
     token = req['token']
-    channel_id = req['channel_id']
+    channel_id = int(req['channel_id'])
     msg = req['message']
     time_sent = int(req['time_sent'])
     return message.message_sendlater(token, channel_id, msg, time_sent)
