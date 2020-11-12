@@ -395,7 +395,7 @@ if __name__ == "__main__":
     if port_num != None:
         print("port: ", port_num)
         APP.run(host='0.0.0.0', port=port_num) # Do not edit this port
-    else if os.getenv('DEV'):
+    elif os.getenv('DEV'):
         APP.run(port=8080)
     else:
         APP.run(port=0) # Debugger
