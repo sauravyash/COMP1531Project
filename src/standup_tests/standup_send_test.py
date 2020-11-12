@@ -9,6 +9,8 @@ import string
 import random
 import time
 
+from data import print_data
+
 from error import InputError, AccessError
 from standup import standup_send, standup_active, standup_start
 
@@ -18,9 +20,13 @@ from testing_fixtures.standup_test_fixtures import setup_test_interface
 # Extremely limited ways to test this without accessing the data structure.
 def test_standup_active_success(setup_test_interface):
     user1, _, channel_id = setup_test_interface
-    standup_start(user1["token"], channel_id, 100)
+    standup_start(user1["token"], channel_id, 20)
 
     assert (standup_send(user1["token"], channel_id, "General Kenobi")) == {}
+    
+    time.sleep(20)
+    
+    assert standup_active(user1["token"], channel_id)['is_active'] == False
 
 # ----- Fail Send
 def test_invalid_token(setup_test_interface):
