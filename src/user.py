@@ -118,6 +118,10 @@ def user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end):
         u_id_index = data.resolve_token_index(token)
     except: # pragma: no cover
         raise AccessError(description="Invalid token")
+    
+    if url == "":
+        data.data["users"][u_id_index]["profile_img"] = ""
+        return {}
 
     if url[-3:] != "jpg":
         raise InputError(description="Image is not jpg")
