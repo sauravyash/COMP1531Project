@@ -45,14 +45,14 @@ def close_standup(channel_index, channel_id):
 	# Collate all messages sent.
 	standup = data.data['channels'][channel_index]['standup']
 
-	standup_str = ''
+    standup_str = 'Standup Minutes: \n'
 
-	for message_info in standup['messages']: # pragma: no cover
-		user_index = data.resolve_user_id_index(message_info['u_id'])
-		# Use handle rather than first name as handle is unique.
-		handle = data.data['users'][user_index]['handle']
-		# Add a message in format 'hayden: I ate a catfish'.
-		standup_str += handle + ': '+ message_info['message'] + '/n'
+    for message_info in standup['messages']: # pragma: no cover
+	    user_index = data.resolve_user_id_index(message_info['u_id'])
+	    # Use handle rather than first name as handle is unique.
+	    handle = data.data['users'][user_index]['handle']
+	    # Add a message in format 'hayden: I ate a catfish'.
+	    standup_str += handle + ': '+ message_info['message'] + '\n'
 
 	# Send out collated messages (unless no messages were sent during standup).
 	send_time = standup['time_finish']
