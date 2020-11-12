@@ -30,8 +30,3 @@ pylint:
   script:
     - find . -type f -name "*.py" | xargs pylint
 
-deploy:
-  stage: deploy
-  script:
-  - gem install dpl
-  - dpl --provider=heroku --app=flockr-backend --api-key=fd707477-777d-4d2c-beca-0b3b18da11bc
