@@ -1,0 +1,85 @@
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 123, in channel_messages
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 144, in svr_channel_messages
+    return channel.channel_messages(token, channel_id, start)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 125, in channel_messages
+    raise InputError('Channel not found')
+error.InputError: 400 Bad Request: Channel not found
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 123, in channel_messages
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 144, in svr_channel_messages
+    return channel.channel_messages(token, channel_id, start)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 125, in channel_messages
+    raise InputError('Channel not found')
+error.InputError: 400 Bad Request: Channel not found
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 66, in channel_details
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 130, in svr_channel_details
+    result = channel.channel_details(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 68, in channel_details
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 66, in channel_details
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 130, in svr_channel_details
+    result = channel.channel_details(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 68, in channel_details
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 66, in channel_details
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 38, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "/home/gabriel/C/UNSW/project/src/server.py", line 130, in svr_channel_details
+    result = channel.channel_details(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 68, in channel_details
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
