@@ -317,10 +317,10 @@ def svr_user_profile_uploadphoto():
     req = request.get_json()
     token = req['token']
     url = str(req['img_url'])
-    x_start = int(req['x_start'])
-    y_start = int(req['y_start'])
-    x_end = int(req['x_end'])
-    y_end = int(req['y_end'])
+    x_start = int(req.get('x_start')) if req.get('x_start') else None
+    y_start = int(req.get('y_start')) if req.get('y_start') else None
+    x_end = int(req.get('x_end')) if req.get('x_end') else None
+    y_end = int(req.get('y_end')) if req.get('y_end') else None
     return user.user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end)
 
 @APP.route("/users/all", methods=["GET"])

@@ -97,7 +97,7 @@ def channel_details(token, channel_id):
             'u_id': mem_id,
             'name_first': user_list[index]['name_first'],
             'name_last': user_list[index]['name_last'],
-            'profile_img_url': "/static/profile_images/" + user_list[index]['profile_img']
+            'profile_img_url': user_list[index]['profile_img']
         })
 
     # Return channel details as a dictionary.
