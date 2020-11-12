@@ -45,20 +45,20 @@ def close_standup(channel_index, channel_id):
     # Collate all messages sent.
     standup = data.data['channels'][channel_index]['standup']
 
-    standup_str = 'Standup Minutes: /n'
+    standup_str = 'Standup Minutes: \n'
+
     for message_info in standup['messages']: # pragma: no cover
         user_index = data.resolve_user_id_index(message_info['u_id'])
         # Use handle rather than first name as handle is unique.
         handle = data.data['users'][user_index]['handle']
         # Add a message in format 'hayden: I ate a catfish'.
-        standup_str += handle + ': '+ message_info['message'] + '/n'
+        standup_str += handle + ': '+ message_info['message'] + '\n'
 
-    # Send out collated messages (unless no messages were sent during standup).	
-    try:
-        send_time = standup['time_finish']
+
+    # Send out collated messages (unless no messages were sent during standup).
+    send_time = standup['time_finish']
+    if standup_str != '': # pragma: no cover
         message.message_sendlater(standup['creator'], channel_id, standup_str, send_time)
-    except InputError:
-        message.message_send(standup['creator'], channel_id, standup_str)
 
     # Clear data
     standup['time_finish'] = None
@@ -86,7 +86,7 @@ def standup_active(token, channel_id):
     standup = data.data['channels'][channel_index]['standup']
     # Check if any data for a standup has been stored
     if standup['time_finish'] is not None:
-	    if standup['time_finish'] <= current_time:
+	    if standup['time_finish'] < current_time:
 		    # Close the standup:
 		    # ie. send out final message and erase all data.
 		    close_standup(channel_index, channel_id)
