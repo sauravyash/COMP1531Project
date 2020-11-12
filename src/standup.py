@@ -97,7 +97,7 @@ def standup_active(token, channel_id):
     return {
 	    'is_active': active,
         'time_finish':  standup['time_finish']
-        }
+    }
 
 def standup_send(token, channel_id, message):
 
@@ -131,6 +131,6 @@ def standup_send(token, channel_id, message):
     standup['messages'].append({
 	    'u_id': u_id,
 	    'message': message
-	    })
+    })
 
     return {}

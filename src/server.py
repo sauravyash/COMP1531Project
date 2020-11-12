@@ -1,8 +1,9 @@
 import sys
+import os
 import json
 from json import dumps
 from flask import Flask, request, abort, send_from_directory
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from error import InputError, AccessError
 
 import auth
@@ -27,11 +28,13 @@ def defaultHandler(err):
     return response
 
 APP = Flask(__name__)
-CORS(APP)
+CORS(app=APP)
 
+APP.config['CORS_HEADERS'] = 'Content-Type'
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
+#@cross_origin(origin="*")
 def handle_request(func):
     def wrapper(*args, **kwargs):
         try:
@@ -388,5 +391,9 @@ def svr_standup_send():
     return standup.standup_send(token, channel_id, message)
 
 if __name__ == "__main__":
-    #APP.run(port=0) # Do not edit this port
-    APP.run(port=8080, debug=True) # Debugger
+    port_num = os.getenv('PORT')
+    port_num = int(port_num) if port_num != None else 0
+    print("port: ", port_num)
+    APP.run(host='0.0.0.0', port=port_num) # Do not edit this port
+    #APP.run(port=8080, debug=True) # Debugger
+
