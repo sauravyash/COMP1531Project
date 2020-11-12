@@ -45,7 +45,7 @@ def close_standup(channel_index, channel_id):
 	# Collate all messages sent.
 	standup = data.data['channels'][channel_index]['standup']
 
-	standup_str = ''
+	standup_str = 'Standup contents: \n'
 
 	for message_info in standup['messages']: # pragma: no cover
 		user_index = data.resolve_user_id_index(message_info['u_id'])
@@ -95,7 +95,7 @@ def standup_active(token, channel_id):
     return {
 	    'is_active': active,
         'time_finish':  standup['time_finish']
-        }
+    }
 
 def standup_send(token, channel_id, message):
 
@@ -129,6 +129,6 @@ def standup_send(token, channel_id, message):
     standup['messages'].append({
 	    'u_id': u_id,
 	    'message': message
-	    })
+    })
 
     return {}
