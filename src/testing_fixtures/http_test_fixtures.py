@@ -75,7 +75,7 @@ def setup_auth(url):
             'name_last': NAME_L_3
         }
     ]
-    
+
     input_log = [
         {
             'email': EMAIL_1,
@@ -103,11 +103,11 @@ def register_user(url, setup_auth):
     data = requests.post(str(url) + "auth/register", json=input_value[0])
     assert data.status_code == 200
     user1 = data.json()
-    
+
     data = requests.post(str(url) + "auth/register", json=input_value[1])
     assert data.status_code == 200
     user2 = data.json()
-    
+
     data = requests.post(str(url) + "auth/register", json=input_value[2])
     assert data.status_code == 200
     user3 = data.json()
@@ -123,12 +123,12 @@ def login_user(url, setup_auth, register_user):
     assert data.status_code == 200
     user1 = data.json()
     assert user1 == u1
-    
+
     data = requests.post(f"{url}/auth/login", json=input_data[1])
     assert data.status_code == 200
     user2 = data.json()
     assert user2 == u2
-    
+
     data = requests.post(f"{url}/auth/login", json=input_data[2])
     assert data.status_code == 200
     user3 = data.json()
@@ -154,11 +154,11 @@ def logout_user(url, login_user):
     data = requests.post(f"{url}/auth/logout", json=input_data[0])
     assert data.status_code == 200
     user1 = data.json()
-    
+
     data = requests.post(f"{url}/auth/logout", json=input_data[1])
     assert data.status_code == 200
     user2 = data.json()
-    
+
     data = requests.post(f"{url}/auth/logout", json=input_data[2])
     assert data.status_code == 200
     user3 = data.json()
@@ -171,7 +171,7 @@ def logout_user(url, login_user):
 @pytest.fixture()
 def setup_channel(url, setup_auth, login_user):
     user1, user2, user3 = login_user
-    
+
     # Create a channel with the first user.
     channel_name = 'Channel_x'
     input_data = {
@@ -182,13 +182,13 @@ def setup_channel(url, setup_auth, login_user):
 
     data = requests.post(f"{url}/channels/create", json=input_data)
     payload = data.json()
-    
+
     return user1, user2, user3, payload['channel_id'], channel_name
 
 @pytest.fixture()
 def invite_all_members(url, setup_channel):
     user1, user2, user3, channel_id, _ = setup_channel
-    
+
     tok1 = user1["token"]
     uid2 = user2["u_id"]
     uid3 = user3["u_id"]
@@ -202,12 +202,12 @@ def invite_all_members(url, setup_channel):
 
     data = requests.get(f"{url}/channel/invite", params=input_data)
     assert data.status_code == 200
-    
-    input_data = {
+
+    input_data = { # pragma: no cover
         'token': tok1,
         'channel_id': channel_id,
         'u_id': uid3
     }
 
-    data = requests.get(f"{url}/channel/invite", params=input_data)
-    assert data.status_code == 200
+    data = requests.get(f"{url}/channel/invite", params=input_data) # pragma: no cover
+    assert data.status_code == 200 # pragma: no cover
