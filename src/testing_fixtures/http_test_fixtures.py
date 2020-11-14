@@ -55,7 +55,6 @@ def setup_auth(url):
     payload = data.json()
     assert payload == {}
 
-<<<<<<< HEAD
     input_reg = [
         {
             'email': EMAIL_1,
