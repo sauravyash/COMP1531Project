@@ -32,7 +32,7 @@ def url():
     server = Popen(["python3", "src/server.py"], stderr=PIPE, stdout=PIPE)
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())
-    if local_url:
+    if local_url: # pragma: no cover
         yield local_url.group(1)
         # Terminate the server
         server.send_signal(signal.SIGINT)
@@ -40,21 +40,22 @@ def url():
         while server.poll() is None and waited < 5:
             sleep(0.1)
             waited += 0.1
-        if server.poll() is None:
+        if server.poll() is None: # pragma: no cover
             server.kill()
     else:
-        server.kill()
-        raise Exception("Couldn't get URL from local server")
+        server.kill() # pragma: no cover
+        raise Exception("Couldn't get URL from local server") # pragma: no cover
 
 # ----- Clear the server, and provide details of first user.
 @pytest.fixture()
 def setup_auth(url):
     data = requests.delete(str(url) + "/clear")
     assert data.status_code == 200
-    
+
     payload = data.json()
     assert payload == {}
 
+<<<<<<< HEAD
     input_reg = [
         {
             'email': EMAIL_1,
@@ -211,4 +212,3 @@ def invite_all_members(url, setup_channel):
 
     data = requests.get(f"{url}/channel/invite", params=input_data)
     assert data.status_code == 200
-

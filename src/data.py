@@ -13,7 +13,8 @@ import string
 global data
 data = {
     'users': [],
-    'channels': []
+    'channels': [],
+    'delayed_messages': []
 }
 
 JWT_KEY = 'b0ggers'
@@ -243,7 +244,7 @@ def reset_key_match(reset_key):
 
     """
     for user in data["users"]:
-        if user.get("reset_code") == hashlib.sha256(reset_key.encode()).hexdigest():
+        if user.get("reset_code") == hashlib.sha256(reset_key.encode()).hexdigest(): # pragma: no cover
             user.pop("reset_code", None)
             return user.get("id")
     return 0
@@ -270,7 +271,7 @@ def generate_handle(handle):
     Returns: Handle
 
     """
-    while resolve_handle(handle):
+    while resolve_handle(handle): # pragma: no cover
         nums = []
         for i in range(len(handle)):
             if handle[i].isdigit():
@@ -324,6 +325,18 @@ def generate_reset_key(length):
 
     """
     alphabet = string.ascii_letters
+    key = ''.join(random.choice(alphabet) for i in range(length))
+
+    return key
+
+def generate_img_name(length):
+    """ GENERATE RANDOM IMAGE NAME
+
+    Arguments: length, must be integer
+    Returns: img_name
+    """
+
+    alphabet = string.ascii_lowercase + string.digits
     key = ''.join(random.choice(alphabet) for i in range(length))
 
     return key

@@ -3,11 +3,11 @@
 Functions to test standup_send functionality
 '''
 
-''' NOT YET IMPLEMENTED
 import pytest
 import other
 import string
 import random
+import time
 
 from error import InputError, AccessError
 from standup import standup_send, standup_active, standup_start
@@ -27,9 +27,9 @@ def test_invalid_token(setup_test_interface):
     _, _, channel_id = setup_test_interface
 
     with pytest.raises(AccessError):
-        standup_active(-999, channel_id, 'General Kenobi')
+        standup_send(-999, channel_id, 'General Kenobi')
     with pytest.raises(AccessError):
-        standup_active('fake_token', channel_id, 'General Kenobi')
+        standup_send('fake_token', channel_id, 'General Kenobi')
 
 def test_invalid_channel_id(setup_test_interface):
     user1, _, channel_id = setup_test_interface
@@ -56,10 +56,19 @@ def test_no_standup(setup_test_interface):
     with pytest.raises(InputError):
         standup_send(user1["token"], channel_id, "General Kenobi")
 
+def test_standup_ended(setup_test_interface):
+    user1, _, channel_id = setup_test_interface
+
+    standup_start(user1["token"], channel_id, 1)
+    time.sleep(3)
+    
+    with pytest.raises(InputError):
+        standup_send(user1["token"], channel_id, "General Kenobi")
+
 def test_unauthorised_user(setup_test_interface):
     user1, user2, channel_id = setup_test_interface
-    standup_start(user1["token"], channel_id, 'General Kenobi')
+    standup_start(user1["token"], channel_id, 100)
 
     with pytest.raises(AccessError):
         standup_send(user2["token"], channel_id, "General Kenobi")
-'''
+
