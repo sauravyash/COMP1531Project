@@ -153,7 +153,7 @@ def test_invite_bad_request(url, setup_channel):
     assert data.status_code == 500
 
 # ---------------------------------------------------------------------------- #
-''' ----- CHANNELS DETAILS ----- '''
+''' ----- CHANNEL DETAILS ----- '''
 
 # ----- Success Details
 def test_details_simple(url, setup_channel, invite_all_members):
@@ -177,7 +177,6 @@ def test_details_simple(url, setup_channel, invite_all_members):
         assert payload['name'] == channel_name
         assert len(payload['owner_members']) == 1
         assert len(payload['all_members']) == 3
-        assert sorted(payload['all_members']) == sorted(users)
 
 # ----- Fail Invite
 def test_details_not_member(url, setup_channel):
@@ -234,25 +233,388 @@ def test_details_key_error(url, setup_channel):
     # Bad/ Invalid input, raise KEY ERROR. (400)
     assert data.status_code == 400
 
-def test_details_bad_request(url, setup_channel):
+''' ----- CHANNEL MESSAGES ----- '''
+
+# ----- Success Messages
+def test_messages_simple(url, setup_channel):
+    user1, _, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'token': user1["token"],
+        'channel_id': channel_id,
+        'start': 0
+    }
+
+    data = requests.get(f"{url}/channel/messages", params=input_data)
+    ''' Checking good connection '''
+    assert data.status_code == 200
+
+    payload = data.json()
+    assert payload == {
+        "messages": [],
+        "start": 0,
+        "end": -1,
+    }
+
+# ----- Fail Messages
+def test_messages_not_member(url, setup_channel):
+    _, user2, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'token': user2["token"],
+        'channel_id': channel_id,
+        'start': 0
+    }
+
+    data = requests.get(f"{url}/channel/messages", params=input_data)
+    # User is not a member of channel, raise ACCESS ERROR. (403)
+    assert data.status_code == 403
+
+
+def test_messages_invalid_channel(url, setup_channel):
+    user1, _, _, _, _ = setup_channel
+
+    input_data = {
+        'token': user1["token"],
+        'channel_id': -99,
+        'start': 0
+    }
+
+    data = requests.get(f"{url}/channel/messages", params=input_data)
+    # Invalid Channel ID, raise INPUT ERROR. (401)
+    assert data.status_code == 401
+
+
+def test_messages_invalid_start(url, setup_channel):
+    user1, _, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'token': user1["token"],
+        'channel_id': channel_id,
+        'start': -99
+    }
+
+    data = requests.get(f"{url}/channel/messages", params=input_data)
+    # Invalid Channel ID, raise INPUT ERROR. (401)
+    assert data.status_code == 401
+
+
+def test_messages_invalid_token(url, setup_channel):
+    _, _, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'token': 'invalid_token',
+        'channel_id': channel_id,
+        'start': 0
+    }
+
+    data = requests.get(f"{url}/channel/messages", params=input_data)
+    # Invalid token, raise ACCESS ERROR. (401)
+    assert data.status_code == 401
+
+def test_messages_key_error(url, setup_channel):
+    user1, _, _, channel_id, _ = setup_channel
+
+    tok1 = user1["token"]
+
+    input_data = {
+        'taken': tok1,
+        'channel_id': channel_id,
+        'start': 0
+    }
+
+    data = requests.get(f"{url}/channel/messages", params=input_data)
+    # Bad/ Invalid input, raise KEY ERROR. (400)
+    assert data.status_code == 400
+
+''' ----- CHANNEL LEAVE ----- '''
+# ----- Success Leave
+def test_leave_simple(url, setup_channel, invite_all_members):
+    user1, user2, _, channel_id, _ = setup_channel
+    invite_all_members
+
+    # A member leaves the channel.
+    input_data = {
+        'token': user2['token'],
+        'channel_id': channel_id
+    }
+
+    data = requests.post(f"{url}/channel/leave", json=input_data)
+    ''' Checking good connection '''
+    assert data.status_code == 200
+
+    payload = data.json()
+    assert payload == {}
+
+    # An owner leaves the channel.
+    input_data = {
+        'token': user1['token'],
+        'channel_id': channel_id
+    }
+
+    data = requests.post(f"{url}/channel/leave", json=input_data)
+    ''' Checking good connection '''
+    assert data.status_code == 200
+
+    payload = data.json()
+    assert payload == {}
+
+# ----- Fail Leave
+def test_leave_not_member(url, setup_channel):
+    _, user2, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'token': user2["token"],
+        'channel_id': channel_id
+    }
+
+    data = requests.post(f"{url}/channel/leave", json=input_data)
+    # User is not a member of channel, raise ACCESS ERROR. (403)
+    assert data.status_code == 403
+
+
+def test_leave_invalid_channel(url, setup_channel):
+    user1, _, _, _, _ = setup_channel
+
+    input_data = {
+        'token': user1["token"],
+        'channel_id': -99
+    }
+
+    data = requests.post(f"{url}/channel/leave", json=input_data)
+    # Invalid Channel ID, raise INPUT ERROR. (401)
+    assert data.status_code == 401
+
+def test_leave_invalid_token(url, setup_channel):
+    _, _, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'token': 'invalid_token',
+        'channel_id': channel_id
+    }
+
+    data = requests.post(f"{url}/channel/leave", json=input_data)
+    # Invalid token, raise ACCESS ERROR. (401)
+    assert data.status_code == 401
+
+def test_leave_key_error(url, setup_channel):
+    user1, _, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'taken': user1['token'],
+        'channel_id': channel_id
+    }
+
+    data = requests.post(f"{url}/channel/leave", json=input_data)
+    # Bad/ Invalid input, raise KEY ERROR. (400)
+    assert data.status_code == 400
+
+def test_leave_bad_request(url, setup_channel):
     setup_channel
   
     input_data = ['not', 'a', 'dictionary']
     
-    data = requests.get(f"{url}/channel/details", params=input_data)
+    data = requests.post(f"{url}/channel/leave", json=input_data)
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
 
-''' ----- CHANNELS MESSAGES ----- '''
+''' ----- CHANNEL JOIN ----- '''
 
+# ----- Success Join
+def test_join_simple(url, setup_channel):
+    _, user2, _, channel_id, _ = setup_channel
 
-''' ----- CHANNELS LEAVE ----- '''
+    # A member joins the channel.
+    input_data = {
+        'token': user2['token'],
+        'channel_id': channel_id
+    }
 
+    data = requests.post(f"{url}/channel/join", json=input_data)
+    ''' Checking good connection '''
+    assert data.status_code == 200
 
-''' ----- CHANNELS JOIN ----- '''
+    payload = data.json()
+    assert payload == {}
 
+# ----- Fail Join
+def test_join_private(url, setup_channel):
+    user1, user2, _, _, _ = setup_channel
 
-''' ----- CHANNELS ADDOWNER ----- '''
+    input_data = {
+        'token': user1["token"],
+        'name': 'Channel_x',
+        'is_public': False
+    }
 
+    data = requests.post(f"{url}/channels/create", json=input_data)
+    assert data.status_code == 200
 
-''' ----- CHANNELS REMOVEOWNER ----- '''
+    payload = data.json()
+    channel_id = payload['channel_id']
+
+    input_data = {
+        'token': user2['token'],
+        'channel_id': channel_id
+    }
+
+    data = requests.post(f"{url}/channel/join", json=input_data)
+    # User can not join private channel, raise ACCESS ERROR. (403)
+    assert data.status_code == 403
+
+def test_join_invalid_channel(url, setup_channel):
+    user1, _, _, _, _ = setup_channel
+
+    input_data = {
+        'token': user1["token"],
+        'channel_id': -99
+    }
+
+    data = requests.post(f"{url}/channel/join", json=input_data)
+    # Invalid Channel ID, raise INPUT ERROR. (401)
+    assert data.status_code == 401
+
+def test_join_invalid_token(url, setup_channel):
+    _, _, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'token': 'invalid_token',
+        'channel_id': channel_id
+    }
+
+    data = requests.post(f"{url}/channel/join", json=input_data)
+    # Invalid token, raise ACCESS ERROR. (401)
+    assert data.status_code == 401
+
+def test_join_key_error(url, setup_channel):
+    user1, _, _, channel_id, _ = setup_channel
+
+    input_data = {
+        'taken': user1['token'],
+        'channel_id': channel_id
+    }
+
+    data = requests.post(f"{url}/channel/join", json=input_data)
+    # Bad/ Invalid input, raise KEY ERROR. (400)
+    assert data.status_code == 400
+
+def test_leave_bad_request(url, setup_channel):
+    setup_channel
+  
+    input_data = ['not', 'a', 'dictionary']
+    
+    data = requests.post(f"{url}/channel/join", json=input_data)
+    # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
+    assert data.status_code == 500
+
+''' ----- CHANNEL ADDOWNER ----- '''
+# ----- Success Addowner
+def test_addowner_simple(url, setup_channel, invite_all_members):
+    user1, user2, _, channel_id, _ = setup_channel
+    invite_all_members
+
+    # A member joins the channel.
+    input_data = {
+        'token': user1['token'],
+        'channel_id': channel_id,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    ''' Checking good connection '''
+    assert data.status_code == 200
+
+    payload = data.json()
+    assert payload == {}
+
+# ----- Fail Addowner
+def test_addowner_not_auth(url, setup_channel, invite_all_members):
+    _, user2, user3, channel_id, _ = setup_channel
+    invite_all_members
+
+    input_data = {
+        'token': user2["token"],
+        'channel_id': channel_id,
+        'u_id': user3['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    # User is not an owner, raise ACCESS ERROR. (403)
+    assert data.status_code == 403
+
+def test_addowner_already_owner(url, setup_channel, invite_all_members):
+    user1, user2, _, channel_id, _ = setup_channel
+    invite_all_members
+
+    # Firstly make user2 an owner.
+    input_data = {
+        'token': user1["token"],
+        'channel_id': channel_id,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    assert data.status_code == 200
+
+    input_data = {
+        'token': user2["token"],
+        'channel_id': channel_id,
+        'u_id': user1['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    # User is already an owner, raise INPUT ERROR. (401)
+    assert data.status_code == 401
+
+def test_addowner_invalid_channel(url, setup_channel, invite_all_members):
+    user1, user2, _, _, _ = setup_channel
+    invite_all_members
+
+    input_data = {
+        'token': user1["token"],
+        'channel_id': -99,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    # Invalid Channel ID, raise INPUT ERROR. (401)
+    assert data.status_code == 401
+
+def test_addowner_invalid_token(url, setup_channel, invite_all_members):
+    _, user2, _, channel_id, _ = setup_channel
+    invite_all_members
+
+    input_data = {
+        'token': 'invalid_token',
+        'channel_id': channel_id,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    # Invalid token, raise ACCESS ERROR. (401)
+    assert data.status_code == 401
+
+def test_addowner_key_error(url, setup_channel, invite_all_members):
+    user1, user2, _, channel_id, _ = setup_channel
+    invite_all_members
+
+    input_data = {
+        'taken': user1['token'],
+        'channel_id': channel_id,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    # Bad/ Invalid input, raise KEY ERROR. (400)
+    assert data.status_code == 400
+
+def test_leave_bad_request(url, setup_channel):
+    setup_channel
+  
+    input_data = ['not', 'a', 'dictionary']
+    
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
+    assert data.status_code == 500
+
+''' ----- CHANNEL REMOVEOWNER ----- '''

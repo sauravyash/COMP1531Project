@@ -200,7 +200,7 @@ def invite_all_members(url, setup_channel):
         'u_id': uid2
     }
 
-    data = requests.get(f"{url}/channel/invite", params=input_data)
+    data = requests.post(f"{url}/channel/invite", json=input_data)
     assert data.status_code == 200
     
     input_data = {
@@ -209,5 +209,5 @@ def invite_all_members(url, setup_channel):
         'u_id': uid3
     }
 
-    data = requests.get(f"{url}/channel/invite", params=input_data)
+    data = requests.post(f"{url}/channel/invite", json=input_data)
     assert data.status_code == 200
