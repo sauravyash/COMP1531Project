@@ -108,6 +108,37 @@ def channel_details(token, channel_id):
         'nsfw': not channel['is_censored']
     }
 
+def channel_setnsfw(token, channel_id, is_nsfw):
+    # Find index of channel and check channel ID is valid.
+    user_id = -1
+    channel_index = -1
+
+    try:
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError(description='Invalid Channel ID')
+
+    # Check that the token is valid.
+    try:
+        user_id = data.token_to_user_id(token)
+    except:
+        raise AccessError(description='Invalid Token')
+
+    # To cause less confusion, name accordingly.
+    invited_member = user_id
+    already_member = user_id_token
+
+    channel = data.data['channels'][channel_index]
+    
+    # If authorised user (already_member) does not have owner permissions, raise
+    # an Access Error.
+    if data.resolve_permissions(channel['id'], already_member) != 1:
+        raise AccessError(description='User Not Authorised With Channel Owner Permissions')
+    
+    channel['is_censored'] = bool(is_nsfw)
+
+    return {}
+
 def channel_messages(token, channel_id, start):
     ''' Channel_messages
     Select the 50 most recent messages and display from a starting point.

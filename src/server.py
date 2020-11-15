@@ -180,6 +180,16 @@ def svr_channel_kickmember():
     user_id = int(req['u_id'])
     return channel.channel_kickmember(token, channel_id, user_id)
 
+@APP.route("/channel/setnsfw", methods=["POST"])
+@handle_request
+def svr_channel_setnsfw():
+    req = request.get_json()
+    token = req['token']
+    channel_id = int(req['channel_id'])
+    nsfw = bool(req['is_nsfw'])
+    return channel.channel_kickmember(token, channel_id, nsfw)
+
+
 @APP.route("/channel/removeowner", methods=["POST"])
 @handle_request
 def svr_channel_removeowner():
