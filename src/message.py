@@ -1,12 +1,33 @@
-'''Test Message's Functional Validity
+''' The Message Implementation File
 '''
 
 import data
 import datetime
+
 from error import InputError, AccessError
+
+PROFANITY_FILE_NAME = "profanity.txt"
 
 def is_message_valid(message):
     return isinstance(message, str) and len(message) <= 1000
+
+def censor_messsage_contents(message):
+    #censors keywords found
+    bad_words = [] # pragma: no cover
+
+    with open(PROFANITY_FILE_NAME, 'r') as profanity_list: # pragma: no cover
+        lines = profanity_list.readlines()
+        for line in lines:
+            bad_words.append(line.strip())
+
+    message_split = message.split() # pragma: no cover
+
+    for i, word in enumerate(message_split): # pragma: no cover
+        if word in bad_words:
+            message_split[i] = "*" * len(word)
+    message = " ".join(message_split) # pragma: no cover
+
+    return message # pragma: no cover
 
 def message_send(token, channel_id, message):
     # check permissions
@@ -31,6 +52,13 @@ def message_send(token, channel_id, message):
     # create msg
     new_id = data.generate_message_id()
 
+    # censor check
+    channel_data = data.data.get('channels')[channel_index]
+    is_censored_channel = channel_data['is_censored']
+
+    if is_censored_channel: # pragma: no cover
+        message = censor_messsage_contents(message)
+
     msg = {
         'message_id': new_id,
         'u_id': user_id,
@@ -38,11 +66,10 @@ def message_send(token, channel_id, message):
         'time_created': datetime.datetime.now().timestamp(),
         'reacts': [],
         'is_pinned': False
-
     }
 
     # add msg to data
-    msgs = data.data.get('channels')[channel_index]['messages']
+    msgs = channel_data['messages']
     msgs.append(msg)
 
     return {
@@ -99,7 +126,13 @@ def message_edit(token, message_id, message):
     if not is_user_author and not is_admin:
         raise AccessError(description="user not authorised")
 
-    data.print_data()
+    # censor check
+    channel_data = data.data.get('channels')[channel_index]
+    is_censored_channel = channel_data['is_censored']
+
+    if is_censored_channel: # pragma: no cover
+        message = censor_messsage_contents(message)
+
     msgs[msg_index]['message'] = message
 
     return {}
