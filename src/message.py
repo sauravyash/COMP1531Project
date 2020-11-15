@@ -6,12 +6,27 @@ import datetime
 
 from error import InputError, AccessError
 
+PROFANITY_FILE_NAME = "profanity.txt"
+
 def is_message_valid(message):
     return isinstance(message, str) and len(message) <= 1000
 
 def censor_messsage_contents(message):
     #censors keywords found
+    bad_words = []
+
+    with open(PROFANITY_FILE_NAME, 'r') as profanity_list:
+        lines = profanity_list.readlines()
+        for line in lines:
+            bad_words.append(line.strip())
+        
+    message_split = message.split()
     
+    for i, word in enumerate(message_split):
+        if word in bad_words:
+            message_split[i] = "*" * len(word)
+    message = " ".join(message_split)
+
     return message
 
 def message_send(token, channel_id, message):
