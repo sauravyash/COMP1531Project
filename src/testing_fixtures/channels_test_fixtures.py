@@ -28,7 +28,7 @@ def setup_test_interface_create():
     return user1, user2
 
 @pytest.fixture()
-def setup_test_interface_lists(setup_test_interface_create):
+def setup_test_interface_lists():
     ''' Setup_test_interface_lists
     Clear data, then register and login three users.
     Multiple channels are created and each user is given a list of the channels
@@ -38,7 +38,11 @@ def setup_test_interface_lists(setup_test_interface_create):
     other.clear()
     
     # Register and login three users.
-    user1, user2 = setup_test_interface_create
+    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
+    user1 = auth.auth_login('validemail1@gmail.com', 'password123')
+
+    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
+    user2 = auth.auth_login('validemail2@gmail.com', 'password123')
     
     auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
     user3 = auth.auth_login('validemail3@gmail.com', 'password123')
