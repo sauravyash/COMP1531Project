@@ -291,8 +291,7 @@ def test_logout_bad_request(url, login_user):
 ''' ----- AUTH RESET REQUEST ----- '''
 
 # ----- Fail Request
-def test_request_invalid_email(url, register_user):
-    user1, _, _ = register_user
+def test_request_invalid_email(url):
 
     input_data = {
         "email": "emailnotregistered@gmail.com"
