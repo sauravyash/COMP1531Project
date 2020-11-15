@@ -186,7 +186,7 @@ def svr_channel_setnsfw():
     req = request.get_json()
     token = req['token']
     channel_id = int(req['channel_id'])
-    nsfw = bool(req['is_nsfw'])
+    nsfw = bool(req['nsfw'])
     return channel.channel_kickmember(token, channel_id, nsfw)
 
 
