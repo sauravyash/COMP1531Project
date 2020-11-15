@@ -47,7 +47,7 @@ def test_invite_simple(url, setup_channel):
 
     payload = data.json()
     assert payload == {}
-    
+
     print_data()
 
     # Check that second user (member) can add third user to channel.
@@ -145,9 +145,9 @@ def test_invite_key_error(url, setup_channel):
 
 def test_invite_bad_request(url, setup_channel):
     setup_channel
-  
+
     input_data = ['not', 'a', 'dictionary']
-    
+
     data = requests.post(f"{url}/channel/invite", json=input_data)
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
@@ -411,9 +411,9 @@ def test_leave_key_error(url, setup_channel):
 
 def test_leave_bad_request(url, setup_channel):
     setup_channel
-  
+
     input_data = ['not', 'a', 'dictionary']
-    
+
     data = requests.post(f"{url}/channel/leave", json=input_data)
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
@@ -500,9 +500,9 @@ def test_join_key_error(url, setup_channel):
 
 def test_join_bad_request(url, setup_channel):
     setup_channel
-  
+
     input_data = ['not', 'a', 'dictionary']
-    
+
     data = requests.post(f"{url}/channel/join", json=input_data)
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
@@ -611,9 +611,9 @@ def test_addowner_key_error(url, setup_channel, invite_all_members):
 
 def test_addowner_bad_request(url, setup_channel):
     setup_channel
-  
+
     input_data = ['not', 'a', 'dictionary']
-    
+
     data = requests.post(f"{url}/channel/addowner", json=input_data)
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
@@ -624,7 +624,7 @@ def test_addowner_bad_request(url, setup_channel):
 def test_removeowner_simple(url, setup_channel, all_members_owners):
     user1, user2, _, channel_id, _ = setup_channel
     all_members_owners
-    
+
     # User1 removes User2 as an owner.
     input_data = {
         'token': user1['token'],
@@ -712,9 +712,9 @@ def test_removeowner_key_error(url, setup_channel, invite_all_members):
 
 def test_removeowner_bad_request(url, setup_channel):
     setup_channel
-  
+
     input_data = ['not', 'a', 'dictionary']
-    
+
     data = requests.post(f"{url}/channel/removeowner", json=input_data)
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
