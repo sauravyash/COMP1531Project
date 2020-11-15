@@ -113,7 +113,8 @@ def channels_create(token, name, is_public):
             'creator': None,
             'time_finish': None,
             'messages': []
-        }
+        },
+        'is_censored': False
     })
 
     return {
