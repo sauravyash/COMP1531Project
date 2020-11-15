@@ -22,7 +22,6 @@ def test_url(url):
     '''Check server set up properly'''
     assert url.startswith("http")
 
-# ---------------------------------------------------------------------------- #
 ''' ----- CHANNELS LIST ----- '''
 # Test empty list (no channels)
 def test_list_empty_list(url, login_user):

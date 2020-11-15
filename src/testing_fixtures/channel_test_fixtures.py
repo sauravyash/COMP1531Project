@@ -1,3 +1,8 @@
+################################ Channel Fixtures ##############################
+'''
+Fixtures to remove repeated code and improve readability of testing.
+'''
+
 import pytest
 
 import auth
@@ -6,6 +11,11 @@ import other
 
 @pytest.fixture()
 def setup_test_interface():
+    ''' Setup_test_interface
+    Clear the data, then register and login 3 users.
+    Finally the first user creates a channel.
+    '''
+    
     other.clear()
 
     # Register and login three users.
