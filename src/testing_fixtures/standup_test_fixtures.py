@@ -1,3 +1,8 @@
+################################ Standup Fixtures ##############################
+'''
+Fixtures to remove repeated code and improve readability of testing.
+'''
+
 import pytest
 
 import auth
@@ -6,6 +11,11 @@ import other
 
 @pytest.fixture()
 def setup_test_interface():
+    ''' Setup_test_interface 
+    Clear data, then register and login two users.
+    Create a channel with the first user.
+    '''
+    
     other.clear()
 
     # Register and login two users.
