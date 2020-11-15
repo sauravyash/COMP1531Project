@@ -171,6 +171,15 @@ def svr_channel_addowner():
     user_id = int(req['u_id'])
     return channel.channel_addowner(token, channel_id, user_id)
 
+@APP.route("/channel/kickmember", methods=["POST"])
+@handle_request
+def svr_channel_kickmember():
+    req = request.get_json()
+    token = req['token']
+    channel_id = int(req['channel_id'])
+    user_id = int(req['u_id'])
+    return channel.channel_kickmember(token, channel_id, user_id)
+
 @APP.route("/channel/removeowner", methods=["POST"])
 @handle_request
 def svr_channel_removeowner():
@@ -179,6 +188,7 @@ def svr_channel_removeowner():
     channel_id = int(req['channel_id'])
     user_id = int(req['u_id'])
     return channel.channel_removeowner(token, channel_id, user_id)
+
 
 @APP.route("/channels/list", methods=["GET"])
 @handle_request
