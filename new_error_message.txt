@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "src/server.py", line 103, in svr_channel_invite
-    u_id = int(req['u_id'])
-ValueError: invalid literal for int() with base 10: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjozfQ.K4cLGtXHfHHR8gEOpFYWgpuwfwiDRKkduKkGi37Ar7A'

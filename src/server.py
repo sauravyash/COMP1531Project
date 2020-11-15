@@ -187,7 +187,7 @@ def svr_channel_setnsfw():
     token = req['token']
     channel_id = int(req['channel_id'])
     nsfw = bool(req['nsfw'])
-    return channel.channel_kickmember(token, channel_id, nsfw)
+    return channel.channel_setnsfw(token, channel_id, nsfw)
 
 
 @APP.route("/channel/removeowner", methods=["POST"])

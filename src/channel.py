@@ -124,18 +124,14 @@ def channel_setnsfw(token, channel_id, is_nsfw):
     except:
         raise AccessError(description='Invalid Token')
 
-    # To cause less confusion, name accordingly.
-    invited_member = user_id
-    already_member = user_id_token
-
     channel = data.data['channels'][channel_index]
     
     # If authorised user (already_member) does not have owner permissions, raise
     # an Access Error.
-    if data.resolve_permissions(channel['id'], already_member) != 1:
+    if data.resolve_permissions(channel_id, user_id) != 1:
         raise AccessError(description='User Not Authorised With Channel Owner Permissions')
     
-    channel['is_censored'] = bool(is_nsfw)
+    channel['is_censored'] = not bool(is_nsfw)
 
     return {}
 
@@ -341,7 +337,7 @@ def channel_kickmember(token, channel_id, user_id): # pragma: no cover
         raise AccessError(description='Invalid Token')
 
     # To cause less confusion, name accordingly.
-    invited_member = user_id
+    removed_member = user_id
     already_member = user_id_token
 
     channel = data.data['channels'][channel_index]
@@ -352,16 +348,14 @@ def channel_kickmember(token, channel_id, user_id): # pragma: no cover
         raise AccessError(description='User Not Authorised With Channel Owner Permissions')
 
     # Check if invited user is a member of channel.
-    if data.resolve_permissions(channel['id'], invited_member) is None:
+    if data.resolve_permissions(channel['id'], removed_member) is None:
         raise InputError(description='User Is Not a Member Of Channel')
     
-    # Check if invited user is already an owner.
-    if invited_member not in channel['members']['permission_id_1']:
-        raise InputError(description='User Is Not Already a Channel Owner')
-
     # Remove the user as a member or owner.
-    channel['members']['permission_id_1'].remove(invited_member)
-    channel['members']['permission_id_2'].remove(invited_member)
+    if data.resolve_permissions(channel['id'], removed_member) == 1:
+        channel['members']['permission_id_1'].remove(removed_member)
+    else: 
+        channel['members']['permission_id_2'].remove(removed_member)
 
     return {}
 
