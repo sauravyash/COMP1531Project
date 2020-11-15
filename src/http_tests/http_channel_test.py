@@ -710,7 +710,7 @@ def test_removeowner_key_error(url, setup_channel, invite_all_members):
     # Bad/ Invalid input, raise KEY ERROR. (400)
     assert data.status_code == 400
 
-def test_addowner_bad_request(url, setup_channel):
+def test_removeowner_bad_request(url, setup_channel):
     setup_channel
   
     input_data = ['not', 'a', 'dictionary']

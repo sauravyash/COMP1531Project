@@ -239,3 +239,45 @@ def all_members_owners(url, setup_channel, invite_all_members):
 
     data = requests.post(f"{url}/channel/addowner", json=input_data)
     assert data.status_code == 200
+
+@pytest.fixture()    
+def setup_channels(url, login_user):
+    user1, user2, user3 = login_user
+
+
+    users = [user1, user2, user3]
+
+    channels_1 = []
+    channels_2 = []
+    channels_3 = []
+
+    # List the channels that each member has created.
+    # User1 creates a channel.
+    input_data = {
+        'token': user1['token'],
+        'name': 'channel_1',
+        'is_public': True
+    }
+
+    data = requests.post(f"{url}/channels/create", json=input_data)
+    ''' Checking good connection '''
+    channels_1.append(data.json()['channel_id'])
+
+    # User2 creates two channels.
+    input_data = {
+        'token': user2['token'],
+        'name': 'channel_2',
+        'is_public': True
+    }
+
+    data = requests.post(f"{url}/channels/create", json=input_data)
+    ''' Checking good connection '''
+    channels_2.append(data.json()['channel_id'])
+
+    input_data['name'] = 'channel_3'
+
+    data = requests.post(f"{url}/channels/create", json=input_data)
+    ''' Checking good connection '''
+    channels_2.append(data.json()['channel_id'])
+
+    return users, channels_1, channels_2, channels_3
