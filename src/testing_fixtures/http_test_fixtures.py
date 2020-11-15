@@ -211,3 +211,31 @@ def invite_all_members(url, setup_channel):
 
     data = requests.post(f"{url}/channel/invite", json=input_data)
     assert data.status_code == 200
+
+@pytest.fixture()    
+def all_members_owners(url, setup_channel, invite_all_members):
+    user1, user2, user3, channel_id, _ = setup_channel
+    invite_all_members
+    
+    tok1 = user1["token"]
+    uid2 = user2["u_id"]
+    uid3 = user3["u_id"]
+
+    # Make all users a member of the channel by inviting them.
+    input_data = {
+        'token': tok1,
+        'channel_id': channel_id,
+        'u_id': uid2
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    assert data.status_code == 200
+    
+    input_data = {
+        'token': tok1,
+        'channel_id': channel_id,
+        'u_id': uid3
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    assert data.status_code == 200

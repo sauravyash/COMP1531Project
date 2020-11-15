@@ -14,9 +14,9 @@ import pytest
 
 from data import print_data
 
-from testing_fixtures.http_test_fixtures import url, setup_auth
+from testing_fixtures.http_test_fixtures import url, setup_auth, setup_channel
 from testing_fixtures.http_test_fixtures import register_user, login_user, logout_user
-from testing_fixtures.http_test_fixtures import setup_channel, invite_all_members
+from testing_fixtures.http_test_fixtures import invite_all_members, all_members_owners
 
 def test_url(url):
     '''Check server set up properly'''
@@ -508,6 +508,7 @@ def test_join_bad_request(url, setup_channel):
     assert data.status_code == 500
 
 ''' ----- CHANNEL ADDOWNER ----- '''
+
 # ----- Success Addowner
 def test_addowner_simple(url, setup_channel, invite_all_members):
     user1, user2, _, channel_id, _ = setup_channel
@@ -618,3 +619,102 @@ def test_addowner_bad_request(url, setup_channel):
     assert data.status_code == 500
 
 ''' ----- CHANNEL REMOVEOWNER ----- '''
+
+# ----- Success Removeowner
+def test_removeowner_simple(url, setup_channel, all_members_owners):
+    user1, user2, _, channel_id, _ = setup_channel
+    all_members_owners
+    
+    # User1 removes User2 as an owner.
+    input_data = {
+        'token': user1['token'],
+        'channel_id': channel_id,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/removeowner", json=input_data)
+    ''' Checking good connection '''
+    assert data.status_code == 200
+
+    payload = data.json()
+    assert payload == {}
+
+# ----- Fail Removeowner
+def test_removeowner_not_auth(url, setup_channel, invite_all_members):
+    user1, user2, _, channel_id, _ = setup_channel
+    invite_all_members
+
+    input_data = {
+        'token': user2["token"],
+        'channel_id': channel_id,
+        'u_id': user1['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/addowner", json=input_data)
+    # User is not an owner, raise ACCESS ERROR. (403)
+    assert data.status_code == 403
+
+def test_removeowner_member(url, setup_channel, invite_all_members):
+    user1, user2, _, channel_id, _ = setup_channel
+    invite_all_members
+
+    input_data = {
+        'token': user1["token"],
+        'channel_id': channel_id,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/removeowner", json=input_data)
+    # User is already an owner, raise INPUT ERROR. (401)
+    assert data.status_code == 401
+
+def test_removeowner_invalid_channel(url, setup_channel, all_members_owners):
+    user1, user2, _, _, _ = setup_channel
+    all_members_owners
+
+    input_data = {
+        'token': user1["token"],
+        'channel_id': -99,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/removeowner", json=input_data)
+    # Invalid Channel ID, raise INPUT ERROR. (401)
+    assert data.status_code == 401
+
+def test_removeowner_invalid_token(url, setup_channel, all_members_owners):
+    _, user2, _, channel_id, _ = setup_channel
+    all_members_owners
+
+    input_data = {
+        'token': 'invalid_token',
+        'channel_id': channel_id,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/removeowner", json=input_data)
+    # Invalid token, raise ACCESS ERROR. (401)
+    assert data.status_code == 401
+
+def test_removeowner_key_error(url, setup_channel, invite_all_members):
+    user1, user2, _, channel_id, _ = setup_channel
+    all_members_owners
+
+    input_data = {
+        'taken': user1['token'],
+        'channel_id': channel_id,
+        'u_id': user2['u_id']
+    }
+
+    data = requests.post(f"{url}/channel/removeowner", json=input_data)
+    # Bad/ Invalid input, raise KEY ERROR. (400)
+    assert data.status_code == 400
+
+def test_addowner_bad_request(url, setup_channel):
+    setup_channel
+  
+    input_data = ['not', 'a', 'dictionary']
+    
+    data = requests.post(f"{url}/channel/removeowner", json=input_data)
+    # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
+    assert data.status_code == 500
