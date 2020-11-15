@@ -114,7 +114,7 @@ def test_already_registered(url, setup_auth, register_user):
     # User can not be registered again, raise INPUT ERROR. (401)
     assert data.status_code == 401
 
-def test_reg_key_error(url):
+def test_reg_key_error(url, setup_auth):
     setup_auth
     input_data = {
         'emale': 'validemail@gmail.com',
@@ -127,7 +127,7 @@ def test_reg_key_error(url):
     # Bad/ Invalid input, raise KEY ERROR. (400)
     assert data.status_code == 400
 
-def test_reg_bad_request(url):
+def test_reg_bad_request(url, setup_auth):
     setup_auth
     input_data = ['not', 'a', 'dictionary']
     
@@ -286,3 +286,4 @@ def test_logout_bad_request(url, login_user):
     data = requests.post(str(url) + "auth/logout", json=input_data)
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
+
