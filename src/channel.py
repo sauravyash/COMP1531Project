@@ -289,6 +289,50 @@ def channel_addowner(token, channel_id, user_id):
 
     return {}
 
+def channel_kickowner(token, channel_id, user_id):
+    # Find index of channel and check channel ID is valid.
+    try:
+        channel_index = data.resolve_channel_id_index(channel_id)
+    except LookupError:
+        raise InputError(description='Invalid Channel ID')
+
+    # Check that user ID is valid.
+    try:
+        data.resolve_user_id_index(user_id)
+    except LookupError:
+        raise InputError(description='Invalid User ID')
+
+    # Check that the token is valid.
+    try:
+        user_id_token = data.token_to_user_id(token)
+    except:
+        raise AccessError(description='Invalid Token')
+
+    # To cause less confusion, name accordingly.
+    invited_member = user_id
+    already_member = user_id_token
+
+    channel = data.data['channels'][channel_index]
+    
+    # If authorised user (already_member) does not have owner permissions, raise
+    # an Access Error.
+    if data.resolve_permissions(channel['id'], already_member) != 1:
+        raise AccessError(description='User Not Authorised With Channel Owner Permissions')
+
+    # Check if invited user is a member of channel.
+    if data.resolve_permissions(channel['id'], invited_member) is None:
+        raise InputError(description='User Is Not a Member Of Channel')
+    
+    # Check if invited user is already an owner.
+    if invited_member not in channel['members']['permission_id_1']:
+        raise InputError(description='User Is Not Already a Channel Owner')
+
+    # Remove the user as a member or owner.
+    channel['members']['permission_id_1'].remove(invited_member)
+    channel['members']['permission_id_2'].remove(invited_member)
+
+    return {}
+
 def channel_removeowner(token, channel_id, user_id):
     ''' Channel_removeowner
     An owner or flockr owner may make any other owner of the channel and remove

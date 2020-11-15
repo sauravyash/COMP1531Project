@@ -1,5 +1,5 @@
 # New Features
-## 1. Remove_member
+## 1. Kick Member (kickmember)
 - Allows the owner of a channel or the owner of Flockr to remove a member from a channel.
 - This member may rejoin or be invited to rejoin after if they wish to.
 - Arguments:
@@ -13,7 +13,7 @@
     - When the token is invalid or does not exist.
     - When the authorised user is not an owner of the flockr, or an owner of this channel.
 
-## 2. Ban_member
+## 2. Ban Member (ban_member)
 - Allows the owner of a channel or the owner of Flockr to ban a member from a channel.
 - This member may never rejoin or be invited to this channel again.
 - Arguments:
