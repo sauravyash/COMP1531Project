@@ -1,0 +1,1350 @@
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 71, in auth_register
+    raise InputError(description='Invalid email')
+error.InputError: 400 Bad Request: Invalid email
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 75, in auth_register
+    raise InputError(description='Invalid password')
+error.InputError: 400 Bad Request: Invalid password
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 75, in auth_register
+    raise InputError(description='Invalid password')
+error.InputError: 400 Bad Request: Invalid password
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 77, in auth_register
+    raise InputError(description='Invalid first name or last name')
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 77, in auth_register
+    raise InputError(description='Invalid first name or last name')
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 77, in auth_register
+    raise InputError(description='Invalid first name or last name')
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 77, in auth_register
+    raise InputError(description='Invalid first name or last name')
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 73, in auth_register
+    raise InputError(description='Email already in use')
+error.InputError: 400 Bad Request: Email already in use
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 89, in svr_auth_register
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 89, in svr_auth_register
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 23, in auth_login
+    raise InputError(description='Email not registered')
+error.InputError: 400 Bad Request: Email not registered
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 25, in auth_login
+    raise InputError(description='Invalid password')
+error.InputError: 400 Bad Request: Invalid password
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 21, in auth_login
+    raise InputError(description='Invalid email')
+error.InputError: 400 Bad Request: Invalid email
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 21, in auth_login
+    raise InputError(description='Invalid email')
+error.InputError: 400 Bad Request: Invalid email
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 25, in auth_login
+    raise InputError(description='Invalid password')
+error.InputError: 400 Bad Request: Invalid password
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 81, in svr_auth_login
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 81, in svr_auth_login
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 99, in svr_auth_logout
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 99, in svr_auth_logout
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 127, in auth_passwordreset_request
+    u_id_index = data.email_to_user_id(email) - 1
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 146, in email_to_user_id
+    raise LookupError("Email not found") # pragma: no cover
+LookupError: Email not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 107, in svr_auth_pwd_request
+    return auth.auth_passwordreset_request(email)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 129, in auth_passwordreset_request
+    raise InputError(description='Email not found')
+error.InputError: 400 Bad Request: Email not found
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 24, in channel_invite
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 124, in svr_channel_invite
+    return channel.channel_invite(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 26, in channel_invite
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 30, in channel_invite
+    data.resolve_user_id_index(user_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 73, in resolve_user_id_index
+    raise LookupError("user id not found")
+LookupError: user id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 124, in svr_channel_invite
+    return channel.channel_invite(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 32, in channel_invite
+    raise InputError(description='Invalid User ID')
+error.InputError: 400 Bad Request: Invalid User ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 121, in svr_channel_invite
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 121, in svr_channel_invite
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 66, in channel_details
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 133, in svr_channel_details
+    result = channel.channel_details(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 68, in channel_details
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 130, in svr_channel_details
+    token = req['token']
+  File "/home/gabriel/.local/lib/python3.8/site-packages/werkzeug/datastructures.py", line 442, in __getitem__
+    raise exceptions.BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 123, in channel_messages
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 147, in svr_channel_messages
+    return channel.channel_messages(token, channel_id, start)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 125, in channel_messages
+    raise InputError('Channel not found')
+error.InputError: 400 Bad Request: Channel not found
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 147, in svr_channel_messages
+    return channel.channel_messages(token, channel_id, start)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 151, in channel_messages
+    raise InputError('Start is Out of Bounds')
+error.InputError: 400 Bad Request: Start is Out of Bounds
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 144, in svr_channel_messages
+    token = req['token']
+  File "/home/gabriel/.local/lib/python3.8/site-packages/werkzeug/datastructures.py", line 442, in __getitem__
+    raise exceptions.BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 177, in channel_leave
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 155, in svr_channel_leave
+    return channel.channel_leave(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 179, in channel_leave
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 153, in svr_channel_leave
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 153, in svr_channel_leave
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 213, in channel_join
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 163, in svr_channel_join
+    return channel.channel_join(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 215, in channel_join
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 161, in svr_channel_join
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 161, in svr_channel_join
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 172, in svr_channel_addowner
+    return channel.channel_addowner(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 284, in channel_addowner
+    raise InputError(description='User Is Already a Channel Owner')
+error.InputError: 400 Bad Request: User Is Already a Channel Owner
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 253, in channel_addowner
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 172, in svr_channel_addowner
+    return channel.channel_addowner(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 255, in channel_addowner
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 169, in svr_channel_addowner
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 169, in svr_channel_addowner
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 181, in svr_channel_removeowner
+    return channel.channel_removeowner(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 336, in channel_removeowner
+    raise InputError(description='User Is Not Already a Channel Owner')
+error.InputError: 400 Bad Request: User Is Not Already a Channel Owner
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 305, in channel_removeowner
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 181, in svr_channel_removeowner
+    return channel.channel_removeowner(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 307, in channel_removeowner
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 178, in svr_channel_removeowner
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 178, in svr_channel_removeowner
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 187, in svr_channels_list
+    token = req['token']
+  File "/home/gabriel/.local/lib/python3.8/site-packages/werkzeug/datastructures.py", line 442, in __getitem__
+    raise exceptions.BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 194, in svr_channels_listall
+    token = req['token']
+  File "/home/gabriel/.local/lib/python3.8/site-packages/werkzeug/datastructures.py", line 442, in __getitem__
+    raise exceptions.BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 204, in svr_channels_create
+    return channels.channels_create(token, name, is_public)
+  File "/home/gabriel/C/UNSW/project/src/channels.py", line 94, in channels_create
+    raise InputError(description="Invalid Name")
+error.InputError: 400 Bad Request: Invalid Name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 204, in svr_channels_create
+    return channels.channels_create(token, name, is_public)
+  File "/home/gabriel/C/UNSW/project/src/channels.py", line 97, in channels_create
+    raise InputError(description="Invalid is_public variable")
+error.InputError: 400 Bad Request: Invalid is_public variable
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 201, in svr_channels_create
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 201, in svr_channels_create
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 213, in svr_message_send
+    return message.message_send(token, channel_id, msg)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 35, in message_send
+    raise InputError(description="Invalid Message")
+error.InputError: 400 Bad Request: Invalid Message
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 240, in svr_message_sendlater
+    return message.message_sendlater(token, channel_id, msg, time_sent)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 147, in message_sendlater
+    raise InputError(description="Invalid Message: contents too long")
+error.InputError: 400 Bad Request: Invalid Message: contents too long
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 240, in svr_message_sendlater
+    return message.message_sendlater(token, channel_id, msg, time_sent)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 143, in message_sendlater
+    raise InputError(description="Time sent is a time in the past")
+error.InputError: 400 Bad Request: Time sent is a time in the past
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 157, in message_sendlater
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 240, in svr_message_sendlater
+    return message.message_sendlater(token, channel_id, msg, time_sent)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 159, in message_sendlater
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 87, in message_remove
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 221, in svr_message_remove
+    return message.message_remove(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 90, in message_remove
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 249, in svr_message_react
+    return message.message_react(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 189, in message_react
+    raise InputError(description="Invalid React ID!")
+error.InputError: 400 Bad Request: Invalid React ID!
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 197, in message_react
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 249, in svr_message_react
+    return message.message_react(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 200, in message_react
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 249, in svr_message_react
+    return message.message_react(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 216, in message_react
+    raise InputError(description="User Already Reacted to Message!")
+error.InputError: 400 Bad Request: User Already Reacted to Message!
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 233, in message_unreact
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 258, in svr_message_unreact
+    return message.message_unreact(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 236, in message_unreact
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 258, in svr_message_unreact
+    return message.message_unreact(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 225, in message_unreact
+    raise InputError(description="Invalid React ID!")
+error.InputError: 400 Bad Request: Invalid React ID!
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 258, in svr_message_unreact
+    return message.message_unreact(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 247, in message_unreact
+    raise InputError(description="User Already Unreacted to Message!")
+error.InputError: 400 Bad Request: User Already Unreacted to Message!
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 264, in message_pin
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 266, in svr_message_pin
+    return message.message_pin(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 267, in message_pin
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 266, in svr_message_pin
+    return message.message_pin(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 277, in message_pin
+    raise InputError(description="Message is Already Pinned!")
+error.InputError: 400 Bad Request: Message is Already Pinned!
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 291, in message_unpin
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 274, in svr_message_unpin
+    return message.message_unpin(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 294, in message_unpin
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 274, in svr_message_unpin
+    return message.message_unpin(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 304, in message_unpin
+    raise InputError(description="Message is Already Unpinned!")
+error.InputError: 400 Bad Request: Message is Already Unpinned!
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 304, in svr_user_profile_setemail
+    return user.user_profile_setemail(token, email)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 76, in user_profile_setemail
+    raise InputError(description="Invalid email")
+error.InputError: 400 Bad Request: Invalid email
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 296, in svr_user_profile_setname
+    return user.user_profile_setname(token, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 53, in user_profile_setname
+    raise InputError(description="Invalid first name or last name")
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 296, in svr_user_profile_setname
+    return user.user_profile_setname(token, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 53, in user_profile_setname
+    raise InputError(description="Invalid first name or last name")
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 296, in svr_user_profile_setname
+    return user.user_profile_setname(token, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 53, in user_profile_setname
+    raise InputError(description="Invalid first name or last name")
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 296, in svr_user_profile_setname
+    return user.user_profile_setname(token, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 53, in user_profile_setname
+    raise InputError(description="Invalid first name or last name")
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 312, in svr_user_profile_sethandle
+    return user.user_profile_sethandle(token, handle)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 102, in user_profile_sethandle
+    raise InputError(description="Handle too short")
+error.InputError: 400 Bad Request: Handle too short
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 312, in svr_user_profile_sethandle
+    return user.user_profile_sethandle(token, handle)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 104, in user_profile_sethandle
+    raise InputError(description="Handle too long")
+error.InputError: 400 Bad Request: Handle too long
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 324, in svr_user_profile_uploadphoto
+    return user.user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 127, in user_profile_uploadphoto
+    raise InputError(description="Image is not jpg")
+error.InputError: 400 Bad Request: Image is not jpg
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 71, in auth_register
+    raise InputError(description='Invalid email')
+error.InputError: 400 Bad Request: Invalid email
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 75, in auth_register
+    raise InputError(description='Invalid password')
+error.InputError: 400 Bad Request: Invalid password
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 75, in auth_register
+    raise InputError(description='Invalid password')
+error.InputError: 400 Bad Request: Invalid password
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 77, in auth_register
+    raise InputError(description='Invalid first name or last name')
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 77, in auth_register
+    raise InputError(description='Invalid first name or last name')
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 77, in auth_register
+    raise InputError(description='Invalid first name or last name')
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 77, in auth_register
+    raise InputError(description='Invalid first name or last name')
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 93, in svr_auth_register
+    return auth.auth_register(email, pwd, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 73, in auth_register
+    raise InputError(description='Email already in use')
+error.InputError: 400 Bad Request: Email already in use
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 89, in svr_auth_register
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 89, in svr_auth_register
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 23, in auth_login
+    raise InputError(description='Email not registered')
+error.InputError: 400 Bad Request: Email not registered
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 25, in auth_login
+    raise InputError(description='Invalid password')
+error.InputError: 400 Bad Request: Invalid password
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 21, in auth_login
+    raise InputError(description='Invalid email')
+error.InputError: 400 Bad Request: Invalid email
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 21, in auth_login
+    raise InputError(description='Invalid email')
+error.InputError: 400 Bad Request: Invalid email
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 83, in svr_auth_login
+    return auth.auth_login(email, pwd)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 25, in auth_login
+    raise InputError(description='Invalid password')
+error.InputError: 400 Bad Request: Invalid password
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 81, in svr_auth_login
+    email = req['email']
+KeyError: 'email'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 81, in svr_auth_login
+    email = req['email']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 99, in svr_auth_logout
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 99, in svr_auth_logout
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 127, in auth_passwordreset_request
+    u_id_index = data.email_to_user_id(email) - 1
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 146, in email_to_user_id
+    raise LookupError("Email not found") # pragma: no cover
+LookupError: Email not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 107, in svr_auth_pwd_request
+    return auth.auth_passwordreset_request(email)
+  File "/home/gabriel/C/UNSW/project/src/auth.py", line 129, in auth_passwordreset_request
+    raise InputError(description='Email not found')
+error.InputError: 400 Bad Request: Email not found
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 24, in channel_invite
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 124, in svr_channel_invite
+    return channel.channel_invite(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 26, in channel_invite
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 30, in channel_invite
+    data.resolve_user_id_index(user_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 73, in resolve_user_id_index
+    raise LookupError("user id not found")
+LookupError: user id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 124, in svr_channel_invite
+    return channel.channel_invite(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 32, in channel_invite
+    raise InputError(description='Invalid User ID')
+error.InputError: 400 Bad Request: Invalid User ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 121, in svr_channel_invite
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 121, in svr_channel_invite
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 66, in channel_details
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 133, in svr_channel_details
+    result = channel.channel_details(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 68, in channel_details
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 130, in svr_channel_details
+    token = req['token']
+  File "/home/gabriel/.local/lib/python3.8/site-packages/werkzeug/datastructures.py", line 442, in __getitem__
+    raise exceptions.BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 123, in channel_messages
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 147, in svr_channel_messages
+    return channel.channel_messages(token, channel_id, start)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 125, in channel_messages
+    raise InputError('Channel not found')
+error.InputError: 400 Bad Request: Channel not found
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 147, in svr_channel_messages
+    return channel.channel_messages(token, channel_id, start)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 151, in channel_messages
+    raise InputError('Start is Out of Bounds')
+error.InputError: 400 Bad Request: Start is Out of Bounds
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 144, in svr_channel_messages
+    token = req['token']
+  File "/home/gabriel/.local/lib/python3.8/site-packages/werkzeug/datastructures.py", line 442, in __getitem__
+    raise exceptions.BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 177, in channel_leave
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 155, in svr_channel_leave
+    return channel.channel_leave(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 179, in channel_leave
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 153, in svr_channel_leave
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 153, in svr_channel_leave
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 213, in channel_join
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 163, in svr_channel_join
+    return channel.channel_join(token, channel_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 215, in channel_join
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 161, in svr_channel_join
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 161, in svr_channel_join
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 172, in svr_channel_addowner
+    return channel.channel_addowner(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 284, in channel_addowner
+    raise InputError(description='User Is Already a Channel Owner')
+error.InputError: 400 Bad Request: User Is Already a Channel Owner
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 253, in channel_addowner
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 172, in svr_channel_addowner
+    return channel.channel_addowner(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 255, in channel_addowner
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 169, in svr_channel_addowner
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 169, in svr_channel_addowner
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 181, in svr_channel_removeowner
+    return channel.channel_removeowner(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 336, in channel_removeowner
+    raise InputError(description='User Is Not Already a Channel Owner')
+error.InputError: 400 Bad Request: User Is Not Already a Channel Owner
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 305, in channel_removeowner
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 181, in svr_channel_removeowner
+    return channel.channel_removeowner(token, channel_id, user_id)
+  File "/home/gabriel/C/UNSW/project/src/channel.py", line 307, in channel_removeowner
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 178, in svr_channel_removeowner
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 178, in svr_channel_removeowner
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 187, in svr_channels_list
+    token = req['token']
+  File "/home/gabriel/.local/lib/python3.8/site-packages/werkzeug/datastructures.py", line 442, in __getitem__
+    raise exceptions.BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 194, in svr_channels_listall
+    token = req['token']
+  File "/home/gabriel/.local/lib/python3.8/site-packages/werkzeug/datastructures.py", line 442, in __getitem__
+    raise exceptions.BadRequestKeyError(key)
+werkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 204, in svr_channels_create
+    return channels.channels_create(token, name, is_public)
+  File "/home/gabriel/C/UNSW/project/src/channels.py", line 94, in channels_create
+    raise InputError(description="Invalid Name")
+error.InputError: 400 Bad Request: Invalid Name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 204, in svr_channels_create
+    return channels.channels_create(token, name, is_public)
+  File "/home/gabriel/C/UNSW/project/src/channels.py", line 97, in channels_create
+    raise InputError(description="Invalid is_public variable")
+error.InputError: 400 Bad Request: Invalid is_public variable
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 201, in svr_channels_create
+    token = req['token']
+KeyError: 'token'
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 201, in svr_channels_create
+    token = req['token']
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 213, in svr_message_send
+    return message.message_send(token, channel_id, msg)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 35, in message_send
+    raise InputError(description="Invalid Message")
+error.InputError: 400 Bad Request: Invalid Message
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 240, in svr_message_sendlater
+    return message.message_sendlater(token, channel_id, msg, time_sent)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 147, in message_sendlater
+    raise InputError(description="Invalid Message: contents too long")
+error.InputError: 400 Bad Request: Invalid Message: contents too long
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 240, in svr_message_sendlater
+    return message.message_sendlater(token, channel_id, msg, time_sent)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 143, in message_sendlater
+    raise InputError(description="Time sent is a time in the past")
+error.InputError: 400 Bad Request: Time sent is a time in the past
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 157, in message_sendlater
+    channel_index = data.resolve_channel_id_index(channel_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 89, in resolve_channel_id_index
+    raise LookupError("channel id not found")
+LookupError: channel id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 240, in svr_message_sendlater
+    return message.message_sendlater(token, channel_id, msg, time_sent)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 159, in message_sendlater
+    raise InputError(description='Invalid Channel ID')
+error.InputError: 400 Bad Request: Invalid Channel ID
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 87, in message_remove
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 221, in svr_message_remove
+    return message.message_remove(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 90, in message_remove
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 249, in svr_message_react
+    return message.message_react(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 189, in message_react
+    raise InputError(description="Invalid React ID!")
+error.InputError: 400 Bad Request: Invalid React ID!
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 197, in message_react
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 249, in svr_message_react
+    return message.message_react(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 200, in message_react
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 249, in svr_message_react
+    return message.message_react(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 216, in message_react
+    raise InputError(description="User Already Reacted to Message!")
+error.InputError: 400 Bad Request: User Already Reacted to Message!
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 233, in message_unreact
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 258, in svr_message_unreact
+    return message.message_unreact(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 236, in message_unreact
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 258, in svr_message_unreact
+    return message.message_unreact(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 225, in message_unreact
+    raise InputError(description="Invalid React ID!")
+error.InputError: 400 Bad Request: Invalid React ID!
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 258, in svr_message_unreact
+    return message.message_unreact(token, message_id, react_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 247, in message_unreact
+    raise InputError(description="User Already Unreacted to Message!")
+error.InputError: 400 Bad Request: User Already Unreacted to Message!
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 264, in message_pin
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 266, in svr_message_pin
+    return message.message_pin(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 267, in message_pin
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 266, in svr_message_pin
+    return message.message_pin(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 277, in message_pin
+    raise InputError(description="Message is Already Pinned!")
+error.InputError: 400 Bad Request: Message is Already Pinned!
+Traceback (most recent call last):
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 291, in message_unpin
+    channel_id, msg_index = data.resolve_message_id_index(message_id)
+  File "/home/gabriel/C/UNSW/project/src/data.py", line 105, in resolve_message_id_index
+    raise LookupError("message id not found")
+LookupError: message id not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 274, in svr_message_unpin
+    return message.message_unpin(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 294, in message_unpin
+    raise InputError(description="invalid message or channel id")
+error.InputError: 400 Bad Request: invalid message or channel id
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 274, in svr_message_unpin
+    return message.message_unpin(token, message_id)
+  File "/home/gabriel/C/UNSW/project/src/message.py", line 304, in message_unpin
+    raise InputError(description="Message is Already Unpinned!")
+error.InputError: 400 Bad Request: Message is Already Unpinned!
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 304, in svr_user_profile_setemail
+    return user.user_profile_setemail(token, email)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 76, in user_profile_setemail
+    raise InputError(description="Invalid email")
+error.InputError: 400 Bad Request: Invalid email
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 296, in svr_user_profile_setname
+    return user.user_profile_setname(token, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 53, in user_profile_setname
+    raise InputError(description="Invalid first name or last name")
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 296, in svr_user_profile_setname
+    return user.user_profile_setname(token, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 53, in user_profile_setname
+    raise InputError(description="Invalid first name or last name")
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 296, in svr_user_profile_setname
+    return user.user_profile_setname(token, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 53, in user_profile_setname
+    raise InputError(description="Invalid first name or last name")
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 296, in svr_user_profile_setname
+    return user.user_profile_setname(token, fname, lname)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 53, in user_profile_setname
+    raise InputError(description="Invalid first name or last name")
+error.InputError: 400 Bad Request: Invalid first name or last name
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 312, in svr_user_profile_sethandle
+    return user.user_profile_sethandle(token, handle)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 102, in user_profile_sethandle
+    raise InputError(description="Handle too short")
+error.InputError: 400 Bad Request: Handle too short
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 312, in svr_user_profile_sethandle
+    return user.user_profile_sethandle(token, handle)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 104, in user_profile_sethandle
+    raise InputError(description="Handle too long")
+error.InputError: 400 Bad Request: Handle too long
+Traceback (most recent call last):
+  File "src/server.py", line 41, in wrapper
+    return json.dumps(func(*args, **kwargs))
+  File "src/server.py", line 324, in svr_user_profile_uploadphoto
+    return user.user_profile_uploadphoto(token, url, x_start, y_start, x_end, y_end)
+  File "/home/gabriel/C/UNSW/project/src/user.py", line 127, in user_profile_uploadphoto
+    raise InputError(description="Image is not jpg")
+error.InputError: 400 Bad Request: Image is not jpg
