@@ -1,12 +1,18 @@
-'''Test Message's Functional Validity
+''' The Message Implementation File
 '''
 
 import data
 import datetime
+
 from error import InputError, AccessError
 
 def is_message_valid(message):
     return isinstance(message, str) and len(message) <= 1000
+
+def censor_messsage_contents(message):
+    #censors keywords found
+    
+    return message
 
 def message_send(token, channel_id, message):
     # check permissions
@@ -30,6 +36,13 @@ def message_send(token, channel_id, message):
 
     # create msg
     new_id = data.generate_message_id()
+    
+    # censor check
+    channel_data = data.data.get('channels')[channel_index]
+    is_censored_channel = channel_data['is_censored']
+
+    if is_censored_channel:
+        message = censor_messsage_contents(message)
 
     msg = {
         'message_id': new_id,
@@ -38,11 +51,10 @@ def message_send(token, channel_id, message):
         'time_created': datetime.datetime.now().timestamp(),
         'reacts': [],
         'is_pinned': False
-
     }
 
     # add msg to data
-    msgs = data.data.get('channels')[channel_index]['messages']
+    msgs = channel_data['messages']
     msgs.append(msg)
 
     return {
@@ -98,8 +110,14 @@ def message_edit(token, message_id, message):
     is_admin = data.resolve_permissions(channel_id, user_id) == 1
     if not is_user_author and not is_admin:
         raise AccessError(description="user not authorised")
+    
+    # censor check
+    channel_data = data.data.get('channels')[channel_index]
+    is_censored_channel = channel_data['is_censored']
 
-    data.print_data()
+    if is_censored_channel:
+        message = censor_messsage_contents(message)
+
     msgs[msg_index]['message'] = message
 
     return {}
