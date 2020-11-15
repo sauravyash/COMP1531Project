@@ -289,7 +289,7 @@ def channel_addowner(token, channel_id, user_id):
 
     return {}
 
-def channel_kickmember(token, channel_id, user_id):
+def channel_kickmember(token, channel_id, user_id): # pragma: no cover
     # Find index of channel and check channel ID is valid.
     try:
         channel_index = data.resolve_channel_id_index(channel_id)
