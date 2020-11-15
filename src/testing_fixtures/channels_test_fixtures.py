@@ -1,3 +1,8 @@
+############################### Channels Fixtures #############################
+'''
+Fixtures to remove repeated code and improve readability of testing.
+'''
+
 import pytest
 
 import auth
@@ -7,6 +12,10 @@ from channels import channels_create
 
 @pytest.fixture()
 def setup_test_interface_create():
+    ''' Setup_test_interface_create
+    Clear the data, then register and login two users.
+    '''
+    
     other.clear()
 
     # Register and login two users.
@@ -19,15 +28,17 @@ def setup_test_interface_create():
     return user1, user2
 
 @pytest.fixture()
-def setup_test_interface_lists():
+def setup_test_interface_lists(setup_test_interface_create):
+    ''' Setup_test_interface_lists
+    Clear data, then register and login three users.
+    Multiple channels are created and each user is given a list of the channels
+    they are a part of (ie. channels_1, etc.).
+    '''
+    
     other.clear()
     
     # Register and login three users.
-    auth.auth_register('validemail1@gmail.com', 'password123', 'fname1', 'lname1')
-    user1 = auth.auth_login('validemail1@gmail.com', 'password123')
-
-    auth.auth_register('validemail2@gmail.com', 'password123', 'fname2', 'lname2')
-    user2 = auth.auth_login('validemail2@gmail.com', 'password123')
+    user1, user2 = setup_test_interface_create
     
     auth.auth_register('validemail3@gmail.com', 'password123', 'fname3', 'lname3')
     user3 = auth.auth_login('validemail3@gmail.com', 'password123')
@@ -50,4 +61,3 @@ def setup_test_interface_lists():
     channels_2.append(channels_create(user2['token'], 'AlloChap', False)['channel_id'])
 
     return users, channels_1, channels_2, channels_3
-

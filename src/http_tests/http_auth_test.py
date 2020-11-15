@@ -22,7 +22,6 @@ def test_url(url):
     '''Check server set up properly'''
     assert url.startswith("http")
 
-# ---------------------------------------------------------------------------- #
 ''' ----- AUTH REGISTER ----- '''
 
 # ----- Success Register
@@ -135,7 +134,6 @@ def test_reg_bad_request(url, setup_auth):
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
 
-# ---------------------------------------------------------------------------- #
 ''' ----- AUTH LOGIN ----- '''
 
 # ----- Success Login
@@ -223,7 +221,6 @@ def test_login_bad_request(url, setup_auth):
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
 
-# ---------------------------------------------------------------------------- #
 ''' ----- AUTH LOGOUT ----- '''
 
 # ----- Success Logout
@@ -287,7 +284,6 @@ def test_logout_bad_request(url, login_user):
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
 
-# ---------------------------------------------------------------------------- #
 ''' ----- AUTH RESET REQUEST ----- '''
 
 # ----- Fail Request
