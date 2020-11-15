@@ -411,7 +411,7 @@ def svr_standup_send():
 
 if __name__ == "__main__":
     port_num = os.getenv('PORT')
-    if port_num != None:
+    if port_num != None and port_num != '':
         print("port: ", port_num)
         APP.run(host='0.0.0.0', port=port_num) # Do not edit this port
     elif os.getenv('DEV'):
