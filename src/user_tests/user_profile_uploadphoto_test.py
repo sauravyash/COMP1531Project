@@ -13,13 +13,6 @@ from testing_fixtures.user_test_fixtures import setup_test_interface
 
 ########################
 
-#def test_user_profile_uploadphoto(setup_test_interface):
-    #''' Success upload photo'''
-    #user = setup_test_interface
-
-    #assert(user_profile_uploadphoto(user["token"], "https://static.scientificamerican.com/sciam/cache/file/92E141F8-36E4-4331-BB2EE42AC8674DD3_source.jpg", 0, 0, 256, 256)) == {}
-
-
 def test_user_profile_uploadphoto():
     ''' Success upload photo'''
     other.clear()
