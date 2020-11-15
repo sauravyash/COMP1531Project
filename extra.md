@@ -29,7 +29,7 @@
     - When the token is invalid or does not exist.
     - When the authorised user is not an owner of the flockr, or an owner of this channel.
 
-## 3. Monitor_Language
+## 3. NSFW Channel Censor
 - Monitors channel messages for 'offensive language'.
 - If a message contains 'offensive language':
     - The word will be replaced with a random string of special characters of the same length.

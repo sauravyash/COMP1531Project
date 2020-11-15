@@ -104,7 +104,8 @@ def channel_details(token, channel_id):
     return {
         'name': channel['name'],
         'owner_members': owners,
-        'all_members': member_list + owners
+        'all_members': member_list + owners,
+        'nsfw': not channel['is_censored']
     }
 
 def channel_messages(token, channel_id, start):
