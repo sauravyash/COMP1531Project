@@ -45,3 +45,5 @@
 ## 4. Deployment to Heroku
 - This project has been deployed to heroku.
 - This means it can now be accessed remotely via a unique url.
+- Frontend url: https://flockr-frontend.herokuapp.com/register
+- Backend url: https://flockr-backend.herokuapp.com/

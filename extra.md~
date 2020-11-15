@@ -41,3 +41,7 @@
 - Raise an INPUT ERROR:
     - Message is more than 1000 characters.
     - channel_id does not exist.
+    
+## 4. Deployment to Heroku
+- This project has been deployed to heroku.
+- This means it can now be accessed remotely via a unique url.
