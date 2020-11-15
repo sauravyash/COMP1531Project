@@ -1,3 +1,8 @@
+############################### HTTP Test Fixtures #############################
+'''
+Fixtures to remove repeated code and improve readability of testing.
+'''
+
 from subprocess import Popen, PIPE
 from time import sleep
 import json
@@ -49,6 +54,10 @@ def url():
 # ----- Clear the server, and provide details of first user.
 @pytest.fixture()
 def setup_auth(url):
+    ''' Setup_auth
+    Clear the data, then create the input for register and login functions.
+    '''
+    
     data = requests.delete(str(url) + "/clear")
     assert data.status_code == 200
 
@@ -98,6 +107,10 @@ def setup_auth(url):
 
 @pytest.fixture()
 def register_user(url, setup_auth):
+    ''' Register_user
+    Clear data, then register three users.
+    '''
+    
     input_value, _ = setup_auth
 
     data = requests.post(str(url) + "auth/register", json=input_value[0])
@@ -116,6 +129,10 @@ def register_user(url, setup_auth):
 
 @pytest.fixture()
 def login_user(url, setup_auth, register_user):
+    ''' Login_user
+    Clear data, then register and login three users.
+    '''
+    
     _, input_data = setup_auth
     u1, u2, u3 = register_user
 
@@ -138,6 +155,11 @@ def login_user(url, setup_auth, register_user):
 
 @pytest.fixture()
 def logout_user(url, login_user):
+    ''' Logout_user
+    Clear data, then register and login three users.
+    Logout three users.
+    '''
+    
     user1, user2, user3 = login_user
     input_data = [
         {
@@ -170,6 +192,11 @@ def logout_user(url, login_user):
 
 @pytest.fixture()
 def setup_channel(url, setup_auth, login_user):
+    ''' Setup_channel
+    Clear data, then register and login three users.
+    Create a channel with the first user.
+    '''
+    
     user1, user2, user3 = login_user
 
     # Create a channel with the first user.
@@ -187,6 +214,12 @@ def setup_channel(url, setup_auth, login_user):
 
 @pytest.fixture()
 def invite_all_members(url, setup_channel):
+    ''' Invite_all_members
+    Clear data, register and login three users.
+    Create a channel with the first user.
+    Invite the remaining two users to the channel.
+    '''
+    
     user1, user2, user3, channel_id, _ = setup_channel
 
     tok1 = user1["token"]
@@ -214,6 +247,13 @@ def invite_all_members(url, setup_channel):
 
 @pytest.fixture()
 def all_members_owners(url, setup_channel, invite_all_members):
+    ''' All_members_owners
+    Clear data, register and login three users.
+    Create a channel with the first user.
+    Invite the remaining two users to the channel.
+    Make all members owners of the channel.
+    '''
+    
     user1, user2, user3, channel_id, _ = setup_channel
     invite_all_members
 
@@ -240,8 +280,17 @@ def all_members_owners(url, setup_channel, invite_all_members):
     data = requests.post(f"{url}/channel/addowner", json=input_data)
     assert data.status_code == 200
 
+''' CHANNELS FIXTURES '''
+
 @pytest.fixture()    
 def setup_channels(url, login_user):
+    ''' Setup_channels
+    Clear data, then register and login three users.
+    Create a channel with user 1.
+    Create two channels with user 2.
+    Keep track of how many channels each user is a member of (ie. Channel_1, etc.)
+    '''
+    
     user1, user2, user3 = login_user
 
 

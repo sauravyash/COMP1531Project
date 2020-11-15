@@ -1,3 +1,4 @@
+############################ Http Message Server Tests ##########################
 '''
 Functions to test http server message functionality
 '''
@@ -25,7 +26,6 @@ def test_url(url):
     '''Check server set up properly'''
     assert url.startswith("http")
 
-# ---------------------------------------------------------------------------- #
 ''' ----- MESSAGES ----- '''
 
 # ----- Success

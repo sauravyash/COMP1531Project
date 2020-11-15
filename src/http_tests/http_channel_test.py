@@ -1,5 +1,6 @@
+############################ Http Channel Server Tests ##########################
 '''
-Functions to test http server auth functionality
+Functions to test http server channel functionality
 '''
 
 from subprocess import Popen, PIPE
@@ -22,7 +23,6 @@ def test_url(url):
     '''Check server set up properly'''
     assert url.startswith("http")
 
-# ---------------------------------------------------------------------------- #
 ''' ----- CHANNEL INVITE ----- '''
 
 # ----- Success Invite
@@ -152,7 +152,6 @@ def test_invite_bad_request(url, setup_channel):
     # Bad/ Invalid input, raise BAD REQUEST ERROR. (500)
     assert data.status_code == 500
 
-# ---------------------------------------------------------------------------- #
 ''' ----- CHANNEL DETAILS ----- '''
 
 # ----- Success Details
