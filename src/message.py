@@ -18,12 +18,12 @@ def censor_messsage_contents(message):
     with open(PROFANITY_FILE_NAME, 'r') as profanity_list: # pragma: no cover
         lines = profanity_list.readlines()
         for line in lines:
-            bad_words.append(line.strip())
+            bad_words.append(line.strip().lower())
 
     message_split = message.split() # pragma: no cover
 
     for i, word in enumerate(message_split): # pragma: no cover
-        if word in bad_words:
+        if word.lower() in bad_words:
             message_split[i] = "*" * len(word)
     message = " ".join(message_split) # pragma: no cover
 
